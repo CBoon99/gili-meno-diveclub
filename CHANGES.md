@@ -147,17 +147,19 @@ Phase 4 will add Resend confirmation emails on top via Netlify Form-submission w
 ✅ Image alt text on every content image; unique-ish Unsplash IDs across 28 entries.
 ✅ Build green, 0 lint errors.
 
+## Phase 3 deliverables (2026-04-28)
+
+✅ **Hero** — `HeroUnderwater.tsx` (React Three Fiber): stylized diver (capsule/superior to placeholder cylinders), **110-fish instanced boid school** (separation / alignment / cohesion), sea floor, moving spotlight for caustic feel, `Stars`, fog; **DPR cap 1.75**, `client:visible` hydrate; **skipped when `prefers-reduced-motion`** (gradient-only hero).
+✅ **Scroll motion** — `HomeScrollFx.tsx` wires **GSAP + ScrollTrigger** to `[data-reveal]` blocks on the home page (skipped under reduced-motion).
+✅ **Map** — `GiliMenoMap.tsx` (`client:only="react"`): OSM tiles, **13 dive-site pins** (links to real `/dive-sites/{slug}` pages), restaurants / stay / sightseeing POIs, **category toggles**, fit-bounds on filter; data in `src/lib/gili-meno-places.ts` (orientation-grade coords, not survey-accurate).
+✅ **SEO** — home page `ItemList` JSON-LD sampling map places.
+✅ **Assets** — `public/assets/models/.gitkeep` ready for optional CC0 `diver.glb` swap later.
+✅ Build green (note: Rollup may warn on chunk size from R3F + Leaflet — acceptable for Phase 3).
+
 ## Coming in Phase 2.5 (deferred per user)
 
 - 49 FR translations alongside Decap CMS verification
 - Decap CMS i18n preview + multi-locale entries
-
-## Coming in Phase 3
-
-- React Three Fiber hero island (lazy-loaded with `client:visible`)
-- CC0 diver model + boids fish school + caustic water shader + bubble particles
-- GSAP scroll-driven camera, reduced-motion fallback to a poster image
-- Interactive Leaflet map with 4 toggle categories (dive sites / accommodation / restaurants / sightseeing)
 
 ## Coming in Phase 4
 

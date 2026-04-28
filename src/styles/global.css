@@ -121,3 +121,13 @@ body {
 .link-underline:focus-visible::after {
   transform: scaleX(1);
 }
+
+/* Leaflet (Gili Meno map) */
+.gili-meno-map-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+.leaflet-container {
+  font-family: var(--font-body);
+}

@@ -3,11 +3,37 @@ export const prerender = true
 
 import { getCollection } from 'astro:content'
 import BaseLayout from '@/layouts/BaseLayout.astro'
+import HeroUnderwater from '@/components/canvas/HeroUnderwater'
+import HomeScrollFx from '@/components/HomeScrollFx'
+import GiliMenoMap from '@/components/map/GiliMenoMap'
 import { useTranslations } from '@/i18n/utils'
 import { cleanSlug, orderKey } from '@/lib/slug'
+import { giliMenoPlaces } from '@/lib/gili-meno-places'
 
 const lang = 'en' as const
 const t = useTranslations(lang)
+
+const mapListJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Gili Meno — dive sites & local places',
+  numberOfItems: giliMenoPlaces.length,
+  itemListElement: giliMenoPlaces.slice(0, 20).map((p, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: p.name,
+    item: {
+      '@type': 'Place',
+      name: p.name,
+      description: p.blurb,
+      geo: {
+        '@type': 'GeoCoordinates',
+        latitude: p.lat,
+        longitude: p.lng,
+      },
+    },
+  })),
+}
 
 const allCourses = (await getCollection('courses')).sort(
   (a, b) => orderKey(a.id) - orderKey(b.id),
@@ -32,12 +58,13 @@ const recentBlog = (await getCollection('blog'))
   lang={lang}
   title="Meno Dive Club — SSI Dive Centre, Gili Meno"
   description="Family-run SSI dive school on Gili Meno, Indonesia. Eight courses, thirteen dive sites, sea turtles on every dive, max 4:1 ratios, conservation-aware diving."
+  jsonLd={[mapListJsonLd]}
 >
   <!-- Hero -->
   <section
     class="relative isolate flex min-h-[100svh] items-end overflow-hidden bg-gradient-to-b from-ocean-900 via-ocean-800 to-ocean-700 pb-24"
   >
-    <div aria-hidden="true" class="absolute inset-0 -z-10 opacity-50" data-hero-canvas-mount></div>
+    <HeroUnderwater client:visible />
     <div
       aria-hidden="true"
       class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_30%_30%,rgba(10,173,219,0.25),transparent_55%),radial-gradient(circle_at_70%_70%,rgba(212,165,116,0.15),transparent_60%)]"
@@ -82,7 +109,7 @@ const recentBlog = (await getCollection('blog'))
   </section>
 
   <!-- About -->
-  <section class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+  <section class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8" data-reveal>
     <div class="grid gap-10 md:grid-cols-2 md:items-center">
       <div>
         <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">{t('nav.about')}</p>
@@ -102,7 +129,7 @@ const recentBlog = (await getCollection('blog'))
   </section>
 
   <!-- Featured courses -->
-  <section class="border-t border-white/5 bg-ocean-900/40">
+  <section class="border-t border-white/5 bg-ocean-900/40" data-reveal>
     <div class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
       <div class="flex flex-wrap items-end justify-between gap-4">
         <div>
@@ -155,7 +182,7 @@ const recentBlog = (await getCollection('blog'))
   </section>
 
   <!-- Featured dive sites -->
-  <section class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+  <section class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8" data-reveal>
     <div class="flex flex-wrap items-end justify-between gap-4">
       <div>
         <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Dive sites</p>
@@ -209,8 +236,28 @@ const recentBlog = (await getCollection('blog'))
     </div>
   </section>
 
+  <!-- Interactive island map -->
+  <section class="border-t border-white/5 bg-ocean-950/40" data-reveal>
+    <div class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+      <div class="max-w-3xl">
+        <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Gili Meno</p>
+        <h2 class="mt-3 font-display text-3xl font-bold tracking-tight md:text-5xl">
+          Explore the island on the map.
+        </h2>
+        <p class="mt-4 text-lg text-white/75">
+          Thirteen dive sites, places to eat, where to stay, and a few land-based highlights — toggle
+          layers and tap markers for quick context (positions are indicative for orientation, not
+          GPS navigation).
+        </p>
+      </div>
+      <div class="mt-12">
+        <GiliMenoMap client:only="react" />
+      </div>
+    </div>
+  </section>
+
   <!-- Testimonials -->
-  <section class="border-t border-white/5 bg-ocean-900/40">
+  <section class="border-t border-white/5 bg-ocean-900/40" data-reveal>
     <div class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
       <div class="flex flex-wrap items-end justify-between gap-4">
         <div>
@@ -248,7 +295,7 @@ const recentBlog = (await getCollection('blog'))
   <!-- Blog teaser -->
   {
     recentBlog.length > 0 && (
-      <section class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+      <section class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8" data-reveal>
         <div class="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Bubble Diaries</p>
@@ -302,7 +349,7 @@ const recentBlog = (await getCollection('blog'))
   }
 
   <!-- Final CTA -->
-  <section class="border-t border-white/5">
+  <section class="border-t border-white/5" data-reveal>
     <div class="mx-auto max-w-7xl px-4 py-24 text-center sm:px-6 lg:px-8">
       <h2 class="font-display text-3xl font-bold tracking-tight md:text-5xl">
         Come dive with us.
@@ -327,4 +374,6 @@ const recentBlog = (await getCollection('blog'))
       </div>
     </div>
   </section>
+
+  <HomeScrollFx client:load />
 </BaseLayout>
