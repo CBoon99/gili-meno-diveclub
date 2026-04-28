@@ -156,6 +156,17 @@ Phase 4 will add Resend confirmation emails on top via Netlify Form-submission w
 ✅ **Assets** — `public/assets/models/.gitkeep` ready for optional CC0 `diver.glb` swap later.
 ✅ Build green (note: Rollup may warn on chunk size from R3F + Leaflet — acceptable for Phase 3).
 
+## Phase 3.1 — bigger 3D hero (2026-04-28)
+
+✅ **Multiple swimming divers** — `SwimmingDiver` rides a `CatmullRomCurve3` (centripetal) with a tangent-based look-at; two extra divers loop on different paths beside the hero diver.
+✅ **Volumetric god rays** — additive cones from the surface, gentle opacity pulse.
+✅ **Plankton sparkles** — drei `Sparkles` at two depths.
+✅ **Camera parallax** — `pointer`-driven lerp on camera position; subtle scroll-based zoom.
+✅ **Soft attractor** in the boid school pulls every Nth fish toward the H1, so the school meanders around the title without breaking flock cohesion. Fish count 110 → 140.
+✅ **Foreground canvas** — `HeroForeground.tsx` renders a second R3F canvas at `z-10`, `pointer-events-none`, with 6 close-up instanced fish + 40 rising bubbles + close sparkles. SEO text stays in DOM and is bumped to `z-20` so it remains readable; clicks still pass through the FG canvas to the CTA buttons.
+✅ Reduced-motion: both canvases render nothing.
+✅ Build green.
+
 ## Phase 4 deliverables (2026-04-28)
 
 ✅ **Drizzle + Neon** — `src/db/schema.ts`: `contacts`, `bookings`, `subscribers`; `src/db/index.ts` lazy `getDb()` via `@neondatabase/serverless` + `drizzle-orm/neon-http`.

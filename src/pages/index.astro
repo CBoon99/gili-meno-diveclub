@@ -4,6 +4,7 @@ export const prerender = true
 import { getCollection } from 'astro:content'
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import HeroUnderwater from '@/components/canvas/HeroUnderwater'
+import HeroForeground from '@/components/canvas/HeroForeground'
 import HomeScrollFx from '@/components/HomeScrollFx'
 import GiliMenoMap from '@/components/map/GiliMenoMap'
 import { useTranslations } from '@/i18n/utils'
@@ -65,13 +66,14 @@ const recentBlog = (await getCollection('blog'))
     class="relative isolate flex min-h-[100svh] items-end overflow-hidden bg-gradient-to-b from-ocean-900 via-ocean-800 to-ocean-700 pb-24"
   >
     <HeroUnderwater client:visible />
+    <HeroForeground client:visible />
     <div
       aria-hidden="true"
       class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_30%_30%,rgba(10,173,219,0.25),transparent_55%),radial-gradient(circle_at_70%_70%,rgba(212,165,116,0.15),transparent_60%)]"
     >
     </div>
 
-    <div class="mx-auto grid w-full max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:px-8">
+    <div class="relative z-20 mx-auto grid w-full max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:px-8">
       <div class="lg:col-span-7" style="animation: var(--animate-fade-up);">
         <p class="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium uppercase tracking-widest text-ocean-200">
           <span class="inline-block h-1.5 w-1.5 rounded-full bg-ocean-400"></span>
