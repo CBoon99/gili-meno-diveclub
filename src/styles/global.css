@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@plugin '@tailwindcss/typography';
 
 /* ---- Theme tokens (Tailwind v4 CSS-first config) ---- */
 @theme {

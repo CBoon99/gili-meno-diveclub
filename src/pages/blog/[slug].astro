@@ -1,0 +1,108 @@
+---
+export const prerender = true
+
+import { getCollection, render } from 'astro:content'
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import Breadcrumbs from '@/components/Breadcrumbs.astro'
+import { cleanSlug } from '@/lib/slug'
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog')
+  return posts.map((entry) => ({
+    params: { slug: cleanSlug(entry.id) },
+    props: { entry },
+  }))
+}
+
+const { entry } = Astro.props
+const { Content } = await render(entry)
+const lang = 'en' as const
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Bubble Diaries', url: '/blog' },
+  { name: entry.data.title, url: `/blog/${cleanSlug(entry.id)}` },
+]
+
+const articleJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: entry.data.title,
+  description: entry.data.summary,
+  image: entry.data.image,
+  datePublished: entry.data.date.toISOString(),
+  dateModified: entry.data.date.toISOString(),
+  author: {
+    '@type': 'Organization',
+    name: entry.data.author,
+    url: 'https://menodiveclub.com',
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Meno Dive Club',
+    logo: {
+      '@type': 'ImageObject',
+      url: 'https://menodiveclub.com/favicon.svg',
+    },
+  },
+  mainEntityOfPage: `https://menodiveclub.com/blog/${cleanSlug(entry.id)}`,
+}
+---
+
+<BaseLayout
+  lang={lang}
+  title={entry.data.title}
+  description={entry.data.summary}
+  image={entry.data.image}
+  type="article"
+  jsonLd={[articleJsonLd]}
+>
+  <article class="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
+    <Breadcrumbs items={breadcrumbs} />
+
+    <header class="mt-6">
+      <p class="text-xs font-medium uppercase tracking-widest text-white/50">
+        <time datetime={entry.data.date.toISOString()}>
+          {entry.data.date.toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' })}
+        </time>
+        · {entry.data.author}
+      </p>
+      <h1 class="mt-3 font-display text-4xl font-bold leading-tight tracking-tight md:text-5xl">
+        {entry.data.title}
+      </h1>
+      <p class="mt-4 text-lg text-white/80">{entry.data.summary}</p>
+    </header>
+
+    {
+      entry.data.image && (
+        <figure class="mt-10 overflow-hidden rounded-2xl border border-white/10">
+          <img
+            src={entry.data.image}
+            alt={entry.data.imageAlt ?? entry.data.title}
+            loading="eager"
+            decoding="async"
+            class="aspect-[16/9] w-full object-cover"
+          />
+        </figure>
+      )
+    }
+
+    <div
+      class="prose prose-invert prose-lg mt-10 max-w-none prose-headings:font-display prose-headings:tracking-tight prose-a:text-ocean-300 hover:prose-a:text-ocean-200"
+    >
+      <Content />
+    </div>
+
+    {
+      entry.data.tags && entry.data.tags.length > 0 && (
+        <div class="mt-10 flex flex-wrap gap-2">
+          {entry.data.tags.map((tag) => (
+            <span class="inline-flex rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium text-white/70">
+              #{tag}
+            </span>
+          ))}
+        </div>
+      )
+    }
+  </article>
+</BaseLayout>

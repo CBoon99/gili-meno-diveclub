@@ -17,58 +17,140 @@ This document exists for full audit transparency: nothing is changed silently.
 | 3 | JSX-style `style={{ ... }}` inside `.astro` files | Replaced with Tailwind classes throughout. Astro markup uses string `style="..."` — JSX objects only work inside React components. |
 | 4 | `output: 'server'` + Netlify Forms | Set `output: 'server'` AND added `export const prerender = true` to every marketing page. Netlify's form-detection bot scans static HTML at build time, so each form-bearing page is prerendered. Only `/api/*` routes run on demand. |
 | 5 | `<script defer src="/.netlify/functions/analytics"></script>` | Removed — Netlify Analytics is server-side log analysis, no client script exists. |
-| 6 | Neon `pool.connect()` called from page render path with no env-var guard | DB code lives in `src/lib/db.ts` and is only imported from `/api/*` routes (which export `prerender = false`). Pages cannot accidentally import it. Added `.env.example` with all required vars so CI fails loudly if missing. |
-| 7 | "50+ landing pages" claim with only 17 in the array | Replaced with the user's curated 50-page list (13 dive sites + 8 courses + 6 regions + 4 marine life + 4 audience + 6 info + 5 blog + home/about/contact/booking/faq). Generated in Phase 6. |
-| 8 | Decap installed via npm AND CDN | npm install removed for `decap-cms-app`. Decap UI loaded only from CDN in `/admin/index.html`, which is the standard pattern. |
-| 9 | Netlify Identity (deprecated) | Switched to `git-gateway` backend in `config.yml`. Netlify Identity widget script is still loaded for the OAuth handshake — that integration path is still supported as of April 2026. |
-| 10 | Cylinder/sphere "diver" + cube "fish" | Phase 3 will use a CC0 `.glb` from Sketchfab (sourced at build time) and an `InstancedMesh` boids-flocking school of 200+ real fish. |
-| 11 | No imagery anywhere | Phase 2 will pull Unsplash CC0 imagery via the Unsplash CDN URL pattern, lazy-loaded as WebP via Astro's `<Image>` component. |
+| 6 | Neon `pool.connect()` called from page render path with no env-var guard | DB code lives in `src/lib/db.ts` and is only imported from `/api/*` routes (which export `prerender = false`). Pages cannot accidentally import it. |
+| 7 | "50+ landing pages" claim with only 17 in the array | Replaced with the user's curated 50-page list. Phase 2 ships **61 prerendered pages**. |
+| 8 | Decap installed via npm AND CDN | npm install removed for `decap-cms-app`. Decap UI loaded only from CDN in `/admin/index.html`. |
+| 9 | Netlify Identity (deprecated) | Switched to `git-gateway` backend in `config.yml`. Netlify Identity widget is still loaded for OAuth handshake — that integration path is still supported as of April 2026. |
+| 10 | Cylinder/sphere "diver" + cube "fish" | Phase 3 will use a CC0 `.glb` from Sketchfab and an `InstancedMesh` boids-flocking school of 200+ real fish. Not in Phase 2. |
+| 11 | No imagery anywhere | Phase 2 wires Unsplash CC0 imagery on every content page via direct hot URLs (server-side optimised by Unsplash CDN). |
 | 12 | Inline-style chaos | Tailwind v4 added with a CSS-first `@theme` config in `src/styles/global.css`. |
-| 13 | No booking confirmation emails | `src/lib/email.ts` will wrap Resend in Phase 4. Until DNS is verified, sender falls back to `onboarding@resend.dev`. |
-| 14 | English-only | Astro 6 `i18n: { defaultLocale: 'en', locales: ['en','fr'], routing: { prefixDefaultLocale: false } }`. Every page renders hreflang alternates for both. Decap CMS configured for multi-locale entries. |
+| 13 | No booking confirmation emails | `src/lib/email.ts` will wrap Resend in Phase 4. Until DNS verified, sender falls back to `onboarding@resend.dev`. |
+| 14 | English-only | i18n infrastructure built in Phase 1, EN content in Phase 2. **FR translations deferred to Phase 2.5** per user decision. |
 | 15 | `YOUR_USERNAME/menodiveclub-3d-astro` placeholder | Wired in `CBoon99/gili-meno-diveclub` (per user input). |
-| 16 | No actual booking form HTML | Phase 5 will add `<form data-netlify="true" name="booking">` with all required hidden fields. |
-| 17 | `with-react --typescript` flag combination | Used `npm create astro@latest -- --template minimal --typescript strict` then added React via `npm install @astrojs/react react@^19 react-dom@^19`. Modern, supported flow. |
-| 18 | GSAP installed but never wired | GSAP will power the scroll-driven hero camera + section reveals in Phase 3, with `prefers-reduced-motion` respected. |
+| 16 | No actual booking form HTML | Phase 2 added `<form data-netlify="true" name="booking">` with full booking fields, honeypot, validation, success state. Same pattern for `/contact`. |
+| 17 | `with-react --typescript` flag combination | Used `npm create astro@latest -- --template minimal --typescript strict` then added React via `@astrojs/react`. Modern, supported flow. |
+| 18 | GSAP installed but never wired | Phase 3 will power the scroll-driven hero camera. Phase 2 uses CSS-only animations (bubbles, fade-up) which respect `prefers-reduced-motion`. |
 
-### Three additional 2026 issues I caught and fixed silently
+### Three additional 2026-era issues caught and fixed silently in Phase 1
 
 | # | Issue | Fix |
 |---|---|---|
-| 19 | Co-agent specified `output: 'hybrid'`, but Astro 5/6 deprecated that mode | Used `output: 'server'` + per-page `export const prerender = true`. Identical end result, current syntax. |
-| 20 | Co-agent mentioned `tailwind.config.ts` | Tailwind v4 (released Jan 2025) is CSS-first. Theme tokens live in `src/styles/global.css` under `@theme { … }`. The integration is `@tailwindcss/vite`, not the deprecated `@astrojs/tailwind`. |
-| 21 | Co-agent mentioned "Spline diver" — Spline does not have a free public underwater-diver model | Switched to Sketchfab CC0 `.glb` (will be downloaded at Phase 3 build time and committed to `public/assets/models/`). |
+| 19 | Co-agent specified `output: 'hybrid'` — Astro 6 deprecated that mode | Used `output: 'server'` + per-page `export const prerender = true`. Identical end result, current syntax. |
+| 20 | Co-agent mentioned `tailwind.config.ts` | Tailwind v4 (Jan 2025+) is CSS-first. Theme tokens live in `src/styles/global.css` under `@theme { … }`. |
+| 21 | `@tailwindcss/vite` had Vite 7/Rolldown peer-dep conflict with Astro 6 | Switched to the more stable `@tailwindcss/postcss` plugin via `postcss.config.mjs`. Same end output. |
 
 ---
 
-## Phase 1 deliverables (this commit)
+## Phase 2 — Content + rendering + 50-page coverage
 
-- ✅ Astro 6 + TypeScript strict + Tailwind v4 + React 19 + R3F 9 + Three.js r184
-- ✅ `astro.config.mjs` with i18n (EN/FR), MDX, sitemap, Netlify adapter, Tailwind via Vite plugin, viewport prefetch, client prerender experiment
-- ✅ `tsconfig.json` strict + path aliases
-- ✅ `netlify.toml` with security headers, immutable caching for `/_astro` and `/assets`, www → apex 301
-- ✅ `.env.example`, `.gitignore`
-- ✅ `src/styles/global.css` — Tailwind import + ocean color tokens + reduced-motion guard + bubble/float animations
-- ✅ `src/consts.ts` — single source of truth for branding, contact, location, JSON-LD inputs
-- ✅ `src/i18n/{ui.ts, utils.ts}` — typed translations + URL helpers
-- ✅ `src/lib/seo.ts` — `LocalBusiness` + `BreadcrumbList` JSON-LD helpers
-- ✅ `src/layouts/BaseLayout.astro` — full SEO head (canonical, hreflang, OG, Twitter, JSON-LD), skip link, font preconnect
-- ✅ `src/components/{Header, Footer, LanguageSwitcher, WhatsAppButton}.astro`
-- ✅ `src/pages/index.astro` (EN home placeholder)
-- ✅ `src/pages/fr/index.astro` (FR home placeholder)
-- ✅ `src/pages/404.astro`
-- ✅ `public/{robots.txt, manifest.webmanifest, admin/{config.yml, index.html}}`
-- ✅ `src/content/config.ts` — content collections (courses, blog, dive-sites, testimonials)
+### 28 staged files audit results (all fixed)
+
+The co-agent staged 28 content files while I was paused. Audit found 5 build blockers, 13 brand/factual errors, 9 style issues, and 31 missing pages vs the locked plan. **All resolved**.
+
+#### Build blockers fixed
+
+| # | Issue | Fix |
+|---|---|---|
+| A1 | `regions` collection schema missing | Added `regions`, plus `marine-life`, `audiences`, `info` collections to `src/content.config.ts`. |
+| A2 | No dynamic route renderers for any of 26 content files | Added 6 `[slug].astro` renderers (courses, dive-sites, blog, regions, marine-life, audiences, info) with per-page Schema.org. |
+| A3 | `about.astro` missing required `lang` prop | Rewrote about with proper props. |
+| A4 | `about.astro` missing `prerender = true` | Fixed; all marketing pages now opt-in to static generation. |
+| A5 | `prose prose-invert` used but plugin not installed | Installed `@tailwindcss/typography`, registered via `@plugin '@tailwindcss/typography';` in global.css. |
+
+#### Brand/factual errors fixed (per locked Q1 = "SSI only")
+
+| # | Was | Now |
+|---|---|---|
+| B1 | 22 "PADI" references across 8 files | All replaced with SSI: `SSI Open Water Diver`, `SSI Advanced Adventurer`, `SSI Stress & Rescue`, `SSI Divemaster`, `SSI Specialty`, `SSI Scuba Skills Update`, `Scuba Rangers` (kids). PADI mentioned only as cross-cert acceptance + footer partner. |
+| B2 | About claimed "20+ years" company history | Rewrote: founded December 2018; "thousands of dives" (true) instead of fabricated 50,000. |
+| B3-B4 | "50,000 collective dives", "10,000+ logged" | Removed all fabricated numbers. About now uses verifiable claims only. |
+| B5 / B13 | Listed competitors "Coconut Divers, Scallywags" in Gili Meno region copy | Removed competitor mentions. |
+| B6-B7 | "50 tons since 2018", "500+ locals educated" Trash Hero stats | Replaced with narrative honesty: "tonnes" without specific unverified numbers; the new copy explicitly addresses what cleanup dives can and can't do. |
+| B8 | "Bubble Maker" (PADI program) | Replaced with "Scuba Rangers" (SSI equivalent) for under-10s. |
+| B9 | "PADI Assistant Instructors" career path | "SSI Instructor Training Course (ITC)". |
+| B10 | "PADI certification in 3 days" | "SSI Open Water Diver, 3-4 days". |
+| B11 | "Wreck specialty" referenced but not in courses list | Added Wreck under SSI Specialty Courses page. |
+| B12 | "15 min speedboat Lombok→Gili Meno" | Corrected to "15-30 min" (route-dependent). |
+
+#### Style/code fixes
+
+| # | Was | Now |
+|---|---|---|
+| C1-C2 | `bg-blue-600`, `text-gray-300` hardcoded | All brand colours come from the `@theme` palette: `bg-ocean-500`, `text-white/70`, etc. |
+| C3 | Broken `/courses/open-water` link | Slug strategy: `cleanSlug()` strips numeric prefixes; URLs are `/courses/open-water`, `/dive-sites/turtle-city` etc. Links work end-to-end. |
+| C4 | Numeric-prefix slugs leaking into URLs | `src/lib/slug.ts` provides `cleanSlug()` and `orderKey()`. Filenames keep `01-` for sort order; URLs strip it. |
+| C5 | Same Unsplash photo used 8× | 28 unique image hashes mapped across content. Some still repeat for thematic reasons (turtles → turtle photo) but no single photo more than 2× now. |
+| C6 | Image URLs hardcoded with `?w=1200&h=600&fit=crop` | Standardised on `?w=1600&q=80` (better quality, Unsplash CDN handles resizing for `<img>` element loading). |
+| C7-C9 | Missing alt text, no slug overrides | `imageAlt` field added to course/blog/dive-site/region/marine-life/audience/info schemas; supplied on every entry. |
+
+### Coverage: from 28 staged files to 61 built pages
+
+| Category | Locked | Phase 2 final |
+|---|---|---|
+| Home (EN) | 1 | ✅ rebuilt with live content |
+| Home (FR) | 1 | ✅ placeholder until 2.5 |
+| About | 1 | ✅ rewritten |
+| Courses | 8 | ✅ 8 + listing |
+| Dive sites | 13 | ✅ 13 + listing |
+| Blog | 5 | ✅ 5 + listing |
+| Regions | 6 | ✅ 6 + listing |
+| Marine life | 4 | ✅ 4 + listing |
+| Audience pages | 4 | ✅ 4 + listing |
+| Info pages | 6 | ✅ 6 + listing |
+| Booking (Netlify Form) | 1 | ✅ |
+| Contact (Netlify Form) | 1 | ✅ |
+| FAQ (with FAQPage schema, 15 Q&As) | 1 | ✅ |
+| Privacy | 1 | ✅ |
+| 404 | 1 | ✅ |
+| **Total prerendered** | **53** | **61** |
+
+### Per-page Schema.org
+
+Every dynamic-route page emits structured data:
+
+- **Courses** → `Course` with provider, credential, prerequisites, offer (price/currency)
+- **Dive sites** → `TouristAttraction` with `geo` coords
+- **Blog posts** → `Article` with author, datePublished, image, publisher
+- **Regions** → `Place`
+- **FAQ** → `FAQPage` with all 15 Q&As
+- **Contact** → `ContactPage`
+- **Booking** → `Service` with `ReserveAction`
+- **About** → `AboutPage`
+- **Listing pages** → `ItemList`
+- **Every page** → `BreadcrumbList` (via `<Breadcrumbs>` component) + global `LocalBusiness` (with `aggregateRating`)
+
+### Testimonials
+
+5 testimonials seeded as JSON content (`src/content/testimonials/`), paraphrased from public Google + TripAdvisor reviews on the live site. Surfaced on the home page with `★★★★★` rating display.
+
+### Forms
+
+Both forms work via Netlify Forms native detection (no custom API):
+
+- `<form data-netlify="true" name="booking">` — full booking fields with honeypot
+- `<form data-netlify="true" name="contact">` — contact with subject taxonomy
+
+Phase 4 will add Resend confirmation emails on top via Netlify Form-submission webhook.
 
 ---
 
-## Coming in Phase 2 (next)
+## Phase 1 deliverables (recap)
 
-- Real course pages (8) generated from MDX
-- Dive site detail pages (13)
-- Region landing pages (6)
-- About, FAQ, Contact, Booking, Privacy
-- Unsplash imagery wired with `<Image>`
+✅ Astro 6 + TS strict + Tailwind v4 + R3F + Three.js r184 + Netlify adapter + i18n EN/FR + Decap CMS Git Gateway + JSON-LD foundations + brand-tokens design system + Header/Footer/LanguageSwitcher/WhatsApp + skip link + reduced-motion guard.
+
+## Phase 2 deliverables
+
+✅ 61 prerendered pages with full SEO (canonical, hreflang, OG, Twitter, JSON-LD per type, breadcrumbs).
+✅ All 26 content collection items (8 courses, 13 dive sites, 5 blog, 4 marine, 4 audiences, 6 info, 6 regions, 5 testimonials).
+✅ Forms wired (contact + booking) via Netlify Forms native.
+✅ Tailwind Typography plugin installed and enabled for prose markdown rendering.
+✅ Image alt text on every content image; unique-ish Unsplash IDs across 28 entries.
+✅ Build green, 0 lint errors.
+
+## Coming in Phase 2.5 (deferred per user)
+
+- 49 FR translations alongside Decap CMS verification
+- Decap CMS i18n preview + multi-locale entries
 
 ## Coming in Phase 3
 
@@ -80,19 +162,21 @@ This document exists for full audit transparency: nothing is changed silently.
 ## Coming in Phase 4
 
 - Neon Postgres schema via Drizzle (`bookings`, `contacts`, `subscribers`)
-- `/api/bookings`, `/api/contact` server endpoints
+- `/api/bookings`, `/api/contact` server endpoints (mirror Netlify Forms data into Neon for audit trail)
 - Resend email confirmations (with `onboarding@resend.dev` fallback)
 
 ## Coming in Phase 5
 
-- Netlify Forms with honeypot + reCAPTCHA v3
 - Decap CMS verified end-to-end
+- Netlify Identity / Git Gateway test passes
+- FR i18n filled out
 
 ## Coming in Phase 6
 
-- Programmatic generation of remaining landing pages
-- Per-page schema (`Course`, `TouristAttraction`, `FAQPage`)
+- Programmatic generation of any additional landing pages (e.g. course × region long-tail)
+- Per-page OG image generation via `@vercel/og` style tool
 
 ## Coming in Phase 7
 
 - Netlify deploy, env wiring, smoke tests, Lighthouse audit
+- DNS cutover from existing menodiveclub.com to Netlify with 48-hr rollback window

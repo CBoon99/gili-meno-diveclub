@@ -1,0 +1,117 @@
+---
+export const prerender = true
+
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import Breadcrumbs from '@/components/Breadcrumbs.astro'
+
+const lang = 'en' as const
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'About', url: '/about' },
+]
+
+const aboutJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  name: 'About Meno Dive Club',
+  url: 'https://menodiveclub.com/about',
+  description:
+    'Family-operated SSI dive school on Gili Meno, Indonesia. Established December 2018.',
+}
+---
+
+<BaseLayout
+  lang={lang}
+  title="About Us"
+  description="A small, family-operated SSI dive school on Gili Meno. Founded December 2018, focused on small groups, careful instruction, and the reefs around our island."
+  jsonLd={[aboutJsonLd]}
+>
+  <article class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+    <Breadcrumbs items={breadcrumbs} />
+
+    <header class="mt-6">
+      <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Our story</p>
+      <h1 class="mt-3 font-display text-4xl font-bold leading-tight tracking-tight md:text-6xl">
+        A family-run dive school on Gili Meno
+      </h1>
+    </header>
+
+    <div class="prose prose-invert prose-lg mt-10 max-w-none prose-headings:font-display prose-headings:tracking-tight prose-a:text-ocean-300 hover:prose-a:text-ocean-200">
+      <p class="lead text-xl text-white/80">
+        Meno Dive Club was established in December 2018 as a family-operated SSI dive
+        centre on Gili Meno. We're not a big shop and we've never tried to be one — small
+        classes, attentive instructors, and an obsession with the reefs around our own
+        island are what we offer.
+      </p>
+
+      <h2>What we do</h2>
+      <p>
+        We teach the SSI ladder of recreational diving, from a first
+        <a href="/courses/open-water">Open Water Diver</a> course up through
+        <a href="/courses/divemaster">Divemaster</a>. We run guided
+        <a href="/dive-sites">fun dives</a> on the thirteen named sites around Gili Meno,
+        family <a href="/courses/family-package">Dive & Stay packages</a>, and a
+        conservation-focused <a href="/courses/eco-scuba">Eco-Scuba</a> programme tied
+        into the work of Trash Hero on the island.
+      </p>
+
+      <h2>Why divers choose us</h2>
+      <ul>
+        <li>
+          <strong>Small group ratios.</strong> A maximum of four students per instructor
+          on every course. On most days you'll have one or two.
+        </li>
+        <li>
+          <strong>Real local knowledge.</strong> Our team have logged thousands of dives
+          on the same thirteen sites — every current pattern, every seasonal change,
+          every cleaning station.
+        </li>
+        <li>
+          <strong>Conservation-aware diving.</strong> We participate in monthly cleanup
+          dives with Trash Hero Gili Meno and bake reef-friendly buoyancy and
+          fish-watching technique into every course we teach.
+        </li>
+        <li>
+          <strong>Honest pricing.</strong> What you see on the
+          <a href="/courses">courses page</a> is what you pay. No hidden fees for boat
+          transfers, kit, or certifications.
+        </li>
+      </ul>
+
+      <h2>Our partners</h2>
+      <p>
+        We are an SSI Dive Center; cross-certifications from PADI and other recognised
+        agencies are accepted on all our courses. We work with
+        <a href="https://trashhero.org/" target="_blank" rel="noopener noreferrer"
+          >Trash Hero</a
+        > on Gili Meno cleanup dives, and partner with several local accommodations on
+        our <a href="/dive-stay">Dive &amp; Stay packages</a>.
+      </p>
+
+      <h2>Come dive with us</h2>
+      <p>
+        Drop us a message via the <a href="/contact">contact page</a>, send a
+        <a
+          href={`https://wa.me/${'6287864074156'}?text=${encodeURIComponent('Hi Meno Dive Club!')}`}
+          target="_blank"
+          rel="noopener noreferrer">WhatsApp</a
+        >, or just walk into the shop on the harbour-side street.
+      </p>
+    </div>
+
+    <div class="mt-12 flex flex-wrap gap-3">
+      <a
+        href="/booking"
+        class="rounded-full bg-ocean-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-ocean-500/30 transition hover:scale-[1.03] hover:bg-ocean-400"
+      >
+        Book a course
+      </a>
+      <a
+        href="/courses"
+        class="rounded-full border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-white/90 transition hover:bg-white/10"
+      >
+        Explore courses
+      </a>
+    </div>
+  </article>
+</BaseLayout>

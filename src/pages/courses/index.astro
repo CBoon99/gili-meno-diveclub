@@ -1,0 +1,103 @@
+---
+export const prerender = true
+
+import { getCollection } from 'astro:content'
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import Breadcrumbs from '@/components/Breadcrumbs.astro'
+import { cleanSlug, orderKey } from '@/lib/slug'
+
+const lang = 'en' as const
+const courses = (await getCollection('courses')).sort((a, b) => orderKey(a.id) - orderKey(b.id))
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Courses', url: '/courses' },
+]
+
+const itemListJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'SSI dive courses at Meno Dive Club',
+  itemListElement: courses.map((c, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: c.data.title,
+    url: `https://menodiveclub.com/courses/${cleanSlug(c.id)}`,
+  })),
+}
+---
+
+<BaseLayout
+  lang={lang}
+  title="SSI Diving Courses on Gili Meno"
+  description="From your first breath underwater to professional Divemaster certification. Eight SSI courses run small and personal at Meno Dive Club, Gili Meno."
+  jsonLd={[itemListJsonLd]}
+>
+  <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+    <Breadcrumbs items={breadcrumbs} />
+
+    <header class="mt-6 max-w-3xl">
+      <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">SSI courses</p>
+      <h1 class="mt-3 font-display text-4xl font-bold leading-tight tracking-tight md:text-6xl">
+        Eight ways to dive deeper.
+      </h1>
+      <p class="mt-6 text-lg text-white/80">
+        Every course runs small (max 4:1), with SSI-certified instructors who know
+        these reefs better than anyone. Pick one and book — or message us if you're
+        not sure which is right for you.
+      </p>
+    </header>
+
+    <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        courses.map((c) => {
+          const slug = cleanSlug(c.id)
+          return (
+            <article class="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur transition hover:-translate-y-1 hover:border-ocean-400/40 hover:bg-white/[0.06]">
+              {c.data.image && (
+                <a
+                  href={`/courses/${slug}`}
+                  class="block aspect-[16/10] overflow-hidden"
+                  aria-label={`Read more about ${c.data.title}`}
+                >
+                  <img
+                    src={c.data.image}
+                    alt={c.data.imageAlt ?? c.data.title}
+                    loading="lazy"
+                    decoding="async"
+                    class="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                  />
+                </a>
+              )}
+              <div class="p-6">
+                <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">
+                  {c.data.type}
+                  {c.data.duration && ` · ${c.data.duration} ${c.data.duration === 1 ? 'day' : 'days'}`}
+                </p>
+                <h2 class="mt-2 font-display text-2xl font-semibold text-white">
+                  <a href={`/courses/${slug}`} class="link-underline">
+                    {c.data.title}
+                  </a>
+                </h2>
+                <p class="mt-3 text-sm leading-relaxed text-white/70">{c.data.summary}</p>
+                <div class="mt-5 flex items-center justify-between">
+                  {c.data.price && (
+                    <span class="text-sm font-semibold text-white">
+                      IDR {c.data.price.toLocaleString('en-US')}
+                    </span>
+                  )}
+                  <a
+                    href={`/courses/${slug}`}
+                    class="inline-flex items-center gap-1 text-sm font-semibold text-ocean-300 group-hover:text-ocean-200"
+                  >
+                    Learn more
+                    <span aria-hidden="true" class="transition-transform group-hover:translate-x-1">→</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+          )
+        })
+      }
+    </div>
+  </section>
+</BaseLayout>

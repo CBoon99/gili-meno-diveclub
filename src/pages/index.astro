@@ -1,29 +1,43 @@
 ---
 export const prerender = true
 
-import BaseLayout from '../layouts/BaseLayout.astro'
-import { useTranslations } from '../i18n/utils'
+import { getCollection } from 'astro:content'
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import { useTranslations } from '@/i18n/utils'
+import { cleanSlug, orderKey } from '@/lib/slug'
 
 const lang = 'en' as const
 const t = useTranslations(lang)
+
+const allCourses = (await getCollection('courses')).sort(
+  (a, b) => orderKey(a.id) - orderKey(b.id),
+)
+const featuredCourses = ['01-open-water', '02-advanced-open-water', '06-eco-scuba']
+  .map((id) => allCourses.find((c) => c.id === id))
+  .filter(Boolean) as typeof allCourses
+
+const allSites = await getCollection('dive-sites')
+const featuredSites = ['01-turtle-city', '03-meno-wall', '09-bounty-wreck', '12-shark-point']
+  .map((id) => allSites.find((s) => s.id === id))
+  .filter(Boolean) as typeof allSites
+
+const testimonials = await getCollection('testimonials')
+
+const recentBlog = (await getCollection('blog'))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3)
 ---
 
 <BaseLayout
   lang={lang}
   title="Meno Dive Club — SSI Dive Centre, Gili Meno"
-  description="Dive Gili Meno with a small, family-run SSI school. Beginner courses to advanced certifications, world-class reefs, and turtles on every dive."
+  description="Family-run SSI dive school on Gili Meno, Indonesia. Eight courses, thirteen dive sites, sea turtles on every dive, max 4:1 ratios, conservation-aware diving."
 >
-  <!-- Hero (3D scene placeholder — wired up in Phase 3) -->
+  <!-- Hero -->
   <section
-    class="relative isolate flex min-h-[100svh] items-end overflow-hidden bg-gradient-to-b from-ocean-900 via-ocean-800 to-ocean-700 pb-20"
+    class="relative isolate flex min-h-[100svh] items-end overflow-hidden bg-gradient-to-b from-ocean-900 via-ocean-800 to-ocean-700 pb-24"
   >
-    <div
-      aria-hidden="true"
-      class="absolute inset-0 -z-10 opacity-50"
-      data-hero-canvas-mount
-    >
-      <!-- React Three Fiber hero scene mounts here in Phase 3 -->
-    </div>
+    <div aria-hidden="true" class="absolute inset-0 -z-10 opacity-50" data-hero-canvas-mount></div>
     <div
       aria-hidden="true"
       class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_30%_30%,rgba(10,173,219,0.25),transparent_55%),radial-gradient(circle_at_70%_70%,rgba(212,165,116,0.15),transparent_60%)]"
@@ -57,7 +71,7 @@ const t = useTranslations(lang)
       </div>
     </div>
 
-    <!-- Bubble accents (CSS-only, no JS, respects reduced-motion) -->
+    <!-- Bubble accents -->
     <div aria-hidden="true" class="pointer-events-none absolute inset-0 -z-10">
       <span class="absolute left-[12%] bottom-0 block h-3 w-3 rounded-full bg-white/40 blur-[1px]" style="animation: var(--animate-bubble); animation-delay: 0s;"></span>
       <span class="absolute left-[28%] bottom-0 block h-2 w-2 rounded-full bg-white/30 blur-[1px]" style="animation: var(--animate-bubble); animation-delay: 1.2s;"></span>
@@ -67,36 +81,250 @@ const t = useTranslations(lang)
     </div>
   </section>
 
-  <!-- About teaser -->
-  <section class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+  <!-- About -->
+  <section class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
     <div class="grid gap-10 md:grid-cols-2 md:items-center">
       <div>
         <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">{t('nav.about')}</p>
         <h2 class="mt-3 font-display text-3xl font-bold leading-tight tracking-tight md:text-5xl">
           {t('home.aboutHeading')}
         </h2>
+        <a
+          href="/about"
+          class="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-ocean-300 hover:text-ocean-200"
+        >
+          Our story
+          <span aria-hidden="true">→</span>
+        </a>
       </div>
       <p class="text-lg leading-relaxed text-white/80">{t('home.aboutBody')}</p>
     </div>
   </section>
 
-  <!-- Phase 1 placeholder grid — replaced with real content in Phases 2-6 -->
-  <section class="mx-auto max-w-7xl px-4 pb-32 sm:px-6 lg:px-8">
-    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+  <!-- Featured courses -->
+  <section class="border-t border-white/5 bg-ocean-900/40">
+    <div class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Courses</p>
+          <h2 class="mt-3 font-display text-3xl font-bold tracking-tight md:text-5xl">
+            Start where you are.
+          </h2>
+        </div>
+        <a
+          href="/courses"
+          class="inline-flex items-center gap-1 text-sm font-semibold text-ocean-300 hover:text-ocean-200"
+        >
+          All eight courses
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          featuredCourses.map((c) => {
+            const slug = cleanSlug(c.id)
+            return (
+              <article class="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur transition hover:-translate-y-1 hover:border-ocean-400/40 hover:bg-white/[0.06]">
+                {c.data.image && (
+                  <a href={`/courses/${slug}`} class="block aspect-[16/10] overflow-hidden">
+                    <img
+                      src={c.data.image}
+                      alt={c.data.imageAlt ?? c.data.title}
+                      loading="lazy"
+                      decoding="async"
+                      class="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                    />
+                  </a>
+                )}
+                <div class="p-6">
+                  <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">
+                    {c.data.type} · {c.data.duration} {c.data.duration === 1 ? 'day' : 'days'}
+                  </p>
+                  <h3 class="mt-2 font-display text-2xl font-semibold text-white">
+                    <a href={`/courses/${slug}`} class="link-underline">{c.data.title}</a>
+                  </h3>
+                  <p class="mt-3 text-sm leading-relaxed text-white/70">{c.data.summary}</p>
+                </div>
+              </article>
+            )
+          })
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured dive sites -->
+  <section class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Dive sites</p>
+        <h2 class="mt-3 font-display text-3xl font-bold tracking-tight md:text-5xl">
+          Thirteen sites. One small island.
+        </h2>
+      </div>
+      <a
+        href="/dive-sites"
+        class="inline-flex items-center gap-1 text-sm font-semibold text-ocean-300 hover:text-ocean-200"
+      >
+        All 13
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
+
+    <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
       {
-        ['Beginner Courses', 'Fun Dives', 'SSI Certifications', 'Eco-Scuba', 'Dive & Stay', 'Refresher'].map(
-          (course) => (
-            <article class="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur transition hover:-translate-y-1 hover:border-ocean-400/40 hover:bg-white/[0.06]">
-              <h3 class="font-display text-2xl font-semibold text-white">{course}</h3>
-              <p class="mt-2 text-sm text-white/70">Real content arrives in Phase 2.</p>
-              <span class="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-ocean-300">
-                Learn more
-                <span aria-hidden="true" class="transition-transform group-hover:translate-x-1">→</span>
-              </span>
-            </article>
-          ),
-        )
+        featuredSites.map((s) => {
+          const slug = cleanSlug(s.id)
+          return (
+            <a
+              href={`/dive-sites/${slug}`}
+              class="group relative block overflow-hidden rounded-2xl border border-white/10"
+            >
+              {s.data.image && (
+                <img
+                  src={s.data.image}
+                  alt={s.data.imageAlt ?? s.data.name}
+                  loading="lazy"
+                  decoding="async"
+                  class="aspect-[4/5] w-full object-cover transition duration-700 group-hover:scale-105"
+                />
+              )}
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-ocean-900/95 via-ocean-900/30 to-transparent"
+                aria-hidden="true"
+              ></div>
+              <div class="absolute inset-x-0 bottom-0 p-5">
+                <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">
+                  {s.data.difficulty} · {s.data.maxDepth} m
+                </p>
+                <h3 class="mt-1 font-display text-xl font-semibold text-white">
+                  {s.data.name}
+                </h3>
+              </div>
+            </a>
+          )
+        })
       }
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="border-t border-white/5 bg-ocean-900/40">
+    <div class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Reviews</p>
+          <h2 class="mt-3 font-display text-3xl font-bold tracking-tight md:text-5xl">
+            What our divers say.
+          </h2>
+        </div>
+        <span class="text-sm text-white/60">
+          ★ 4.9 on Google · ★ 5.0 on TripAdvisor
+        </span>
+      </div>
+
+      <div class="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {
+          testimonials.map((tst) => (
+            <blockquote class="rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur">
+              <div class="flex items-center gap-1 text-amber-300">
+                {Array.from({ length: tst.data.rating }).map(() => (
+                  <span aria-hidden="true">★</span>
+                ))}
+                <span class="sr-only">{tst.data.rating} out of 5</span>
+              </div>
+              <p class="mt-4 text-base leading-relaxed text-white/85">"{tst.data.review}"</p>
+              <footer class="mt-5 text-xs uppercase tracking-widest text-white/50">
+                {tst.data.name} · {tst.data.source}
+              </footer>
+            </blockquote>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Blog teaser -->
+  {
+    recentBlog.length > 0 && (
+      <section class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+        <div class="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Bubble Diaries</p>
+            <h2 class="mt-3 font-display text-3xl font-bold tracking-tight md:text-5xl">
+              Stories from the reef.
+            </h2>
+          </div>
+          <a
+            href="/blog"
+            class="inline-flex items-center gap-1 text-sm font-semibold text-ocean-300 hover:text-ocean-200"
+          >
+            All posts
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+
+        <div class="mt-12 grid gap-10 md:grid-cols-3">
+          {recentBlog.map((p) => {
+            const slug = cleanSlug(p.id)
+            return (
+              <article class="group">
+                {p.data.image && (
+                  <a
+                    href={`/blog/${slug}`}
+                    class="block aspect-[16/10] overflow-hidden rounded-2xl border border-white/10"
+                  >
+                    <img
+                      src={p.data.image}
+                      alt={p.data.imageAlt ?? p.data.title}
+                      loading="lazy"
+                      decoding="async"
+                      class="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                    />
+                  </a>
+                )}
+                <p class="mt-4 text-xs font-medium uppercase tracking-widest text-white/50">
+                  <time datetime={p.data.date.toISOString()}>
+                    {p.data.date.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' })}
+                  </time>
+                </p>
+                <h3 class="mt-2 font-display text-xl font-semibold text-white">
+                  <a href={`/blog/${slug}`} class="link-underline">{p.data.title}</a>
+                </h3>
+                <p class="mt-2 text-sm leading-relaxed text-white/70">{p.data.summary}</p>
+              </article>
+            )
+          })}
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Final CTA -->
+  <section class="border-t border-white/5">
+    <div class="mx-auto max-w-7xl px-4 py-24 text-center sm:px-6 lg:px-8">
+      <h2 class="font-display text-3xl font-bold tracking-tight md:text-5xl">
+        Come dive with us.
+      </h2>
+      <p class="mx-auto mt-4 max-w-xl text-lg text-white/80">
+        Drop us a message, send a WhatsApp, or just walk into the shop.
+        We'll work out a plan that suits the trip you actually want.
+      </p>
+      <div class="mt-10 flex flex-wrap justify-center gap-4">
+        <a
+          href="/booking"
+          class="rounded-full bg-ocean-500 px-6 py-3 text-sm font-semibold text-white shadow-xl shadow-ocean-500/30 transition hover:scale-[1.03] hover:bg-ocean-400"
+        >
+          Book a dive
+        </a>
+        <a
+          href="/contact"
+          class="rounded-full border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-white/90 backdrop-blur transition hover:bg-white/10"
+        >
+          Get in touch
+        </a>
+      </div>
     </div>
   </section>
 </BaseLayout>

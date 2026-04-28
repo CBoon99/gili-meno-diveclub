@@ -10,7 +10,12 @@ const courses = defineCollection({
     price: z.number().optional(),
     duration: z.number().optional(),
     image: z.string().optional(),
+    imageAlt: z.string().optional(),
     summary: z.string(),
+    /** SSI cert awarded on completion (e.g. "SSI Open Water Diver"). */
+    credential: z.string().optional(),
+    /** Plain-text prerequisites (e.g. "Age 10+, basic swimming"). */
+    prerequisites: z.array(z.string()).optional(),
     seo: z
       .object({
         title: z.string().optional(),
@@ -27,6 +32,7 @@ const blog = defineCollection({
     author: z.string(),
     date: z.coerce.date(),
     image: z.string().optional(),
+    imageAlt: z.string().optional(),
     summary: z.string(),
     tags: z.array(z.string()).optional(),
   }),
@@ -42,6 +48,60 @@ const diveSites = defineCollection({
     lat: z.number(),
     lng: z.number(),
     image: z.string().optional(),
+    imageAlt: z.string().optional(),
+  }),
+})
+
+const regions = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/regions' }),
+  schema: z.object({
+    title: z.string(),
+    slug: z.string().optional(),
+    location: z.string().optional(),
+    description: z.string().optional(),
+    image: z.string().optional(),
+    imageAlt: z.string().optional(),
+    seo: z
+      .object({
+        title: z.string().optional(),
+        description: z.string().optional(),
+      })
+      .optional(),
+  }),
+})
+
+const marineLife = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/marine-life' }),
+  schema: z.object({
+    title: z.string(),
+    slug: z.string().optional(),
+    summary: z.string(),
+    image: z.string().optional(),
+    imageAlt: z.string().optional(),
+    species: z.array(z.string()).optional(),
+    bestSites: z.array(z.string()).optional(),
+  }),
+})
+
+const audiences = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/audiences' }),
+  schema: z.object({
+    title: z.string(),
+    slug: z.string().optional(),
+    summary: z.string(),
+    image: z.string().optional(),
+    imageAlt: z.string().optional(),
+  }),
+})
+
+const info = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/info' }),
+  schema: z.object({
+    title: z.string(),
+    slug: z.string().optional(),
+    summary: z.string(),
+    image: z.string().optional(),
+    imageAlt: z.string().optional(),
   }),
 })
 
@@ -56,4 +116,13 @@ const testimonials = defineCollection({
   }),
 })
 
-export const collections = { courses, blog, 'dive-sites': diveSites, testimonials }
+export const collections = {
+  courses,
+  blog,
+  'dive-sites': diveSites,
+  regions,
+  'marine-life': marineLife,
+  audiences,
+  info,
+  testimonials,
+}

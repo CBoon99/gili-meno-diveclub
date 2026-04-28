@@ -1,0 +1,131 @@
+---
+export const prerender = true
+
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import Breadcrumbs from '@/components/Breadcrumbs.astro'
+
+const lang = 'en' as const
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'FAQ', url: '/faq' },
+]
+
+const faqs = [
+  {
+    q: "Do I need to be able to swim?",
+    a: "Yes — you need to be comfortable in water and able to swim 200 m unaided (any stroke) and tread water for 10 minutes. You don't need to be athletic; a relaxed breast-stroke is fine.",
+  },
+  {
+    q: "What's the minimum age?",
+    a: "Eight years old for our Scuba Rangers programme (pool only). Ten for Junior Open Water Diver. Fifteen for full Open Water Diver. Eighteen for Divemaster.",
+  },
+  {
+    q: "Are there age or health restrictions?",
+    a: "Most healthy people can dive. We require a medical declaration form for every diver and a doctor's sign-off for some pre-existing conditions (asthma, diabetes, heart conditions, recent surgery). Send us your concerns before booking and we'll advise honestly.",
+  },
+  {
+    q: "How long does it take to learn to dive?",
+    a: "An SSI Open Water Diver course is three to four days. Online theory before you arrive saves a day in some cases. We never rush — if you need an extra half-day to feel ready, you take it at no extra charge.",
+  },
+  {
+    q: "What's the visibility like?",
+    a: "Visibility around Gili Meno is typically 12-25 m. Best in the dry season (May-October) and after extended dry periods. Lower (8-15 m) in the wet season.",
+  },
+  {
+    q: "How deep will I dive?",
+    a: "On an Open Water course, no deeper than 18 m. Most certification dives are 8-12 m. Advanced Adventurer takes you to 30 m, Deep specialty to 40 m. Recreational maximum is 40 m.",
+  },
+  {
+    q: "What equipment is included?",
+    a: "Everything: tank, BCD, regulator, wetsuit, mask, fins, weights, computer. Personal items only — bring swimwear, towel, sunscreen.",
+  },
+  {
+    q: "Is there a hyperbaric chamber nearby?",
+    a: "Yes — Mataram on Lombok mainland. About one hour from us by speedboat. We have radio contact with the boat at all times and DAN Indonesia partnership for evacuation support.",
+  },
+  {
+    q: "Do I need travel insurance?",
+    a: "Yes — non-negotiable. It must cover scuba diving (most travel insurance does, but check the fine print). DAN dive accident insurance is the gold standard.",
+  },
+  {
+    q: "What happens if the weather is bad?",
+    a: "We have alternative shallow sites for marginal conditions. If we genuinely can't dive safely on a given day, we extend your course at no extra cost or refund any unused dives.",
+  },
+  {
+    q: "Can I share equipment with my partner?",
+    a: "No — every diver needs their own kit. We can size our kit for partners with very different body shapes and sizes; ask if you're unsure.",
+  },
+  {
+    q: "What languages do you teach in?",
+    a: "English and French primarily. Bahasa Indonesia and German part-time depending on staff schedule. Tell us your preference at booking and we'll match where possible.",
+  },
+  {
+    q: "How do I pay?",
+    a: "Cash in IDR (preferred — small discount), bank transfer in IDR or USD, or card with 3% surcharge. Deposits are 30% of the course price, refundable up to 14 days before.",
+  },
+  {
+    q: "Can I cancel?",
+    a: "More than 14 days before: full refund of any deposit. 7-14 days: 50%. Within 7 days: deposit retained, but we always reschedule rather than charge for cancellations caused by illness, flight cancellations, or weather.",
+  },
+  {
+    q: "Do you offer Discover Scuba experiences?",
+    a: "Yes — a single pool session and one optional ocean dive, no certification. Useful if you want to find out whether you enjoy it before committing to a full course. IDR 1,200,000.",
+  },
+]
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+}
+---
+
+<BaseLayout
+  lang={lang}
+  title="Frequently Asked Questions"
+  description="Common questions about diving with Meno Dive Club: age limits, swim ability, costs, weather, equipment, safety, payments, cancellation."
+  jsonLd={[faqJsonLd]}
+>
+  <section class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+    <Breadcrumbs items={breadcrumbs} />
+
+    <header class="mt-6">
+      <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">FAQ</p>
+      <h1 class="mt-3 font-display text-4xl font-bold leading-tight tracking-tight md:text-6xl">
+        Common questions, honestly answered.
+      </h1>
+    </header>
+
+    <dl class="mt-14 divide-y divide-white/10">
+      {
+        faqs.map((f) => (
+          <details class="group py-5 [&_svg]:open:rotate-45">
+            <summary class="flex cursor-pointer list-none items-start justify-between gap-4 text-base font-semibold text-white">
+              <span>{f.q}</span>
+              <svg
+                class="mt-1 h-5 w-5 shrink-0 text-ocean-300 transition-transform"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path d="M10 4.5a.75.75 0 01.75.75v3.5h3.5a.75.75 0 010 1.5h-3.5v3.5a.75.75 0 01-1.5 0v-3.5h-3.5a.75.75 0 010-1.5h3.5v-3.5A.75.75 0 0110 4.5z" />
+              </svg>
+            </summary>
+            <dd class="mt-3 text-base leading-relaxed text-white/75">{f.a}</dd>
+          </details>
+        ))
+      }
+    </dl>
+
+    <div class="mt-12 rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+      <p class="text-sm text-white/70">
+        Question not here? <a href="/contact" class="link-underline text-ocean-300">Send us a message</a>
+        — we usually reply within a day.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

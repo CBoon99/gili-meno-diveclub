@@ -1,0 +1,150 @@
+---
+export const prerender = true
+
+import { getCollection, render } from 'astro:content'
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import Breadcrumbs from '@/components/Breadcrumbs.astro'
+import { cleanSlug } from '@/lib/slug'
+
+export async function getStaticPaths() {
+  const courses = await getCollection('courses')
+  return courses.map((entry) => ({
+    params: { slug: cleanSlug(entry.id) },
+    props: { entry },
+  }))
+}
+
+const { entry } = Astro.props
+const { Content } = await render(entry)
+const lang = 'en' as const
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Courses', url: '/courses' },
+  { name: entry.data.title, url: `/courses/${cleanSlug(entry.id)}` },
+]
+
+const courseJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Course',
+  name: entry.data.title,
+  description: entry.data.summary,
+  provider: {
+    '@type': 'Organization',
+    name: 'Meno Dive Club',
+    url: 'https://menodiveclub.com',
+    sameAs: 'https://menodiveclub.com',
+  },
+  educationalCredentialAwarded: entry.data.credential,
+  coursePrerequisites: entry.data.prerequisites?.join('; '),
+  offers: entry.data.price
+    ? {
+        '@type': 'Offer',
+        price: entry.data.price,
+        priceCurrency: 'IDR',
+        availability: 'https://schema.org/InStock',
+        url: `https://menodiveclub.com/courses/${cleanSlug(entry.id)}`,
+      }
+    : undefined,
+  hasCourseInstance: {
+    '@type': 'CourseInstance',
+    courseMode: 'In-person',
+    location: {
+      '@type': 'Place',
+      name: 'Gili Meno, Indonesia',
+      address: 'Gili Meno, North Lombok, West Nusa Tenggara, Indonesia',
+    },
+    courseWorkload: entry.data.duration ? `P${entry.data.duration}D` : undefined,
+  },
+}
+---
+
+<BaseLayout
+  lang={lang}
+  title={entry.data.seo?.title ?? entry.data.title}
+  description={entry.data.seo?.description ?? entry.data.summary}
+  image={entry.data.image}
+  type="article"
+  jsonLd={[courseJsonLd]}
+>
+  <article class="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
+    <Breadcrumbs items={breadcrumbs} />
+
+    <header class="mt-6">
+      <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">
+        {entry.data.type}
+        {entry.data.duration && ` · ${entry.data.duration} ${entry.data.duration === 1 ? 'day' : 'days'}`}
+      </p>
+      <h1 class="mt-3 font-display text-4xl font-bold leading-tight tracking-tight md:text-6xl">
+        {entry.data.title}
+      </h1>
+      <p class="mt-4 text-lg text-white/80">{entry.data.summary}</p>
+    </header>
+
+    {
+      entry.data.image && (
+        <figure class="mt-10 overflow-hidden rounded-2xl border border-white/10">
+          <img
+            src={entry.data.image}
+            alt={entry.data.imageAlt ?? entry.data.title}
+            loading="eager"
+            decoding="async"
+            class="aspect-[16/9] w-full object-cover"
+          />
+        </figure>
+      )
+    }
+
+    <div
+      class="prose prose-invert prose-lg mt-10 max-w-none prose-headings:font-display prose-headings:tracking-tight prose-a:text-ocean-300 hover:prose-a:text-ocean-200"
+    >
+      <Content />
+    </div>
+
+    <aside class="mt-12 grid gap-6 rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur sm:grid-cols-3">
+      {
+        entry.data.credential && (
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Cert</p>
+            <p class="mt-1 text-base font-semibold text-white">{entry.data.credential}</p>
+          </div>
+        )
+      }
+      {
+        entry.data.duration && (
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Duration</p>
+            <p class="mt-1 text-base font-semibold text-white">
+              {entry.data.duration} {entry.data.duration === 1 ? 'day' : 'days'}
+            </p>
+          </div>
+        )
+      }
+      {
+        entry.data.price && (
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Price</p>
+            <p class="mt-1 text-base font-semibold text-white">
+              IDR {entry.data.price.toLocaleString('en-US')}
+            </p>
+          </div>
+        )
+      }
+    </aside>
+
+    <div class="mt-10 flex flex-wrap gap-3">
+      <a
+        href="/booking"
+        class="rounded-full bg-ocean-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-ocean-500/30 transition hover:scale-[1.03] hover:bg-ocean-400"
+      >
+        Book this course
+      </a>
+      <a
+        href="/contact"
+        class="rounded-full border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-white/90 transition hover:bg-white/10"
+      >
+        Ask a question
+      </a>
+    </div>
+  </article>
+</BaseLayout>

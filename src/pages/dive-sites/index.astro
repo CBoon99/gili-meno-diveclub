@@ -1,0 +1,102 @@
+---
+export const prerender = true
+
+import { getCollection } from 'astro:content'
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import Breadcrumbs from '@/components/Breadcrumbs.astro'
+import { cleanSlug, orderKey } from '@/lib/slug'
+
+const lang = 'en' as const
+const sites = (await getCollection('dive-sites')).sort((a, b) => orderKey(a.id) - orderKey(b.id))
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Dive sites', url: '/dive-sites' },
+]
+
+const itemListJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Dive sites around Gili Meno',
+  itemListElement: sites.map((s, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: s.data.name,
+    url: `https://menodiveclub.com/dive-sites/${cleanSlug(s.id)}`,
+  })),
+}
+
+function difficultyBadge(d: string) {
+  if (d === 'BEGINNER') return 'bg-emerald-500/20 text-emerald-200'
+  if (d === 'INTERMEDIATE') return 'bg-amber-500/20 text-amber-200'
+  return 'bg-rose-500/20 text-rose-200'
+}
+---
+
+<BaseLayout
+  lang={lang}
+  title="Gili Meno Dive Sites — All 13"
+  description="Every named dive site around Gili Meno: Turtle City, Meno Wall, Hans Reef, Bounty Wreck, Bio Rock, Shark Point, and more. Depths, difficulty, marine life."
+  jsonLd={[itemListJsonLd]}
+>
+  <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+    <Breadcrumbs items={breadcrumbs} />
+
+    <header class="mt-6 max-w-3xl">
+      <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Dive sites</p>
+      <h1 class="mt-3 font-display text-4xl font-bold leading-tight tracking-tight md:text-6xl">
+        Thirteen sites. One small island.
+      </h1>
+      <p class="mt-6 text-lg text-white/80">
+        Every named site around Gili Meno is within a fifteen-minute boat ride. Below
+        is the full list with depths, difficulty, and what you're most likely to see.
+      </p>
+    </header>
+
+    <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        sites.map((s) => {
+          const slug = cleanSlug(s.id)
+          return (
+            <article class="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur transition hover:-translate-y-1 hover:border-ocean-400/40 hover:bg-white/[0.06]">
+              {s.data.image && (
+                <a
+                  href={`/dive-sites/${slug}`}
+                  class="block aspect-[16/10] overflow-hidden"
+                  aria-label={`Read about ${s.data.name}`}
+                >
+                  <img
+                    src={s.data.image}
+                    alt={s.data.imageAlt ?? s.data.name}
+                    loading="lazy"
+                    decoding="async"
+                    class="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                  />
+                </a>
+              )}
+              <div class="p-6">
+                <span
+                  class={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-widest ${difficultyBadge(s.data.difficulty)}`}
+                >
+                  {s.data.difficulty}
+                </span>
+                <h2 class="mt-3 font-display text-2xl font-semibold text-white">
+                  <a href={`/dive-sites/${slug}`} class="link-underline">
+                    {s.data.name}
+                  </a>
+                </h2>
+                <p class="mt-2 text-sm text-white/70">Max depth {s.data.maxDepth} m</p>
+                <a
+                  href={`/dive-sites/${slug}`}
+                  class="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-ocean-300 group-hover:text-ocean-200"
+                >
+                  Site details
+                  <span aria-hidden="true" class="transition-transform group-hover:translate-x-1">→</span>
+                </a>
+              </div>
+            </article>
+          )
+        })
+      }
+    </div>
+  </section>
+</BaseLayout>
