@@ -1,6 +1,7 @@
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Float, Sparkles, Stars } from '@react-three/drei'
 import { Bloom, EffectComposer, Vignette } from '@react-three/postprocessing'
+import gsap from 'gsap'
 import { BlendFunction, KernelSize } from 'postprocessing'
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import * as THREE from 'three'
@@ -52,18 +53,118 @@ function DiverMesh({ scale = 1, tint = '#1a2332' }: { scale?: number; tint?: str
   )
 }
 
-function HeroDiver() {
+/**
+ * Cinematic intro diver. Swims in along a Catmull-Rom curve from the deep
+ * right, scaling up as they approach, then transitions to a relaxed hover
+ * next to the headline. Driven by GSAP for the intro, then handed off to
+ * useFrame for the idle loop.
+ */
+function IntroDiver({ onSettled }: { onSettled?: () => void } = {}) {
   const group = useRef<THREE.Group>(null)
+  const phase = useRef<'intro' | 'transition' | 'idle'>('intro')
+  const progress = useRef({ value: 0 })
+
+  const curve = useMemo(
+    () =>
+      new THREE.CatmullRomCurve3(
+        [
+          new THREE.Vector3(11, -7, -14),
+          new THREE.Vector3(8, -4.5, -7),
+          new THREE.Vector3(5, -2, -2),
+          new THREE.Vector3(2.5, -0.6, 1.5),
+          new THREE.Vector3(1.4, -0.3, 2.6),
+        ],
+        false,
+        'catmullrom',
+        0.3,
+      ),
+    [],
+  )
+
+  const tmp = useMemo(() => new THREE.Vector3(), [])
+  const lookTmp = useMemo(() => new THREE.Vector3(), [])
+
+  useEffect(() => {
+    if (!group.current) return
+
+    // Start far away and tiny
+    curve.getPointAt(0, tmp)
+    group.current.position.copy(tmp)
+    group.current.scale.setScalar(0.35)
+
+    const tl = gsap.timeline({ delay: 0.35 })
+
+    tl.to(
+      progress.current,
+      {
+        value: 1,
+        duration: 5.2,
+        ease: 'power2.inOut',
+      },
+      0,
+    )
+      .to(
+        group.current.scale,
+        {
+          x: 1.55,
+          y: 1.55,
+          z: 1.55,
+          duration: 5.2,
+          ease: 'power2.inOut',
+        },
+        0,
+      )
+      .add(() => {
+        phase.current = 'transition'
+      })
+      // Smoothly normalise the body orientation
+      .to(
+        group.current.rotation,
+        {
+          x: 0,
+          y: 0,
+          z: 0,
+          duration: 0.7,
+          ease: 'power2.inOut',
+        },
+        '>-0.05',
+      )
+      .add(() => {
+        phase.current = 'idle'
+        onSettled?.()
+      })
+
+    return () => {
+      tl.kill()
+    }
+  }, [curve, tmp, onSettled])
+
   useFrame((state) => {
     if (!group.current) return
     const t = state.clock.elapsedTime
-    group.current.position.y = -0.3 + Math.sin(t * 0.55) * 0.35
-    group.current.rotation.y = Math.sin(t * 0.22) * 0.12
-    group.current.rotation.z = Math.sin(t * 0.31) * 0.06
+
+    if (phase.current === 'intro') {
+      curve.getPointAt(progress.current.value, tmp)
+      group.current.position.copy(tmp)
+
+      const ahead = Math.min(progress.current.value + 0.04, 1)
+      curve.getPointAt(ahead, lookTmp)
+      group.current.lookAt(lookTmp)
+      group.current.rotateX(Math.PI / 2)
+
+      // body wobble while swimming
+      group.current.rotation.z += Math.sin(t * 4) * 0.07
+    } else if (phase.current === 'idle') {
+      group.current.position.y = -0.3 + Math.sin(t * 0.55) * 0.35
+      group.current.rotation.y = Math.sin(t * 0.22) * 0.12
+      group.current.rotation.z = Math.sin(t * 0.31) * 0.06
+    }
+    // transition phase: GSAP owns rotation; position is frozen at curve end
   })
+
   return (
-    <group ref={group} position={[1.2, -0.3, 2]}>
-      <DiverMesh scale={1.2} />
+    <group ref={group}>
+      <DiverMesh scale={1} />
     </group>
   )
 }
@@ -290,7 +391,7 @@ function SceneContent({ scrollProgress }: { scrollProgress: React.RefObject<numb
       </Float>
 
       {/* divers */}
-      <HeroDiver />
+      <IntroDiver />
       <SwimmingDiver points={path1} speed={0.013} scale={0.85} tint="#16263a" startOffset={0.08} />
       <SwimmingDiver points={path2} speed={0.009} scale={0.7} tint="#1a2b3e" startOffset={0.55} />
 

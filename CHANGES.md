@@ -156,6 +156,10 @@ Phase 4 will add Resend confirmation emails on top via Netlify Form-submission w
 ✅ **Assets** — `public/assets/models/.gitkeep` ready for optional CC0 `diver.glb` swap later.
 ✅ Build green (note: Rollup may warn on chunk size from R3F + Leaflet — acceptable for Phase 3).
 
+## Phase 3.2.1 — cinematic diver entrance (2026-04-28)
+
+✅ **`IntroDiver`** replaces the static hero diver. Swims in along a 5-point Catmull-Rom curve from the deep right (start: `(11, -7, -14)`, scale 0.35) to a relaxed hover next to the H1 (end: `(1.4, -0.3, 2.6)`, scale 1.55) over **5.2s** with `power2.inOut`. Body wobble during swim, then a **0.7s rotation lerp** smooths the hand-off to the idle hover. **No snap.** Driven by GSAP for the intro; `useFrame` owns idle.
+
 ## Phase 3.2 — full-throttle 3D (2026-04-28)
 
 ✅ **Postprocessing** — installed `@react-three/postprocessing` + `postprocessing`. BG hero gets **Bloom** (mipmap blur, kernel LARGE) + **Vignette** for cinematic underwater feel.
