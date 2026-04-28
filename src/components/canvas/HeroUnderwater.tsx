@@ -57,10 +57,20 @@ function DiverMesh({ scale = 1, tint = '#1a2332' }: { scale?: number; tint?: str
  * Cinematic intro diver. Swims in along a Catmull-Rom curve from the deep
  * right, scaling up as they approach, then transitions to a relaxed hover
  * next to the headline. Driven by GSAP for the intro, then handed off to
- * useFrame for the idle loop.
+ * useFrame for the idle loop. Optionally drives a `cameraOffset` ref that
+ * a `CameraRig` reads to dolly the camera back during the swim-in.
  */
-function IntroDiver({ onSettled }: { onSettled?: () => void } = {}) {
-  const group = useRef<THREE.Group>(null)
+function IntroDiver({
+  groupRef,
+  cameraOffset,
+  onSettled,
+}: {
+  groupRef?: React.MutableRefObject<THREE.Group | null>
+  cameraOffset?: React.MutableRefObject<{ z: number }>
+  onSettled?: () => void
+} = {}) {
+  const localRef = useRef<THREE.Group>(null)
+  const group = (groupRef ?? localRef) as React.MutableRefObject<THREE.Group | null>
   const phase = useRef<'intro' | 'transition' | 'idle'>('intro')
   const progress = useRef({ value: 0 })
 
@@ -114,9 +124,22 @@ function IntroDiver({ onSettled }: { onSettled?: () => void } = {}) {
         },
         0,
       )
-      .add(() => {
-        phase.current = 'transition'
-      })
+
+    if (cameraOffset) {
+      tl.to(
+        cameraOffset.current,
+        {
+          z: 0,
+          duration: 5.2,
+          ease: 'power2.out',
+        },
+        0,
+      )
+    }
+
+    tl.add(() => {
+      phase.current = 'transition'
+    })
       // Smoothly normalise the body orientation
       .to(
         group.current.rotation,
@@ -137,7 +160,7 @@ function IntroDiver({ onSettled }: { onSettled?: () => void } = {}) {
     return () => {
       tl.kill()
     }
-  }, [curve, tmp, onSettled])
+  }, [curve, tmp, onSettled, cameraOffset])
 
   useFrame((state) => {
     if (!group.current) return
@@ -270,14 +293,21 @@ function GodRays() {
  * Camera + scroll
  * ============================================================ */
 
-function CameraRig({ scrollProgress }: { scrollProgress: React.RefObject<number> }) {
+function CameraRig({
+  scrollProgress,
+  cameraOffset,
+}: {
+  scrollProgress: React.RefObject<number>
+  cameraOffset?: React.MutableRefObject<{ z: number }>
+}) {
   const base = useMemo(() => new THREE.Vector3(-3.2, 1.4, 9.5), [])
   useFrame(({ camera, pointer }) => {
     const sy = scrollProgress.current ?? 0
+    const dolly = cameraOffset?.current?.z ?? 0
     // Descend on scroll: camera y drops, fov widens slightly, target tilts down
     const tx = base.x + pointer.x * 0.6
     const ty = base.y + pointer.y * 0.4 - sy * 4.5
-    const tz = base.z + sy * 1.2
+    const tz = base.z + sy * 1.2 + dolly
     camera.position.x = THREE.MathUtils.lerp(camera.position.x, tx, 0.04)
     camera.position.y = THREE.MathUtils.lerp(camera.position.y, ty, 0.04)
     camera.position.z = THREE.MathUtils.lerp(camera.position.z, tz, 0.04)
@@ -288,6 +318,102 @@ function CameraRig({ scrollProgress }: { scrollProgress: React.RefObject<number>
     }
   })
   return null
+}
+
+/**
+ * Bubble trail that emits behind a tracked Three.js Group (the diver).
+ * Uses a fixed pool of instances; spawns faster while `intro.current === true`
+ * (during the swim-in), then a slower drip during idle so the diver still
+ * "breathes out" bubbles realistically.
+ */
+function DiverBubbleTrail({
+  targetRef,
+  intro,
+}: {
+  targetRef: React.MutableRefObject<THREE.Group | null>
+  intro: React.MutableRefObject<boolean>
+}) {
+  const COUNT = 38
+  const meshRef = useRef<THREE.InstancedMesh>(null)
+  const geo = useMemo(() => new THREE.SphereGeometry(0.06, 10, 10), [])
+  const mat = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: '#e0f2fe',
+        metalness: 0.9,
+        roughness: 0.05,
+        transparent: true,
+        opacity: 0.7,
+        emissive: new THREE.Color('#7dd3fc'),
+        emissiveIntensity: 0.55,
+        depthWrite: false,
+      }),
+    [],
+  )
+
+  const bubbles = useMemo(
+    () =>
+      Array.from({ length: COUNT }, () => ({
+        pos: new THREE.Vector3(),
+        vel: new THREE.Vector3(),
+        life: 0,
+        maxLife: 0,
+        size: 0,
+      })),
+    [],
+  )
+
+  const dummy = useMemo(() => new THREE.Object3D(), [])
+  const off = useMemo(() => new THREE.Vector3(0, -1000, 0), [])
+  const lastSpawn = useRef(0)
+
+  useFrame((state, dt) => {
+    const mesh = meshRef.current
+    if (!mesh) return
+    const t = state.clock.elapsedTime
+
+    const interval = intro.current ? 0.06 : 0.35
+    if (targetRef.current && t - lastSpawn.current > interval) {
+      const idle = bubbles.find((b) => b.life <= 0)
+      if (idle) {
+        idle.pos.copy(targetRef.current.position)
+        idle.pos.x += -0.4 + Math.random() * 0.8
+        idle.pos.y += 0.4 + Math.random() * 0.35
+        idle.pos.z += -0.3 + Math.random() * 0.6
+        idle.vel.set(
+          (Math.random() - 0.5) * 0.4,
+          0.65 + Math.random() * 0.6,
+          (Math.random() - 0.5) * 0.4,
+        )
+        idle.maxLife = 2.6 + Math.random() * 1.6
+        idle.life = idle.maxLife
+        idle.size = 0.45 + Math.random() * 1.6
+      }
+      lastSpawn.current = t
+    }
+
+    bubbles.forEach((b, i) => {
+      if (b.life <= 0) {
+        dummy.position.copy(off)
+        dummy.scale.setScalar(0)
+      } else {
+        b.life -= dt
+        b.pos.addScaledVector(b.vel, dt)
+        b.vel.x *= 0.95
+        b.vel.z *= 0.95
+        const ratio = Math.max(b.life / b.maxLife, 0)
+        const fade = ratio < 0.25 ? ratio / 0.25 : 1
+        const grow = 0.55 + (1 - ratio) * 0.55
+        dummy.position.copy(b.pos)
+        dummy.scale.setScalar(b.size * grow * fade)
+      }
+      dummy.updateMatrix()
+      mesh.setMatrixAt(i, dummy.matrix)
+    })
+    mesh.instanceMatrix.needsUpdate = true
+  })
+
+  return <instancedMesh ref={meshRef} args={[geo, mat, COUNT]} frustumCulled={false} />
 }
 
 /** Drives fog colour / range by scroll progress to feel like descending */
@@ -317,6 +443,10 @@ function DepthMood({ scrollProgress }: { scrollProgress: React.RefObject<number>
  * ============================================================ */
 
 function SceneContent({ scrollProgress }: { scrollProgress: React.RefObject<number> }) {
+  const heroDiverRef = useRef<THREE.Group>(null)
+  const introActive = useRef(true)
+  const cameraOffset = useRef({ z: 1.9 })
+
   // Diver paths — gentle sweeping curves that loop forever.
   const path1 = useMemo(
     () => [
@@ -391,7 +521,14 @@ function SceneContent({ scrollProgress }: { scrollProgress: React.RefObject<numb
       </Float>
 
       {/* divers */}
-      <IntroDiver />
+      <IntroDiver
+        groupRef={heroDiverRef}
+        cameraOffset={cameraOffset}
+        onSettled={() => {
+          introActive.current = false
+        }}
+      />
+      <DiverBubbleTrail targetRef={heroDiverRef} intro={introActive} />
       <SwimmingDiver points={path1} speed={0.013} scale={0.85} tint="#16263a" startOffset={0.08} />
       <SwimmingDiver points={path2} speed={0.009} scale={0.7} tint="#1a2b3e" startOffset={0.55} />
 
@@ -401,7 +538,7 @@ function SceneContent({ scrollProgress }: { scrollProgress: React.RefObject<numb
 
       <SeaFloor />
 
-      <CameraRig scrollProgress={scrollProgress} />
+      <CameraRig scrollProgress={scrollProgress} cameraOffset={cameraOffset} />
       <DepthMood scrollProgress={scrollProgress} />
     </>
   )

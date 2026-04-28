@@ -159,6 +159,8 @@ Phase 4 will add Resend confirmation emails on top via Netlify Form-submission w
 ## Phase 3.2.1 — cinematic diver entrance (2026-04-28)
 
 ✅ **`IntroDiver`** replaces the static hero diver. Swims in along a 5-point Catmull-Rom curve from the deep right (start: `(11, -7, -14)`, scale 0.35) to a relaxed hover next to the H1 (end: `(1.4, -0.3, 2.6)`, scale 1.55) over **5.2s** with `power2.inOut`. Body wobble during swim, then a **0.7s rotation lerp** smooths the hand-off to the idle hover. **No snap.** Driven by GSAP for the intro; `useFrame` owns idle.
+✅ **`DiverBubbleTrail`** — pool of 38 instanced bubble spheres that emit from the diver's regulator. Spawn rate is 6× higher (every 60ms) during the intro for a clear visible plume; drops to a slow drip (every 350ms) once the diver settles, so they continue to "breathe" realistically. Each bubble grows + fades over its lifetime.
+✅ **Camera dolly** — `cameraOffset.z` starts at `1.9` and GSAPs to `0` over the swim-in, easing `power2.out`. Combined with the diver's scale animation, the framing tightens cinematically as they approach. `CameraRig` reads the offset alongside the existing scroll/parallax lerps so all camera motion stays composable.
 
 ## Phase 3.2 — full-throttle 3D (2026-04-28)
 
