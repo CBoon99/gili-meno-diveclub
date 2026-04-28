@@ -5,6 +5,7 @@ import { getCollection } from 'astro:content'
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import Breadcrumbs from '@/components/Breadcrumbs.astro'
 import AmbientCanvas from '@/components/canvas/AmbientCanvas'
+import Eel from '@/components/canvas/Eel'
 import { cleanSlug, orderKey } from '@/lib/slug'
 
 const lang = 'en' as const
@@ -60,6 +61,13 @@ function difficultyBadge(d: string) {
         <AmbientCanvas client:only="react" fishCount={32} bubbleCount={48} fishColor="#7dd3fc" />
       </div>
     </header>
+
+    <div
+      class="pointer-events-none relative mt-12 hidden h-32 overflow-hidden rounded-2xl border border-white/10 lg:block [&_canvas]:h-full [&_canvas]:w-full"
+      aria-hidden="true"
+    >
+      <Eel client:only="react" />
+    </div>
 
     <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {

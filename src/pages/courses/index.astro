@@ -5,6 +5,7 @@ import { getCollection } from 'astro:content'
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import Breadcrumbs from '@/components/Breadcrumbs.astro'
 import AmbientCanvas from '@/components/canvas/AmbientCanvas'
+import Octopus from '@/components/canvas/Octopus'
 import { cleanSlug, orderKey } from '@/lib/slug'
 
 const lang = 'en' as const
@@ -60,8 +61,17 @@ const itemListJsonLd = {
       {
         courses.map((c) => {
           const slug = cleanSlug(c.id)
+          const isEcoScuba = c.id === '06-eco-scuba'
           return (
-            <article class="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur transition hover:-translate-y-1 hover:border-ocean-400/40 hover:bg-white/[0.06]">
+            <article class={`group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur transition hover:-translate-y-1 hover:border-ocean-400/40 hover:bg-white/[0.06] ${isEcoScuba ? 'octopus-target' : ''}`}>
+              {isEcoScuba && (
+                <div
+                  class="pointer-events-none absolute -right-24 -top-24 hidden h-72 w-72 lg:block"
+                  aria-hidden="true"
+                >
+                  <Octopus client:only="react" />
+                </div>
+              )}
               {c.data.image && (
                 <a
                   href={`/courses/${slug}`}

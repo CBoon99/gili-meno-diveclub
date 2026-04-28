@@ -5,6 +5,7 @@ import { getCollection } from 'astro:content'
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import HeroUnderwater from '@/components/canvas/HeroUnderwater'
 import HeroForeground from '@/components/canvas/HeroForeground'
+import SeabedDecor from '@/components/canvas/SeabedDecor'
 import HomeScrollFx from '@/components/HomeScrollFx'
 import GiliMenoMap from '@/components/map/GiliMenoMap'
 import { useTranslations } from '@/i18n/utils'
@@ -259,7 +260,13 @@ const recentBlog = (await getCollection('blog'))
   </section>
 
   <!-- Testimonials -->
-  <section class="border-t border-white/5 bg-ocean-900/40" data-reveal>
+  <section class="relative border-t border-white/5 bg-ocean-900/40" data-reveal>
+    <div
+      class="pointer-events-none absolute inset-x-0 bottom-0 hidden h-64 opacity-70 lg:block [&_canvas]:h-full [&_canvas]:w-full"
+      aria-hidden="true"
+    >
+      <SeabedDecor client:only="react" />
+    </div>
     <div class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
       <div class="flex flex-wrap items-end justify-between gap-4">
         <div>

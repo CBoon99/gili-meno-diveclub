@@ -3,6 +3,7 @@ export const prerender = true
 
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import Breadcrumbs from '@/components/Breadcrumbs.astro'
+import Jellyfish from '@/components/canvas/Jellyfish'
 
 const lang = 'en' as const
 const breadcrumbs = [
@@ -26,7 +27,13 @@ const aboutJsonLd = {
   description="A small, family-operated SSI dive school on Gili Meno. Founded December 2018, focused on small groups, careful instruction, and the reefs around our island."
   jsonLd={[aboutJsonLd]}
 >
-  <article class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+  <article class="relative mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+    <div
+      class="pointer-events-none absolute -right-32 top-32 hidden h-72 w-72 opacity-80 lg:block [&_canvas]:h-full [&_canvas]:w-full"
+      aria-hidden="true"
+    >
+      <Jellyfish client:only="react" />
+    </div>
     <Breadcrumbs items={breadcrumbs} />
 
     <header class="mt-6">

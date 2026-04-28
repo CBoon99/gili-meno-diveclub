@@ -3,6 +3,7 @@ export const prerender = true
 
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import Breadcrumbs from '@/components/Breadcrumbs.astro'
+import SedimentParticles from '@/components/canvas/SedimentParticles'
 
 const lang = 'en' as const
 const breadcrumbs = [
@@ -90,7 +91,13 @@ const faqJsonLd = {
   description="Common questions about diving with Meno Dive Club: age limits, swim ability, costs, weather, equipment, safety, payments, cancellation."
   jsonLd={[faqJsonLd]}
 >
-  <section class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+  <section class="relative mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+    <div
+      class="pointer-events-none absolute inset-0 -z-10 hidden lg:block [&_canvas]:h-full [&_canvas]:w-full"
+      aria-hidden="true"
+    >
+      <SedimentParticles client:only="react" targetSelector=".faq-item" count={220} />
+    </div>
     <Breadcrumbs items={breadcrumbs} />
 
     <header class="mt-6">
@@ -103,7 +110,7 @@ const faqJsonLd = {
     <dl class="mt-14 divide-y divide-white/10">
       {
         faqs.map((f) => (
-          <details class="group py-5 [&_svg]:open:rotate-45">
+          <details class="faq-item group py-5 [&_svg]:open:rotate-45">
             <summary class="flex cursor-pointer list-none items-start justify-between gap-4 text-base font-semibold text-white">
               <span>{f.q}</span>
               <svg
