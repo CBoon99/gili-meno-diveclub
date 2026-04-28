@@ -156,6 +156,21 @@ Phase 4 will add Resend confirmation emails on top via Netlify Form-submission w
 ✅ **Assets** — `public/assets/models/.gitkeep` ready for optional CC0 `diver.glb` swap later.
 ✅ Build green (note: Rollup may warn on chunk size from R3F + Leaflet — acceptable for Phase 3).
 
+## Phase 3.2 — full-throttle 3D (2026-04-28)
+
+✅ **Postprocessing** — installed `@react-three/postprocessing` + `postprocessing`. BG hero gets **Bloom** (mipmap blur, kernel LARGE) + **Vignette** for cinematic underwater feel.
+✅ **Projected caustics** — `src/lib/caustic-shader.ts` (procedural Voronoi caustics) rendered each frame to an FBO via `<CausticProjector>` and assigned as `THREE.SpotLight.map`. PBR materials are preserved; light spots crawl across sea floor + divers in real time.
+✅ **Two fish species** — refactored to a reusable `<FishSchool>` (props: `count`, `speed`, `scale`, `bounds`, `centre`, `color`, `emissive`, `attractor`).
+   - Blue fusiliers: 120 fish, faster, attracted to H1
+   - Yellow snappers: 32 fish, slower, deeper
+✅ **Reef shark silhouette** — slow background orbit with animated tail (`Creatures.tsx`).
+✅ **Drifting sea turtle** — single pass every 75s, animated flippers (conservation cameo).
+✅ **Scroll-driven dive** — `CameraRig` + `DepthMood` lerp camera Y down, fog tightens, colour shifts darker as the user scrolls past the hero.
+✅ **Reusable `<Bubbles>`** — props for `count`, `speed`, `bounds`, `size`, `wobble`. Used in FG hero canvas + listing canvases.
+✅ **Listing-page ambient canvases** — new `<AmbientCanvas>` (low-power GL, DPR cap 1.4) added to `/blog`, `/courses`, `/dive-sites`. Each gets a tinted variant (cyan / yellow / sky). **Hidden under `lg:`** so mobile is clean.
+✅ **`client:only="react"`** on all canvases — kills the noisy "Invalid hook call" R3F SSR warning.
+✅ Build green; 4 pages probed 200.
+
 ## Phase 3.1 — bigger 3D hero (2026-04-28)
 
 ✅ **Multiple swimming divers** — `SwimmingDiver` rides a `CatmullRomCurve3` (centripetal) with a tangent-based look-at; two extra divers loop on different paths beside the hero diver.

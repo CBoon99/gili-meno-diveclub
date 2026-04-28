@@ -1,9 +1,14 @@
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Float, Sparkles, Stars } from '@react-three/drei'
+import { Bloom, EffectComposer, Vignette } from '@react-three/postprocessing'
+import { BlendFunction, KernelSize } from 'postprocessing'
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import * as THREE from 'three'
 
-const FISH_COUNT = 140
+import FishSchool from '@/components/canvas/FishSchool'
+import { DriftingTurtle, SharkSilhouette } from '@/components/canvas/Creatures'
+import CausticProjector from '@/components/canvas/effects/CausticProjector'
+
 const BOUNDS = 22
 const BOUNDS_Y = 10
 
@@ -12,7 +17,10 @@ function prefersReducedMotion(): boolean {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches
 }
 
-/* ---------- Shared diver mesh ---------- */
+/* ============================================================
+ * Diver primitives
+ * ============================================================ */
+
 function DiverMesh({ scale = 1, tint = '#1a2332' }: { scale?: number; tint?: string }) {
   return (
     <group scale={scale}>
@@ -44,7 +52,6 @@ function DiverMesh({ scale = 1, tint = '#1a2332' }: { scale?: number; tint?: str
   )
 }
 
-/** Hero diver — stays close to camera, gentle hover */
 function HeroDiver() {
   const group = useRef<THREE.Group>(null)
   useFrame((state) => {
@@ -61,7 +68,6 @@ function HeroDiver() {
   )
 }
 
-/** A diver that swims along a Catmull-Rom curve, looping */
 function SwimmingDiver({
   points,
   speed,
@@ -98,136 +104,19 @@ function SwimmingDiver({
   )
 }
 
-function BoidFishSchool() {
-  const meshRef = useRef<THREE.InstancedMesh>(null)
-  const geo = useMemo(() => new THREE.ConeGeometry(0.12, 0.35, 5), [])
-  const mat = useMemo(
-    () =>
-      new THREE.MeshStandardMaterial({
-        color: new THREE.Color('#38bdf8'),
-        metalness: 0.25,
-        roughness: 0.35,
-        emissive: new THREE.Color('#0c4a63'),
-        emissiveIntensity: 0.45,
-      }),
-    [],
-  )
-
-  const data = useMemo(() => {
-    const pos: THREE.Vector3[] = []
-    const vel: THREE.Vector3[] = []
-    for (let i = 0; i < FISH_COUNT; i++) {
-      pos.push(
-        new THREE.Vector3(
-          (Math.random() - 0.5) * BOUNDS * 1.6,
-          (Math.random() - 0.5) * BOUNDS_Y,
-          (Math.random() - 0.5) * BOUNDS * 1.2 - 4,
-        ),
-      )
-      vel.push(
-        new THREE.Vector3(
-          (Math.random() - 0.5) * 0.08,
-          (Math.random() - 0.5) * 0.04,
-          (Math.random() - 0.5) * 0.08,
-        ),
-      )
-    }
-    return { pos, vel }
-  }, [])
-
-  const dummy = useMemo(() => new THREE.Object3D(), [])
-  const sep = useMemo(() => new THREE.Vector3(), [])
-  const push = useMemo(() => new THREE.Vector3(), [])
-  const ali = useMemo(() => new THREE.Vector3(), [])
-  const coh = useMemo(() => new THREE.Vector3(), [])
-  /** Soft attractor near the H1 (left of camera, eye-level) so fish meander around the text */
-  const attractor = useMemo(() => new THREE.Vector3(-3.5, 1.6, 1.2), [])
-  const toAtt = useMemo(() => new THREE.Vector3(), [])
-
-  useFrame((_, dt) => {
-    const mesh = meshRef.current
-    if (!mesh) return
-    const { pos, vel } = data
-    const maxSpeed = 0.16
-    const minSep = 1.05
-    const sight = 4.5
-
-    for (let i = 0; i < FISH_COUNT; i++) {
-      sep.set(0, 0, 0)
-      ali.set(0, 0, 0)
-      coh.set(0, 0, 0)
-      let n = 0
-      const pi = pos[i]
-
-      for (let j = 0; j < FISH_COUNT; j++) {
-        if (i === j) continue
-        const pj = pos[j]
-        const dist = pi.distanceTo(pj)
-        if (dist > sight || dist < 0.001) continue
-        n++
-        if (dist < minSep) {
-          push.copy(pi).sub(pj).normalize().multiplyScalar((minSep - dist) / minSep)
-          sep.add(push)
-        }
-        ali.add(vel[j])
-        coh.add(pj)
-      }
-
-      if (n > 0) {
-        ali.multiplyScalar(1 / n).sub(vel[i]).multiplyScalar(0.045)
-        coh.multiplyScalar(1 / n).sub(pi).multiplyScalar(0.02)
-      } else {
-        ali.set(0, 0, 0)
-        coh.set(0, 0, 0)
-      }
-
-      // soft pull toward H1 attractor (only every Nth fish, weakly)
-      if (i % 4 === 0) {
-        toAtt.copy(attractor).sub(pi).multiplyScalar(0.0035)
-        vel[i].add(toAtt)
-      }
-
-      sep.multiplyScalar(0.1)
-      vel[i].add(sep).add(ali).add(coh)
-      if (vel[i].length() > maxSpeed) vel[i].normalize().multiplyScalar(maxSpeed)
-
-      pi.addScaledVector(vel[i], dt * 42)
-
-      if (Math.abs(pi.x) > BOUNDS) {
-        pi.x = THREE.MathUtils.clamp(pi.x, -BOUNDS, BOUNDS)
-        vel[i].x *= -0.6
-      }
-      if (Math.abs(pi.y) > BOUNDS_Y * 0.85) {
-        pi.y = THREE.MathUtils.clamp(pi.y, -BOUNDS_Y * 0.85, BOUNDS_Y * 0.85)
-        vel[i].y *= -0.6
-      }
-      if (pi.z > 2 || pi.z < -BOUNDS - 6) {
-        pi.z = THREE.MathUtils.clamp(pi.z, -BOUNDS - 6, 2)
-        vel[i].z *= -0.6
-      }
-
-      dummy.position.copy(pi)
-      dummy.lookAt(pi.clone().add(vel[i]))
-      dummy.rotateX(Math.PI / 2)
-      dummy.updateMatrix()
-      mesh.setMatrixAt(i, dummy.matrix)
-    }
-    mesh.instanceMatrix.needsUpdate = true
-  })
-
-  return <instancedMesh ref={meshRef} args={[geo, mat, FISH_COUNT]} frustumCulled={false} />
-}
+/* ============================================================
+ * Static scene props
+ * ============================================================ */
 
 function SeaFloor() {
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -BOUNDS_Y - 0.2, -4]} receiveShadow>
-      <planeGeometry args={[140, 140, 32, 32]} />
+      <planeGeometry args={[160, 160, 64, 64]} />
       <meshStandardMaterial color="#0a3a4f" metalness={0.05} roughness={0.92} />
     </mesh>
   )
 }
 
-/** Volumetric god rays — additive cones with animated opacity */
 function GodRays() {
   const refs = useRef<THREE.Mesh[]>([])
   useFrame((state) => {
@@ -276,54 +165,57 @@ function GodRays() {
   )
 }
 
-/** Subtle camera parallax following the pointer */
-function CameraRig() {
+/* ============================================================
+ * Camera + scroll
+ * ============================================================ */
+
+function CameraRig({ scrollProgress }: { scrollProgress: React.RefObject<number> }) {
   const base = useMemo(() => new THREE.Vector3(-3.2, 1.4, 9.5), [])
   useFrame(({ camera, pointer }) => {
+    const sy = scrollProgress.current ?? 0
+    // Descend on scroll: camera y drops, fov widens slightly, target tilts down
     const tx = base.x + pointer.x * 0.6
-    const ty = base.y + pointer.y * 0.4
+    const ty = base.y + pointer.y * 0.4 - sy * 4.5
+    const tz = base.z + sy * 1.2
     camera.position.x = THREE.MathUtils.lerp(camera.position.x, tx, 0.04)
     camera.position.y = THREE.MathUtils.lerp(camera.position.y, ty, 0.04)
-    camera.lookAt(0, 0.3, 0)
+    camera.position.z = THREE.MathUtils.lerp(camera.position.z, tz, 0.04)
+    camera.lookAt(0, 0.3 - sy * 4, 0)
+    if ('zoom' in camera) {
+      camera.zoom = THREE.MathUtils.lerp(camera.zoom, 1 + sy * 0.18, 0.08)
+      camera.updateProjectionMatrix()
+    }
   })
   return null
 }
 
-function ScrollResponder() {
-  const { camera } = useThree()
+/** Drives fog colour / range by scroll progress to feel like descending */
+function DepthMood({ scrollProgress }: { scrollProgress: React.RefObject<number> }) {
+  const { scene } = useThree()
+  const colourA = useMemo(() => new THREE.Color('#051a2c'), [])
+  const colourB = useMemo(() => new THREE.Color('#01060d'), [])
+  const tmp = useMemo(() => new THREE.Color(), [])
+
   useFrame(() => {
-    if (typeof window === 'undefined') return
-    // push camera further into the scene as user scrolls past the hero
-    const sy = Math.min(window.scrollY / window.innerHeight, 1.4)
-    camera.zoom = THREE.MathUtils.lerp(camera.zoom, 1 + sy * 0.18, 0.08)
-    camera.updateProjectionMatrix()
+    const sy = scrollProgress.current ?? 0
+    if (!scene.fog) return
+    const fog = scene.fog as THREE.Fog
+    fog.near = THREE.MathUtils.lerp(fog.near, 14 - sy * 8, 0.06)
+    fog.far = THREE.MathUtils.lerp(fog.far, 56 - sy * 26, 0.06)
+    tmp.copy(colourA).lerp(colourB, sy)
+    fog.color.lerp(tmp, 0.06)
+    if ('background' in scene && scene.background instanceof THREE.Color) {
+      scene.background.lerp(tmp, 0.06)
+    }
   })
   return null
 }
 
-function CausticLight() {
-  const ref = useRef<THREE.SpotLight>(null)
-  useFrame((state) => {
-    if (!ref.current) return
-    const t = state.clock.elapsedTime
-    ref.current.position.x = Math.sin(t * 0.4) * 8
-    ref.current.position.z = Math.cos(t * 0.35) * 6 - 2
-    ref.current.intensity = 2.2 + Math.sin(t * 0.8) * 0.35
-  })
-  return (
-    <spotLight
-      ref={ref}
-      position={[4, 16, 2]}
-      angle={0.55}
-      penumbra={0.85}
-      intensity={2.4}
-      color="#7dd3fc"
-      castShadow={false}
-    />
-  )
-}
+/* ============================================================
+ * Scene composition
+ * ============================================================ */
 
-function SceneContent() {
+function SceneContent({ scrollProgress }: { scrollProgress: React.RefObject<number> }) {
   // Diver paths — gentle sweeping curves that loop forever.
   const path1 = useMemo(
     () => [
@@ -358,18 +250,43 @@ function SceneContent() {
       {/* lights */}
       <ambientLight intensity={0.42} color="#7dd3fc" />
       <directionalLight position={[-6, 18, 4]} intensity={0.95} color="#e0f2fe" />
-      <CausticLight />
       <pointLight position={[10, 2, -8]} intensity={1.1} color="#0aaddb" distance={40} decay={2} />
+
+      {/* projected caustics — animated procedural cookie on a SpotLight */}
+      <CausticProjector position={[0, 16, -2]} targetPosition={[0, -8, -2]} intensity={3.4} angle={0.95} />
 
       {/* atmosphere */}
       <Stars radius={80} depth={40} count={900} factor={2.4} saturation={0} speed={0.25} />
-      <Sparkles count={120} scale={[28, 14, 18]} position={[0, 1, -4]} size={2.2} speed={0.25} color="#bae6fd" opacity={0.6} />
+      <Sparkles count={140} scale={[28, 14, 18]} position={[0, 1, -4]} size={2.4} speed={0.25} color="#bae6fd" opacity={0.6} />
       <Sparkles count={45} scale={[14, 6, 6]} position={[-2, 1.5, 4]} size={3} speed={0.4} color="#e0f2fe" opacity={0.85} />
       <GodRays />
 
-      {/* ecosystem */}
-      <Float speed={1.2} rotationIntensity={0.08} floatIntensity={0.35}>
-        <BoidFishSchool />
+      {/* TWO fish species ----------------------------------- */}
+      {/* Blue fusiliers — large, fast school, attracted toward H1 */}
+      <Float speed={1.1} rotationIntensity={0.06} floatIntensity={0.3}>
+        <FishSchool
+          count={120}
+          speed={0.16}
+          scale={1}
+          bounds={[BOUNDS, BOUNDS_Y, BOUNDS]}
+          centre={[0, 0, -4]}
+          color="#38bdf8"
+          emissive="#0c4a63"
+          attractor={[-3.5, 1.6, 1.2]}
+          attractorStrength={0.0035}
+        />
+      </Float>
+      {/* Yellow snappers — slower, smaller school, deeper background */}
+      <Float speed={0.8} rotationIntensity={0.05} floatIntensity={0.4}>
+        <FishSchool
+          count={32}
+          speed={0.12}
+          scale={1.4}
+          bounds={[14, 5, 10]}
+          centre={[6, -1, -10]}
+          color="#facc15"
+          emissive="#7a4f0a"
+        />
       </Float>
 
       {/* divers */}
@@ -377,17 +294,25 @@ function SceneContent() {
       <SwimmingDiver points={path1} speed={0.013} scale={0.85} tint="#16263a" startOffset={0.08} />
       <SwimmingDiver points={path2} speed={0.009} scale={0.7} tint="#1a2b3e" startOffset={0.55} />
 
+      {/* big creatures */}
+      <SharkSilhouette />
+      <DriftingTurtle cycleSeconds={75} />
+
       <SeaFloor />
 
-      {/* camera */}
-      <CameraRig />
-      <ScrollResponder />
+      <CameraRig scrollProgress={scrollProgress} />
+      <DepthMood scrollProgress={scrollProgress} />
     </>
   )
 }
 
+/* ============================================================
+ * Component
+ * ============================================================ */
+
 export default function HeroUnderwater() {
   const [enableScene, setEnableScene] = useState(false)
+  const scrollProgress = useRef(0)
 
   useEffect(() => {
     if (prefersReducedMotion()) {
@@ -395,10 +320,23 @@ export default function HeroUnderwater() {
       return
     }
     setEnableScene(true)
+
+    const onScroll = () => {
+      if (typeof window === 'undefined') return
+      const denom = Math.max(window.innerHeight, 1)
+      scrollProgress.current = THREE.MathUtils.clamp(window.scrollY / denom, 0, 1.5)
+    }
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
     const onChange = () => setEnableScene(!mq.matches)
     mq.addEventListener('change', onChange)
-    return () => mq.removeEventListener('change', onChange)
+
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      mq.removeEventListener('change', onChange)
+    }
   }, [])
 
   if (!enableScene) return null
@@ -412,7 +350,22 @@ export default function HeroUnderwater() {
         camera={{ position: [-3.2, 1.4, 9.5], fov: 42, near: 0.1, far: 100 }}
       >
         <Suspense fallback={null}>
-          <SceneContent />
+          <SceneContent scrollProgress={scrollProgress} />
+          <EffectComposer multisampling={0}>
+            <Bloom
+              intensity={0.55}
+              luminanceThreshold={0.35}
+              luminanceSmoothing={0.45}
+              kernelSize={KernelSize.LARGE}
+              mipmapBlur
+            />
+            <Vignette
+              offset={0.2}
+              darkness={0.55}
+              blendFunction={BlendFunction.NORMAL}
+              eskil={false}
+            />
+          </EffectComposer>
         </Suspense>
       </Canvas>
     </div>

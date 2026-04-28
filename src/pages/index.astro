@@ -65,8 +65,8 @@ const recentBlog = (await getCollection('blog'))
   <section
     class="relative isolate flex min-h-[100svh] items-end overflow-hidden bg-gradient-to-b from-ocean-900 via-ocean-800 to-ocean-700 pb-24"
   >
-    <HeroUnderwater client:visible />
-    <HeroForeground client:visible />
+    <HeroUnderwater client:only="react" />
+    <HeroForeground client:only="react" />
     <div
       aria-hidden="true"
       class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_30%_30%,rgba(10,173,219,0.25),transparent_55%),radial-gradient(circle_at_70%_70%,rgba(212,165,116,0.15),transparent_60%)]"
