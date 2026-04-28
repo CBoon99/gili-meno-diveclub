@@ -156,6 +156,19 @@ Phase 4 will add Resend confirmation emails on top via Netlify Form-submission w
 ✅ **Assets** — `public/assets/models/.gitkeep` ready for optional CC0 `diver.glb` swap later.
 ✅ Build green (note: Rollup may warn on chunk size from R3F + Leaflet — acceptable for Phase 3).
 
+## Phase 3B — creature scenes per section (2026-04-28)
+
+Six new low-power creature components, each in its own small canvas, integrated into existing section pages (no pages re-created — every page already shipped in Phase 2). All canvases hidden under `lg:` to keep mobile fast and respect the choice from Phase 3.2.
+
+✅ **`Octopus.tsx`** — purple cephalopod with 8 multi-segment tentacles. GSAP timeline drifts it in from the right then idles with breathing pulse + tentacle wave. Wired over the **Eco-Scuba** course card on `/courses` (class hook `octopus-target`).
+✅ **`Eel.tsx`** — 14-segment serpentine body following a 6-point Catmull-Rom S-curve, with sinusoidal wobble + tail wag. Banner across the top of `/dive-sites` listing.
+✅ **`Jellyfish.tsx`** — translucent bell with pulse, inner glow, 10 swaying tentacles. Side overlay on `/about`.
+✅ **`SeabedDecor.tsx`** — 4 shells + 2 corals + 1 rock. GSAP cascades them down with stagger, lands on a soft floor strip; idle bob after settling. Background layer behind the home **testimonials** section.
+✅ **`SedimentParticles.tsx`** — instanced 220-particle dust field orbiting in a flat plane. Listens to `mouseenter/leave` and `focusin/out` on a target selector and **doubles swirl speed on FAQ item hover/focus**, lerping back when idle. Wired to `/faq` with `targetSelector=".faq-item"`.
+✅ **`CoralScene.tsx`** (extra) — 4 stylised coral towers + sparkles + soft floor strip. Subtle background under the `/booking` form.
+
+All components: `client:only="react"`, low-power GL, DPR cap 1.4, `prefers-reduced-motion` returns `null`.
+
 ## Phase 3.2.1 — cinematic diver entrance (2026-04-28)
 
 ✅ **`IntroDiver`** replaces the static hero diver. Swims in along a 5-point Catmull-Rom curve from the deep right (start: `(11, -7, -14)`, scale 0.35) to a relaxed hover next to the H1 (end: `(1.4, -0.3, 2.6)`, scale 1.55) over **5.2s** with `power2.inOut`. Body wobble during swim, then a **0.7s rotation lerp** smooths the hand-off to the idle hover. **No snap.** Driven by GSAP for the intro; `useFrame` owns idle.
