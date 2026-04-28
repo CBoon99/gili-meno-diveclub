@@ -156,16 +156,20 @@ Phase 4 will add Resend confirmation emails on top via Netlify Form-submission w
 ✅ **Assets** — `public/assets/models/.gitkeep` ready for optional CC0 `diver.glb` swap later.
 ✅ Build green (note: Rollup may warn on chunk size from R3F + Leaflet — acceptable for Phase 3).
 
+## Phase 4 deliverables (2026-04-28)
+
+✅ **Drizzle + Neon** — `src/db/schema.ts`: `contacts`, `bookings`, `subscribers`; `src/db/index.ts` lazy `getDb()` via `@neondatabase/serverless` + `drizzle-orm/neon-http`.
+✅ **Migrations** — `src/db/migrations/0000_init.sql` + Drizzle meta; run `npm run db:migrate` with `DATABASE_URL` set (or apply SQL manually in Neon).
+✅ **Resend** — `src/lib/email.ts`: guest + admin emails for contact and booking (no-op logs if `RESEND_API_KEY` missing).
+✅ **Persistence** — `src/lib/submissions.ts`: insert + trigger Resend.
+✅ **API (JSON)** — `POST /api/contact`, `POST /api/bookings`, `POST /api/subscribe` (`export const prerender = false`). Return `503` if `DATABASE_URL` unset.
+✅ **Netlify mirror** — `POST /api/webhooks/netlify-form` parses [submission-created style payloads](https://answers.netlify.com/t/submission-created-payload-example/30054) (`body.payload.data`, `form_name`, `id`). Dedupes on `netlify_submission_id` (unique). Optional `NETLIFY_WEBHOOK_SECRET` + `?token=` on webhook URL.
+✅ **Validation** — `src/lib/form-schemas.ts` (Zod 4).
+
 ## Coming in Phase 2.5 (deferred per user)
 
 - 49 FR translations alongside Decap CMS verification
 - Decap CMS i18n preview + multi-locale entries
-
-## Coming in Phase 4
-
-- Neon Postgres schema via Drizzle (`bookings`, `contacts`, `subscribers`)
-- `/api/bookings`, `/api/contact` server endpoints (mirror Netlify Forms data into Neon for audit trail)
-- Resend email confirmations (with `onboarding@resend.dev` fallback)
 
 ## Coming in Phase 5
 
