@@ -1,0 +1,12 @@
+{
+  "name": "Meno Dive Club",
+  "short_name": "Meno Dive",
+  "description": "SSI dive school on Gili Meno, Indonesia.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#051a2c",
+  "theme_color": "#051a2c",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

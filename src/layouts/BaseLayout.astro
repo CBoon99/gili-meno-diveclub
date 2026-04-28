@@ -1,0 +1,112 @@
+---
+import '../styles/global.css'
+import { SITE_CONFIG, type Locale } from '../consts'
+import { localBusinessJsonLd } from '../lib/seo'
+import Header from '../components/Header.astro'
+import Footer from '../components/Footer.astro'
+import WhatsAppButton from '../components/WhatsAppButton.astro'
+
+interface Props {
+  title: string
+  description: string
+  image?: string
+  noindex?: boolean
+  type?: 'website' | 'article'
+  lang: Locale
+  /** Optional <head> JSON-LD blocks beyond the default LocalBusiness. */
+  jsonLd?: Record<string, unknown>[]
+}
+
+const {
+  title,
+  description,
+  image = '/og-default.jpg',
+  noindex = false,
+  type = 'website',
+  lang,
+  jsonLd = [],
+} = Astro.props
+
+const canonical = new URL(Astro.url.pathname, SITE_CONFIG.url).toString()
+const ogImageUrl = new URL(image, SITE_CONFIG.url).toString()
+const fullTitle = title === SITE_CONFIG.name ? title : `${title} · ${SITE_CONFIG.name}`
+
+// hreflang alternates: same path under each locale
+const path = Astro.url.pathname.replace(/^\/(en|fr)/, '') || '/'
+const alternates: Record<Locale, string> = {
+  en: new URL(path === '/' ? '/' : path, SITE_CONFIG.url).toString(),
+  fr: new URL(`/fr${path === '/' ? '' : path}`, SITE_CONFIG.url).toString(),
+}
+
+const allJsonLd = [localBusinessJsonLd(), ...jsonLd]
+---
+
+<!doctype html>
+<html lang={lang} dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content={SITE_CONFIG.colors.oceanDeep} />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={SITE_CONFIG.name} />
+    <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large'} />
+
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="en" href={alternates.en} />
+    <link rel="alternate" hreflang="fr" href={alternates.fr} />
+    <link rel="alternate" hreflang="x-default" href={alternates.en} />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    <link rel="preconnect" href="https://images.unsplash.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&display=swap"
+    />
+
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content={SITE_CONFIG.name} />
+    <meta property="og:locale" content={lang === 'en' ? 'en_AU' : 'fr_FR'} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    {
+      allJsonLd.map((data) => (
+        <script type="application/ld+json" set:html={JSON.stringify(data)} />
+      ))
+    }
+  </head>
+  <body class="bg-ocean-900 text-white antialiased">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded focus:bg-ocean-500 focus:px-4 focus:py-2 focus:text-white"
+    >
+      Skip to content
+    </a>
+
+    <Header lang={lang} />
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <Footer lang={lang} />
+    <WhatsAppButton />
+  </body>
+</html>

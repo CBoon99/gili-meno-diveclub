@@ -1,0 +1,77 @@
+---
+import { SITE_CONFIG, type Locale } from '../consts'
+import { useTranslations, localizedPath } from '../i18n/utils'
+
+interface Props {
+  lang: Locale
+}
+const { lang } = Astro.props
+const t = useTranslations(lang)
+const year = new Date().getFullYear()
+---
+
+<footer class="relative mt-32 border-t border-white/10 bg-ocean-900/95">
+  <div class="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 md:grid-cols-4 lg:px-8">
+    <div class="md:col-span-2">
+      <a
+        href={localizedPath(lang, '/')}
+        class="flex items-center gap-2 text-xl font-bold tracking-tight"
+      >
+        <span aria-hidden="true" class="text-3xl">🤿</span>
+        <span class="font-display">Meno Dive Club</span>
+      </a>
+      <p class="mt-4 max-w-md text-sm leading-relaxed text-white/70">
+        {t('home.aboutBody')}
+      </p>
+      <address class="mt-6 not-italic text-sm text-white/70">
+        {SITE_CONFIG.location.streetAddress}, {SITE_CONFIG.location.locality}<br />
+        {SITE_CONFIG.location.region} {SITE_CONFIG.location.postalCode}<br />
+        <a class="link-underline mt-2 inline-block" href={`tel:${SITE_CONFIG.contact.phoneIntl}`}>{SITE_CONFIG.contact.phone}</a>
+        <br />
+        <a class="link-underline" href={`mailto:${SITE_CONFIG.contact.email}`}>{SITE_CONFIG.contact.email}</a>
+      </address>
+    </div>
+
+    <nav class="text-sm" aria-label="Footer">
+      <h3 class="mb-4 text-xs font-semibold uppercase tracking-widest text-white/50">
+        {t('nav.courses')}
+      </h3>
+      <ul class="space-y-2 text-white/80">
+        <li><a class="link-underline" href={localizedPath(lang, '/courses')}>{t('nav.courses')}</a></li>
+        <li><a class="link-underline" href={localizedPath(lang, '/dive-sites')}>{t('nav.diveSites')}</a></li>
+        <li><a class="link-underline" href={localizedPath(lang, '/dive-stay')}>{t('nav.diveStay')}</a></li>
+        <li><a class="link-underline" href={localizedPath(lang, '/blog')}>{t('nav.blog')}</a></li>
+        <li><a class="link-underline" href={localizedPath(lang, '/faq')}>{t('nav.faq')}</a></li>
+      </ul>
+    </nav>
+
+    <div class="text-sm">
+      <h3 class="mb-4 text-xs font-semibold uppercase tracking-widest text-white/50">Follow</h3>
+      <ul class="space-y-2 text-white/80">
+        <li>
+          <a class="link-underline" href={SITE_CONFIG.social.instagram} target="_blank" rel="noopener noreferrer">Instagram</a>
+        </li>
+        <li>
+          <a class="link-underline" href={SITE_CONFIG.social.facebook} target="_blank" rel="noopener noreferrer">Facebook</a>
+        </li>
+        <li>
+          <a class="link-underline" href={SITE_CONFIG.social.google} target="_blank" rel="noopener noreferrer">Google Reviews</a>
+        </li>
+      </ul>
+
+      <h3 class="mb-3 mt-8 text-xs font-semibold uppercase tracking-widest text-white/50">
+        {t('footer.partners')}
+      </h3>
+      <p class="text-sm text-white/70">{SITE_CONFIG.partners.join(' · ')}</p>
+    </div>
+  </div>
+
+  <div class="border-t border-white/5">
+    <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-6 text-xs text-white/50 sm:flex-row sm:px-6 lg:px-8">
+      <p>&copy; {year} {SITE_CONFIG.name}. {t('footer.rights')}</p>
+      <p>
+        Built with care in Gili Meno · <a class="link-underline" href={localizedPath(lang, '/privacy')}>Privacy</a>
+      </p>
+    </div>
+  </div>
+</footer>

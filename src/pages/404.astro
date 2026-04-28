@@ -1,0 +1,31 @@
+---
+export const prerender = true
+import BaseLayout from '../layouts/BaseLayout.astro'
+---
+
+<BaseLayout
+  lang="en"
+  title="Lost at sea — 404"
+  description="The page you were looking for has drifted off. Let's get you back to the surface."
+  noindex
+>
+  <section class="relative flex min-h-[80svh] flex-col items-center justify-center px-6 text-center">
+    <p class="font-display text-9xl font-extrabold tracking-tight text-ocean-400">404</p>
+    <h1 class="mt-4 font-display text-3xl font-bold sm:text-4xl">Lost at sea.</h1>
+    <p class="mt-4 max-w-md text-white/70">
+      The page you were looking for has drifted off into the blue. Let's get you back to the surface.
+    </p>
+    <div class="mt-8 flex gap-3">
+      <a
+        href="/"
+        class="rounded-full bg-ocean-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-ocean-400"
+        >Back to home</a
+      >
+      <a
+        href="/contact"
+        class="rounded-full border border-white/20 bg-white/5 px-5 py-2.5 text-sm font-semibold text-white/90 hover:bg-white/10"
+        >Get in touch</a
+      >
+    </div>
+  </section>
+</BaseLayout>
