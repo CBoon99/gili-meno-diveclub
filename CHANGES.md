@@ -186,3 +186,12 @@ Phase 4 will add Resend confirmation emails on top via Netlify Form-submission w
 
 - Netlify deploy, env wiring, smoke tests, Lighthouse audit
 - DNS cutover from existing menodiveclub.com to Netlify with 48-hr rollback window
+
+---
+
+## Dev troubleshooting: blank page / 500 on `/@vite/client`
+
+**Cause:** `@react-three/drei` → `detect-gpu`: Vite resolved the UMD `main` entry, breaking named ESM imports (`getGPUTier`). A hoisted **Vite 8** conflicted with Astro 6 (Vite 7), causing `Missing field moduleType` in the React refresh pipeline.
+
+**Fix in this repo:** `detect-gpu` alias to `dist/detect-gpu.esm.js`, `react`/`react-dom` dedupe, and `overrides.vite` = `7.3.2`. After `npm install`, restart `npm run dev` and hard-refresh.
+
