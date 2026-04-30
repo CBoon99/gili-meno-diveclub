@@ -3,7 +3,7 @@ title: 'SSI Open Water Diver'
 type: 'BEGINNER'
 price: 3500000
 duration: 3
-image: 'https://images.unsplash.com/photo-1530053969600-caed2596d242?w=1600&q=80'
+image: '/images/course-open-water.jpg'
 imageAlt: 'Diver swimming above coral reef in clear blue water'
 summary: 'Get certified to scuba dive in 3-4 days. No experience needed — perfect for first-time divers in Gili Meno.'
 credential: 'SSI Open Water Diver'

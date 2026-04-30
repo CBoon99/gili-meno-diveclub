@@ -4,7 +4,7 @@ difficulty: 'BEGINNER'
 maxDepth: 15
 lat: -8.3555
 lng: 116.0290
-image: 'https://images.unsplash.com/photo-1505228395891-9a51e7e86bf6?w=1600&q=80'
+image: '/images/site-turtle-city.jpg'
 imageAlt: 'Green sea turtle resting on a sandy patch surrounded by coral'
 ---
 

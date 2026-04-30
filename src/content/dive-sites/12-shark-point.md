@@ -4,7 +4,7 @@ difficulty: 'INTERMEDIATE'
 maxDepth: 28
 lat: -8.3500
 lng: 116.0260
-image: 'https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?w=1600&q=80'
+image: '/images/site-shark-point.jpg'
 imageAlt: 'White-tip reef shark cruising above sandy seabed'
 ---
 

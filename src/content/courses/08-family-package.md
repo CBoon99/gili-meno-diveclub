@@ -3,7 +3,7 @@ title: 'Family Diving Package'
 type: 'PACKAGE'
 price: 8500000
 duration: 4
-image: 'https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?w=1600&q=80'
+image: '/images/course-family.jpg'
 imageAlt: 'Parent and child snorkelling together in shallow water'
 summary: 'Learn together. Custom four-day package for parents and children, mixing pool sessions, snorkel trips, and certification dives.'
 credential: 'Mix of Scuba Rangers (under-10s), Junior Open Water (10-14), and SSI Open Water Diver (15+)'

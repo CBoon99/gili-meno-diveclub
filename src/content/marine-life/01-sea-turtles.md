@@ -2,7 +2,7 @@
 title: 'Sea Turtles of Gili Meno'
 slug: 'sea-turtles'
 summary: 'Green and hawksbill turtles are residents of Gili Meno''s reefs. Here''s where to see them, how to watch them respectfully, and why they matter to the ecosystem.'
-image: 'https://images.unsplash.com/photo-1582967788606-a171c1080cb0?w=1600&q=80'
+image: '/images/site-turtle-city.jpg'
 imageAlt: 'Green sea turtle resting on a sandy patch surrounded by coral'
 species:
   - 'Green sea turtle (Chelonia mydas)'

@@ -3,7 +3,7 @@ title: 'Eco-Scuba Diver Programme'
 type: 'ECO'
 price: 2200000
 duration: 2
-image: 'https://images.unsplash.com/photo-1517824806704-9040b037703b?w=1600&q=80'
+image: '/images/course-eco-scuba.jpg'
 imageAlt: 'Diver gently observing healthy coral garden without touching'
 summary: 'Become a diver the reef is glad to see. Conservation-focused course built around Gili Meno''s reefs and our Trash Hero partnership.'
 credential: 'SSI Ecology specialty (Marine Ecology / Coral Identification)'

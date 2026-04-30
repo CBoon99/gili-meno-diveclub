@@ -2,7 +2,7 @@
 title: "Swimming with Sea Turtles: What You Need to Know"
 author: "Meno Dive Club"
 date: 2026-04-10
-image: 'https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?w=1600&q=80'
+image: '/images/site-bounty-wreck.jpg'
 imageAlt: 'Green sea turtle swimming over a coral reef'
 summary: "Encounter sea turtles responsibly. Tips for ethical wildlife interaction underwater."
 tags: ['wildlife', 'conservation', 'turtles', 'experience']

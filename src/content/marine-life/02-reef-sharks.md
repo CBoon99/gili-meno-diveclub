@@ -2,7 +2,7 @@
 title: 'Reef Sharks at Gili Meno'
 slug: 'reef-sharks'
 summary: 'White-tip and black-tip reef sharks are common around Gili Meno. They''re shy, harmless to divers behaving sensibly, and the highlight of many trips.'
-image: 'https://images.unsplash.com/photo-1571680322279-a226e6a4cc2a?w=1600&q=80'
+image: '/images/site-shark-point.jpg'
 imageAlt: 'White-tip reef shark cruising above sandy seabed'
 species:
   - 'White-tip reef shark (Triaenodon obesus)'

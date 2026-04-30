@@ -6,6 +6,55 @@ This document exists for full audit transparency: nothing is changed silently.
 
 ---
 
+## Phase 4.2 — image audit + responsive polish (2026-04-30)
+
+### Broken images fixed
+
+5 Unsplash photo IDs returning 404 affected 11 content files. All replaced with verified-loading IDs:
+
+| Broken | Used by | Replacement |
+|---|---|---|
+| `1502663129377-4ade7d7d4855` | solo-divers, deep-turbo | `1551918120-9739cb430c6d`, `1542931287-023b922fa89b` |
+| `1530036846422-8a1bce47ed26` | family-diving, family-package, meno-slope | `1561485132-59468cd0b553`, `1567899378494-47b22a2ae96a`, `1542156822-6924d1a71ace` |
+| `1549921296-3b4a5e6c4eb1` | pricing | `1559682468-a6a29e7d9517` |
+| `1564550974352-c4d129ed5cb9` | advanced-open-water, meno-wall | `1580618864180-f6d7d39b8ff6`, `1473163928189-364b2c4e1135` |
+| `1572125675722-238a4f1f8ea4` | diving-safety, rescue-diver, bounty-wreck | `1591025207163-942350e47db2`, `1537944434965-cf4679d1a598`, `1493558103817-58b2924bce98` |
+
+### Image diversity
+
+Reduced over-duplicates: previously 5 files shared a single image; now max 3, almost all 1–2.
+
+### `<PageHero>` component
+
+New reusable banner-image header with slow Ken-Burns zoom. Added to:
+
+- `/about`, `/contact`, `/faq`, `/booking` (utility pages)
+- `/courses`, `/dive-sites`, `/blog`, `/marine-life`, `/regions`, `/audiences`, `/info` (listings)
+
+Each gets a unique themed Unsplash image. Privacy page kept text-only (legal context).
+
+### Responsive fixes
+
+- **Hero buttons**: now stack full-width vertically below `sm`, side-by-side from `sm:`. Better thumb tap targets on iPhone SE / small Android.
+- **Hero text**: confirmed `text-5xl sm:text-6xl lg:text-7xl` cascade works edge-to-edge from 320px.
+- **PageHero**: `min-h-[44svh] md:min-h-[50svh]` keeps utility hero readable without dominating.
+- **Forms**: confirmed `sm:grid-cols-2` cascade for booking + contact field rows.
+- **Map**: `h-[min(68vh,520px)]` adapts cleanly mobile → desktop.
+
+### Detail-page SEO improvements
+
+- Blog `[slug]`: now passes `publishedTime`, `modifiedTime`, `imageAlt`, and `keywords` (from tags) into `BaseLayout` so the meta tags I added in 4.1 actually fire.
+- Course `[slug]` and Dive-site `[slug]`: now pass `imageAlt`.
+- Blog `Article` JSON-LD: `publisher.logo` → `icon-512.png` (with width/height) for richer Google results.
+
+### FR home page rebuilt
+
+Was still referencing the deleted 3D hero markup. Now mirrors the EN home page section-for-section in French, uses `<Hero>` + `<GiliMenoMap>`, full localised testimonials + CTAs.
+
+### Smoke-tested
+
+All 14 main routes return 200: `/`, `/about`, `/courses`, `/dive-sites`, `/blog`, `/marine-life`, `/regions`, `/info`, `/audiences`, `/faq`, `/contact`, `/booking`, `/privacy`, `/fr`.
+
 ## Phase 4.1 — SEO + favicon polish (2026-04-30)
 
 User asked for "all the finer detail" — done.
