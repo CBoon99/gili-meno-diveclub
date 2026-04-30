@@ -2,7 +2,7 @@
 title: 'Diving Safety on Gili Meno'
 slug: 'diving-safety'
 summary: 'How we keep diving safe — our procedures, your responsibilities, and what happens when things go sideways.'
-image: 'https://images.unsplash.com/photo-1572125675722-238a4f1f8ea4?w=1600&q=80'
+image: 'https://images.unsplash.com/photo-1591025207163-942350e47db2?w=1600&q=80'
 imageAlt: 'Two divers practising a buddy check on the surface'
 ---
 

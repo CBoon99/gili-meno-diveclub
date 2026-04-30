@@ -2,7 +2,7 @@
 title: 'Pricing & Packages'
 slug: 'pricing'
 summary: 'Everything we charge, in one place. No hidden fees, no surcharges, no surprises.'
-image: 'https://images.unsplash.com/photo-1549921296-3b4a5e6c4eb1?w=1600&q=80'
+image: 'https://images.unsplash.com/photo-1559682468-a6a29e7d9517?w=1600&q=80'
 imageAlt: 'Dive flag and equipment bag on a wooden boat deck'
 ---
 

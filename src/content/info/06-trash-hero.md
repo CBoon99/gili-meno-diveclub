@@ -2,7 +2,7 @@
 title: 'Trash Hero on Gili Meno'
 slug: 'trash-hero'
 summary: 'Our partnership with the Trash Hero movement. Beach cleanups every week, underwater cleanups once a month, and how to join.'
-image: 'https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?w=1600&q=80'
+image: 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=1600&q=80'
 imageAlt: 'Volunteer holding a bag of plastic collected from the beach'
 ---
 

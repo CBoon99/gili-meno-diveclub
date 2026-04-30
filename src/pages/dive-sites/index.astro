@@ -4,6 +4,7 @@ export const prerender = true
 import { getCollection } from 'astro:content'
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import Breadcrumbs from '@/components/Breadcrumbs.astro'
+import PageHero from '@/components/PageHero.astro'
 import { cleanSlug, orderKey } from '@/lib/slug'
 
 const lang = 'en' as const
@@ -38,19 +39,16 @@ function difficultyBadge(d: string) {
   description="Every named dive site around Gili Meno: Turtle City, Meno Wall, Hans Reef, Bounty Wreck, Bio Rock, Shark Point, and more. Depths, difficulty, marine life."
   jsonLd={[itemListJsonLd]}
 >
+  <PageHero
+    image="https://images.unsplash.com/photo-1583212292454-1fe6229603b7?auto=format&fit=crop&w=2400&q=82"
+    imageAlt="Tropical coral reef with abundant marine life around Gili Meno"
+    eyebrow="Dive sites"
+    title="Thirteen sites. One small island."
+    subtitle="Every named site around Gili Meno is within a fifteen-minute boat ride. Below is the full list with depths, difficulty, and what you're most likely to see."
+  />
+
   <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
     <Breadcrumbs items={breadcrumbs} />
-
-    <header class="mt-6 max-w-3xl">
-      <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Dive sites</p>
-      <h1 class="mt-3 font-display text-4xl font-bold leading-tight tracking-tight md:text-6xl">
-        Thirteen sites. One small island.
-      </h1>
-      <p class="mt-6 text-lg text-white/80">
-        Every named site around Gili Meno is within a fifteen-minute boat ride. Below
-        is the full list with depths, difficulty, and what you're most likely to see.
-      </p>
-    </header>
 
     <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {

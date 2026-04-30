@@ -3,6 +3,7 @@ export const prerender = true
 
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import Breadcrumbs from '@/components/Breadcrumbs.astro'
+import PageHero from '@/components/PageHero.astro'
 
 const lang = 'en' as const
 const breadcrumbs = [
@@ -26,15 +27,16 @@ const aboutJsonLd = {
   description="A small, family-operated SSI dive school on Gili Meno. Founded December 2018, focused on small groups, careful instruction, and the reefs around our island."
   jsonLd={[aboutJsonLd]}
 >
+  <PageHero
+    image="https://images.unsplash.com/photo-1530053969600-caed2596d242?auto=format&fit=crop&w=2400&q=82"
+    imageAlt="A diver descending into the deep blue around Gili Meno"
+    eyebrow="Our story"
+    title="A family-run dive school on Gili Meno"
+    subtitle="Established December 2018 — small classes, attentive instructors, and an obsession with the reefs around our own island."
+  />
+
   <article class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
     <Breadcrumbs items={breadcrumbs} />
-
-    <header class="mt-6">
-      <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Our story</p>
-      <h1 class="mt-3 font-display text-4xl font-bold leading-tight tracking-tight md:text-6xl">
-        A family-run dive school on Gili Meno
-      </h1>
-    </header>
 
     <div class="prose prose-invert prose-lg mt-10 max-w-none prose-headings:font-display prose-headings:tracking-tight prose-a:text-ocean-300 hover:prose-a:text-ocean-200">
       <p class="lead text-xl text-white/80">

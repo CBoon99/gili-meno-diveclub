@@ -2,7 +2,7 @@
 title: 'Reef Fish & Macro of Gili Meno'
 slug: 'reef-fish'
 summary: 'The everyday wildlife of Meno''s reefs — the parrotfish, anthias clouds, nudibranchs, octopuses, and small things most divers swim past.'
-image: 'https://images.unsplash.com/photo-1583212292454-1fe6229603b7?w=1600&q=80'
+image: 'https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=1600&q=80'
 imageAlt: 'Colourful tropical fish above a healthy coral reef'
 species:
   - 'Parrotfish, wrasses, fusiliers, anthias, snappers, groupers'

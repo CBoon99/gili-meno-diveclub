@@ -4,7 +4,7 @@ difficulty: 'ADVANCED'
 maxDepth: 45
 lat: -8.3520
 lng: 116.0290
-image: 'https://images.unsplash.com/photo-1502663129377-4ade7d7d4855?w=1600&q=80'
+image: 'https://images.unsplash.com/photo-1542931287-023b922fa89b?w=1600&q=80'
 imageAlt: 'Diver silhouetted against deep blue water with rays of sunlight'
 ---
 

@@ -78,16 +78,16 @@ const {
         {headline}
       </h1>
       <p class="mt-6 max-w-2xl text-lg text-white/85 drop-shadow-[0_2px_15px_rgba(0,0,0,0.5)]">{subhead}</p>
-      <div class="mt-10 flex flex-wrap gap-4">
+      <div class="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
         <a
           href={primaryHref}
-          class="rounded-full bg-ocean-500 px-6 py-3 text-sm font-semibold text-white shadow-xl shadow-ocean-500/30 transition hover:scale-[1.03] hover:bg-ocean-400"
+          class="inline-flex items-center justify-center rounded-full bg-ocean-500 px-6 py-3 text-center text-sm font-semibold text-white shadow-xl shadow-ocean-500/30 transition hover:scale-[1.03] hover:bg-ocean-400"
         >
           {primaryLabel}
         </a>
         <a
           href={secondaryHref}
-          class="rounded-full border border-white/30 bg-white/10 px-6 py-3 text-sm font-semibold text-white/95 backdrop-blur transition hover:bg-white/20"
+          class="inline-flex items-center justify-center rounded-full border border-white/30 bg-white/10 px-6 py-3 text-center text-sm font-semibold text-white/95 backdrop-blur transition hover:bg-white/20"
         >
           {secondaryLabel}
         </a>

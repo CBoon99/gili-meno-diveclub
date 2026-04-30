@@ -4,6 +4,7 @@ export const prerender = true
 import { getCollection } from 'astro:content'
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import Breadcrumbs from '@/components/Breadcrumbs.astro'
+import PageHero from '@/components/PageHero.astro'
 import { cleanSlug, orderKey } from '@/lib/slug'
 
 const lang = 'en' as const
@@ -21,19 +22,16 @@ const breadcrumbs = [
   title="Diving Indonesia — Regions We Cover"
   description="Diving guides for Gili Meno, Gili Air, Gili Trawangan, Lombok, Bali, and Komodo. Where to base, what to expect, and how to plan a multi-region trip."
 >
+  <PageHero
+    image="https://images.unsplash.com/photo-1602002418082-a4443e081dd1?auto=format&fit=crop&w=2400&q=82"
+    imageAlt="Calm tropical waters of the Gili Islands seen from a dive boat"
+    eyebrow="Regions"
+    title="Diving the Lombok strait — and beyond."
+    subtitle="We're based on Gili Meno, but the wider region has plenty to offer divers coming through. Quick guides to each region we know well."
+  />
+
   <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
     <Breadcrumbs items={breadcrumbs} />
-
-    <header class="mt-6 max-w-3xl">
-      <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Regions</p>
-      <h1 class="mt-3 font-display text-4xl font-bold leading-tight tracking-tight md:text-6xl">
-        Diving the Lombok strait — and beyond.
-      </h1>
-      <p class="mt-6 text-lg text-white/80">
-        We're based on Gili Meno, but the wider region has plenty to offer divers
-        coming through. Quick guides to each region we know well.
-      </p>
-    </header>
 
     <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {

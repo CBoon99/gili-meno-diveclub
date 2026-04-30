@@ -4,6 +4,7 @@ export const prerender = true
 import { getCollection } from 'astro:content'
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import Breadcrumbs from '@/components/Breadcrumbs.astro'
+import PageHero from '@/components/PageHero.astro'
 import { cleanSlug, orderKey } from '@/lib/slug'
 
 const lang = 'en' as const
@@ -21,19 +22,16 @@ const breadcrumbs = [
   title="Marine Life of Gili Meno"
   description="Sea turtles, reef sharks, manta rays, and the everyday reef fish of Gili Meno. Honest guides to what you'll see and where."
 >
+  <PageHero
+    image="https://images.unsplash.com/photo-1582967788606-a171c1080cb0?auto=format&fit=crop&w=2400&q=82"
+    imageAlt="A green sea turtle gliding over a coral reef"
+    eyebrow="Marine life"
+    title="What you'll see down there."
+    subtitle="Honest guides to the marine life of Gili Meno — where to find it, when, and how to behave around it."
+  />
+
   <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
     <Breadcrumbs items={breadcrumbs} />
-
-    <header class="mt-6 max-w-3xl">
-      <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Marine life</p>
-      <h1 class="mt-3 font-display text-4xl font-bold leading-tight tracking-tight md:text-6xl">
-        What you'll see down there.
-      </h1>
-      <p class="mt-6 text-lg text-white/80">
-        Honest guides to the marine life of Gili Meno — where to find it, when, and how
-        to behave around it.
-      </p>
-    </header>
 
     <div class="mt-14 grid gap-6 sm:grid-cols-2">
       {

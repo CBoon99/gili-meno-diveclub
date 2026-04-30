@@ -2,7 +2,7 @@
 title: 'Training at Meno Dive Club — How We Teach'
 slug: 'training-guide'
 summary: 'Behind the SSI curriculum: how we structure courses, what a typical training day looks like, and what makes our teaching different.'
-image: 'https://images.unsplash.com/photo-1576086476234-1103be98f096?w=1600&q=80'
+image: 'https://images.unsplash.com/photo-1455156218388-5e61b526818b?w=1600&q=80'
 imageAlt: 'Instructor demonstrating a skill to a small group of students underwater'
 ---
 

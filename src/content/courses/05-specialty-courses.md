@@ -3,7 +3,7 @@ title: 'SSI Specialty Courses'
 type: 'INTERMEDIATE'
 price: 1800000
 duration: 2
-image: 'https://images.unsplash.com/photo-1551244072-5d12893278ab?w=1600&q=80'
+image: 'https://images.unsplash.com/photo-1551522435-a13afa10f103?w=1600&q=80'
 imageAlt: 'Diver with torch exploring coral at night'
 summary: 'Pick a single skill and master it. Specialties run between 1-3 days each — combine three to make Specialty Diver.'
 credential: 'SSI [Specialty] Diver — varies by course'

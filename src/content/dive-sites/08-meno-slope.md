@@ -4,7 +4,7 @@ difficulty: 'INTERMEDIATE'
 maxDepth: 30
 lat: -8.3545
 lng: 116.0250
-image: 'https://images.unsplash.com/photo-1530036846422-8a1bce47ed26?w=1600&q=80'
+image: 'https://images.unsplash.com/photo-1542156822-6924d1a71ace?w=1600&q=80'
 imageAlt: 'Coral-covered slope descending into blue water'
 ---
 

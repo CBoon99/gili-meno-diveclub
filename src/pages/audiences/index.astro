@@ -4,6 +4,7 @@ export const prerender = true
 import { getCollection } from 'astro:content'
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import Breadcrumbs from '@/components/Breadcrumbs.astro'
+import PageHero from '@/components/PageHero.astro'
 import { cleanSlug, orderKey } from '@/lib/slug'
 
 const lang = 'en' as const
@@ -21,20 +22,16 @@ const breadcrumbs = [
   title="Who We Teach"
   description="Family divers, solo travellers, divers on a certification journey, and eco-conscious divers — how Meno Dive Club fits each."
 >
+  <PageHero
+    image="https://images.unsplash.com/photo-1561485132-59468cd0b553?auto=format&fit=crop&w=2400&q=82"
+    imageAlt="A family enjoying time by the ocean in Indonesia"
+    eyebrow="Who we teach"
+    title="Diving for everyone."
+    subtitle="Family-friendly courses, solo-traveler-friendly logistics, structured certification journeys, and conservation-aware diving for divers who want their footprint to matter."
+  />
+
   <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
     <Breadcrumbs items={breadcrumbs} />
-
-    <header class="mt-6 max-w-3xl">
-      <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Who we teach</p>
-      <h1 class="mt-3 font-display text-4xl font-bold leading-tight tracking-tight md:text-6xl">
-        Diving for everyone.
-      </h1>
-      <p class="mt-6 text-lg text-white/80">
-        Family-friendly courses, solo-traveler-friendly logistics, structured
-        certification journeys, and conservation-aware diving for divers who want
-        their footprint to matter.
-      </p>
-    </header>
 
     <div class="mt-14 grid gap-6 sm:grid-cols-2">
       {

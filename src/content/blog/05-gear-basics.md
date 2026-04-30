@@ -2,7 +2,7 @@
 title: "Gear Guide: What to Know Before You Buy"
 author: "Meno Dive Club"
 date: 2026-03-15
-image: 'https://images.unsplash.com/photo-1551244072-5d12893278ab?w=1600&q=80'
+image: 'https://images.unsplash.com/photo-1587474260584-136574528ed5?w=1600&q=80'
 imageAlt: 'Set of scuba diving equipment laid out on a dive boat'
 summary: "Buy or rent? We break down essential diving gear and help you decide."
 tags: ['gear', 'equipment', 'guide']

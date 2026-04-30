@@ -3,6 +3,7 @@ export const prerender = true
 
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import Breadcrumbs from '@/components/Breadcrumbs.astro'
+import PageHero from '@/components/PageHero.astro'
 
 const lang = 'en' as const
 const breadcrumbs = [
@@ -90,15 +91,16 @@ const faqJsonLd = {
   description="Common questions about diving with Meno Dive Club: age limits, swim ability, costs, weather, equipment, safety, payments, cancellation."
   jsonLd={[faqJsonLd]}
 >
+  <PageHero
+    image="https://images.unsplash.com/photo-1517824806704-9040b037703b?auto=format&fit=crop&w=2400&q=82"
+    imageAlt="Sunset over the calm waters of Gili Meno, Indonesia"
+    eyebrow="FAQ"
+    title="Common questions, honestly answered."
+    subtitle="If your question isn't here, drop us a line — we usually reply within a day."
+  />
+
   <section class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
     <Breadcrumbs items={breadcrumbs} />
-
-    <header class="mt-6">
-      <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">FAQ</p>
-      <h1 class="mt-3 font-display text-4xl font-bold leading-tight tracking-tight md:text-6xl">
-        Common questions, honestly answered.
-      </h1>
-    </header>
 
     <dl class="mt-14 divide-y divide-white/10">
       {

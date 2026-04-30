@@ -2,7 +2,7 @@
 title: 'Solo Travelers Welcome'
 slug: 'solo-divers'
 summary: 'Travelling alone? You''re in good company. Most of our students arrive solo, and a small dive school is one of the best places in Indonesia to make new diving friends.'
-image: 'https://images.unsplash.com/photo-1502663129377-4ade7d7d4855?w=1600&q=80'
+image: 'https://images.unsplash.com/photo-1551918120-9739cb430c6d?w=1600&q=80'
 imageAlt: 'Single diver descending in clear blue water with sun rays'
 ---
 

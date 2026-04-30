@@ -4,7 +4,7 @@ difficulty: 'INTERMEDIATE'
 maxDepth: 35
 lat: -8.3480
 lng: 116.0320
-image: 'https://images.unsplash.com/photo-1572125675722-238a4f1f8ea4?w=1600&q=80'
+image: 'https://images.unsplash.com/photo-1493558103817-58b2924bce98?w=1600&q=80'
 imageAlt: 'Sunken vessel encrusted with coral and surrounded by fish'
 ---
 

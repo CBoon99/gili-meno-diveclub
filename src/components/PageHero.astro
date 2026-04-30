@@ -1,0 +1,87 @@
+---
+/**
+ * Compact image-banner header for utility & listing pages
+ * (about, contact, faq, booking, privacy, listings).
+ *
+ * Smaller than the home Hero — typically 50svh — and keeps content readable
+ * with a dark gradient. No JS, no animations beyond a slow CSS Ken-Burns.
+ */
+interface Props {
+  image: string
+  imageAlt?: string
+  eyebrow?: string
+  title: string
+  subtitle?: string
+  /** Tailwind height util — defaults to small banner */
+  height?: string
+}
+
+const {
+  image,
+  imageAlt = '',
+  eyebrow,
+  title,
+  subtitle,
+  height = 'min-h-[44svh] md:min-h-[50svh]',
+} = Astro.props
+---
+
+<section class={`page-hero relative isolate flex items-end overflow-hidden bg-ocean-950 ${height}`}>
+  <div class="page-hero__media absolute inset-0 -z-10" aria-hidden="true">
+    <img
+      src={image}
+      alt={imageAlt}
+      class="page-hero__img h-full w-full object-cover"
+      fetchpriority="high"
+      decoding="async"
+    />
+  </div>
+
+  <div
+    class="absolute inset-0 -z-10 bg-gradient-to-t from-ocean-950/95 via-ocean-950/60 to-ocean-950/30"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div class="relative z-10 mx-auto w-full max-w-7xl px-4 pb-12 pt-24 sm:px-6 lg:px-8">
+    {
+      eyebrow && (
+        <p class="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium uppercase tracking-widest text-ocean-200 backdrop-blur">
+          <span class="inline-block h-1.5 w-1.5 rounded-full bg-ocean-400" />
+          {eyebrow}
+        </p>
+      )
+    }
+    <h1 class="font-display text-4xl font-extrabold leading-[1.05] tracking-tight drop-shadow-[0_4px_20px_rgba(0,0,0,0.55)] sm:text-5xl lg:text-6xl">
+      {title}
+    </h1>
+    {
+      subtitle && (
+        <p class="mt-5 max-w-2xl text-lg text-white/85 drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)]">{subtitle}</p>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .page-hero__img {
+    animation: page-hero-zoom 32s ease-in-out infinite alternate;
+    transform-origin: 55% 45%;
+    will-change: transform;
+  }
+
+  @keyframes page-hero-zoom {
+    0% {
+      transform: scale(1);
+    }
+    100% {
+      transform: scale(1.08);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .page-hero__img {
+      animation: none !important;
+    }
+  }
+</style>

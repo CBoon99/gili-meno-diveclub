@@ -3,7 +3,7 @@ title: 'SSI Advanced Adventurer'
 type: 'INTERMEDIATE'
 price: 2500000
 duration: 2
-image: 'https://images.unsplash.com/photo-1564550974352-c4d129ed5cb9?w=1600&q=80'
+image: 'https://images.unsplash.com/photo-1580618864180-f6d7d39b8ff6?w=1600&q=80'
 imageAlt: 'Diver descending along a vertical coral wall'
 summary: 'Take your diving deeper. Five themed adventure dives over two days at Gili Meno''s most exciting sites.'
 credential: 'SSI Advanced Adventurer'

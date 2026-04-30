@@ -2,7 +2,7 @@
 title: 'Family Diving on Gili Meno'
 slug: 'family-diving'
 summary: 'Bring the kids. Gili Meno is one of the safest, calmest places in Indonesia to learn to dive — and we have the right courses for every age in your family.'
-image: 'https://images.unsplash.com/photo-1530036846422-8a1bce47ed26?w=1600&q=80'
+image: 'https://images.unsplash.com/photo-1561485132-59468cd0b553?w=1600&q=80'
 imageAlt: 'Parent and child snorkelling together in shallow tropical water'
 ---
 

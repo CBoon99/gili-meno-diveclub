@@ -2,7 +2,7 @@
 title: 'Your Certification Journey'
 slug: 'certification-journey'
 summary: 'From first breath underwater to professional Divemaster — the SSI ladder and how Meno Dive Club fits into each step.'
-image: 'https://images.unsplash.com/photo-1576086476234-1103be98f096?w=1600&q=80'
+image: 'https://images.unsplash.com/photo-1503424886307-b090341d25d1?w=1600&q=80'
 imageAlt: 'Group of divers preparing equipment on a dive boat'
 ---
 

@@ -4,6 +4,7 @@ export const prerender = true
 import { getCollection } from 'astro:content'
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import Breadcrumbs from '@/components/Breadcrumbs.astro'
+import PageHero from '@/components/PageHero.astro'
 import { cleanSlug, orderKey } from '@/lib/slug'
 
 const lang = 'en' as const
@@ -21,20 +22,16 @@ const breadcrumbs = [
   title="Practical Information"
   description="Diving safety, training approach, equipment, pricing, accommodation packages, and our Trash Hero partnership. Everything practical, in one place."
 >
+  <PageHero
+    image="https://images.unsplash.com/photo-1591025207163-942350e47db2?auto=format&fit=crop&w=2400&q=82"
+    imageAlt="Diving gear ready on the dive boat"
+    eyebrow="Information"
+    title="The practical bits."
+    subtitle="Everything that's useful but doesn't fit on a course page: how we teach, how we keep things safe, what gear we provide, and how we work with the local conservation community."
+  />
+
   <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
     <Breadcrumbs items={breadcrumbs} />
-
-    <header class="mt-6 max-w-3xl">
-      <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Information</p>
-      <h1 class="mt-3 font-display text-4xl font-bold leading-tight tracking-tight md:text-6xl">
-        The practical bits.
-      </h1>
-      <p class="mt-6 text-lg text-white/80">
-        Everything that's useful but doesn't fit on a course page: how we teach,
-        how we keep things safe, what gear we provide, what we charge, and how
-        we work with the local conservation community.
-      </p>
-    </header>
 
     <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {

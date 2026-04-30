@@ -2,7 +2,7 @@
 title: 'Dive & Stay Packages'
 slug: 'dive-and-stay'
 summary: 'Bundle accommodation with diving and travel. We pick partner properties we trust, and you get one booking, one bill, no logistics.'
-image: 'https://images.unsplash.com/photo-1602002418082-a4443e081dd1?w=1600&q=80'
+image: 'https://images.unsplash.com/photo-1530870110042-98b2cb110834?w=1600&q=80'
 imageAlt: 'Beachfront bungalows with palm trees and turquoise water'
 ---
 

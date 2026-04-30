@@ -4,6 +4,7 @@ export const prerender = true
 import { getCollection } from 'astro:content'
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import Breadcrumbs from '@/components/Breadcrumbs.astro'
+import PageHero from '@/components/PageHero.astro'
 import { cleanSlug } from '@/lib/slug'
 
 const lang = 'en' as const
@@ -30,19 +31,16 @@ const blogJsonLd = {
   description="Diving guides, conservation news, and stories from Meno Dive Club. Updated monthly."
   jsonLd={[blogJsonLd]}
 >
+  <PageHero
+    image="https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=2400&q=82"
+    imageAlt="A school of fish swimming over a coral reef in Indonesia"
+    eyebrow="Bubble Diaries"
+    title="Stories from the reefs."
+    subtitle="Diving guides, conservation news, and the small things we notice while teaching on Gili Meno."
+  />
+
   <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
     <Breadcrumbs items={breadcrumbs} />
-
-    <header class="mt-6 max-w-3xl">
-      <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Bubble diaries</p>
-      <h1 class="mt-3 font-display text-4xl font-bold leading-tight tracking-tight md:text-6xl">
-        Stories from the reefs.
-      </h1>
-      <p class="mt-6 text-lg text-white/80">
-        Diving guides, conservation news, and the small things we notice while
-        teaching on Gili Meno.
-      </p>
-    </header>
 
     <div class="mt-14 grid gap-10 md:grid-cols-2 lg:grid-cols-3">
       {

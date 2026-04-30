@@ -3,7 +3,7 @@ title: 'SSI Stress & Rescue'
 type: 'ADVANCED'
 price: 4000000
 duration: 4
-image: 'https://images.unsplash.com/photo-1572125675722-238a4f1f8ea4?w=1600&q=80'
+image: 'https://images.unsplash.com/photo-1537944434965-cf4679d1a598?w=1600&q=80'
 imageAlt: 'Two divers practising a surface rescue tow'
 summary: 'The course every diver remembers. Learn to recognise, prevent, and handle dive emergencies — for yourself and others.'
 credential: 'SSI Stress & Rescue Diver'

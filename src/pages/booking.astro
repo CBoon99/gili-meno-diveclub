@@ -3,6 +3,7 @@ export const prerender = true
 
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import Breadcrumbs from '@/components/Breadcrumbs.astro'
+import PageHero from '@/components/PageHero.astro'
 import { SITE_CONFIG } from '@/consts'
 
 const lang = 'en' as const
@@ -35,20 +36,16 @@ const reserveActionJsonLd = {
   description="Book a dive course or fun-dive day at Meno Dive Club, Gili Meno. We'll confirm by email within a day and reply with payment instructions."
   jsonLd={[reserveActionJsonLd]}
 >
+  <PageHero
+    image="https://images.unsplash.com/photo-1505228395891-9a51e7e86bf6?auto=format&fit=crop&w=2400&q=82"
+    imageAlt="A green sea turtle swimming over a coral reef in Gili Meno"
+    eyebrow="Book"
+    title="Book your dive."
+    subtitle="Tell us what you'd like to do and when. We'll come back within a day with availability and payment details — no deposit until we confirm."
+  />
+
   <section class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
     <Breadcrumbs items={breadcrumbs} />
-
-    <header class="mt-6">
-      <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Book</p>
-      <h1 class="mt-3 font-display text-4xl font-bold leading-tight tracking-tight md:text-6xl">
-        Book your dive.
-      </h1>
-      <p class="mt-6 text-lg text-white/80">
-        Tell us what you'd like to do and when. We'll come back within a day with
-        availability, payment details, and any questions about your level or
-        plans. No deposit yet — that comes after we confirm.
-      </p>
-    </header>
 
     {
       submitted ? (

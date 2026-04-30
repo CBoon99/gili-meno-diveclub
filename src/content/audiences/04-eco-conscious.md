@@ -2,7 +2,7 @@
 title: 'Eco-conscious Divers'
 slug: 'eco-conscious'
 summary: 'Diving leaves a footprint. Here''s how we minimise ours, and how you can dive with us in a way that genuinely supports rather than damages the reef.'
-image: 'https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?w=1600&q=80'
+image: 'https://images.unsplash.com/photo-1495467033336-2effd8753d51?w=1600&q=80'
 imageAlt: 'Diver collecting plastic from a sandy seabed during cleanup dive'
 ---
 

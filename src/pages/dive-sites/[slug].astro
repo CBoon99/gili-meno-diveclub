@@ -47,6 +47,7 @@ const placeJsonLd = {
   title={`${entry.data.name} — Dive Site, Gili Meno`}
   description={`${entry.data.name} dive site on Gili Meno. Max depth ${entry.data.maxDepth}m, ${entry.data.difficulty.toLowerCase()} level. Marine life, conditions, best months.`}
   image={entry.data.image}
+  imageAlt={entry.data.imageAlt ?? `${entry.data.name} dive site on Gili Meno`}
   jsonLd={[placeJsonLd]}
 >
   <article class="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">

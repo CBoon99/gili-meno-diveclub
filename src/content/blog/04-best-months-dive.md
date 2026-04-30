@@ -2,7 +2,7 @@
 title: "Best Months to Dive Gili Meno: A Seasonal Guide"
 author: "Meno Dive Club"
 date: 2026-03-25
-image: 'https://images.unsplash.com/photo-1602002418082-a4443e081dd1?w=1600&q=80'
+image: 'https://images.unsplash.com/photo-1500916434205-0c77489c6cf7?w=1600&q=80'
 imageAlt: 'Sunlit tropical island and turquoise water from above'
 summary: "Plan your dive trip right. Understand Gili Meno's seasons, conditions, and what to expect."
 tags: ['guide', 'planning', 'conditions']

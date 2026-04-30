@@ -4,7 +4,7 @@ difficulty: 'ADVANCED'
 maxDepth: 50
 lat: -8.3460
 lng: 116.0255
-image: 'https://images.unsplash.com/photo-1564550974352-c4d129ed5cb9?w=1600&q=80'
+image: 'https://images.unsplash.com/photo-1473163928189-364b2c4e1135?w=1600&q=80'
 imageAlt: 'Diver descending along a vertical coral wall in deep blue water'
 ---
 

@@ -1,65 +1,361 @@
 ---
 export const prerender = true
 
-import BaseLayout from '../../layouts/BaseLayout.astro'
-import { useTranslations } from '../../i18n/utils'
+import { getCollection } from 'astro:content'
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import Hero from '@/components/Hero.astro'
+import GiliMenoMap from '@/components/map/GiliMenoMap.astro'
+import { cleanSlug, orderKey } from '@/lib/slug'
+import { SITE_CONFIG } from '@/consts'
+import hero from '@/content/settings/hero.json'
 
 const lang = 'fr' as const
-const t = useTranslations(lang)
+
+const allCourses = (await getCollection('courses')).sort(
+  (a, b) => orderKey(a.id) - orderKey(b.id),
+)
+const featuredCourses = ['01-open-water', '02-advanced-open-water', '06-eco-scuba', '08-family-package']
+  .map((id) => allCourses.find((c) => c.id === id))
+  .filter(Boolean) as typeof allCourses
+
+const allSites = await getCollection('dive-sites')
+const featuredSites = ['01-turtle-city', '03-meno-wall', '09-bounty-wreck', '12-shark-point']
+  .map((id) => allSites.find((s) => s.id === id))
+  .filter(Boolean) as typeof allSites
+
+const testimonials = await getCollection('testimonials')
+
+const recentBlog = (await getCollection('blog'))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3)
 ---
 
 <BaseLayout
   lang={lang}
   title="Meno Dive Club — Centre de plongée SSI, Gili Meno"
-  description="Plongée à Gili Meno avec une école SSI familiale. Cours débutants jusqu'aux certifications avancées, récifs de classe mondiale et tortues à chaque plongée."
+  description="Meno Dive Club est le nouveau centre de plongée SSI à Gili Meno, en Indonésie. Commencez votre aventure de plongée sous-marine avec nous et explorez les Îles Gili."
 >
-  <section
-    class="relative isolate flex min-h-[100svh] items-end overflow-hidden bg-gradient-to-b from-ocean-900 via-ocean-800 to-ocean-700 pb-20"
-  >
-    <div aria-hidden="true" class="absolute inset-0 -z-10 opacity-50" data-hero-canvas-mount></div>
-    <div
-      aria-hidden="true"
-      class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_30%_30%,rgba(10,173,219,0.25),transparent_55%),radial-gradient(circle_at_70%_70%,rgba(212,165,116,0.15),transparent_60%)]"
-    >
-    </div>
+  <Hero
+    image={hero.image}
+    imageAlt={hero.imageAlt}
+    eyebrow="Certifié SSI · Gili Meno · Indonésie"
+    headline="Votre aventure sous-marine vous attend à Gili Meno"
+    subhead="Meno Dive Club est le nouveau centre de plongée SSI à Gili Meno. Commencez votre aventure de plongée sous-marine avec nous et explorez toutes les possibilités de plongée des Îles Gili."
+    primaryHref="/fr/booking"
+    primaryLabel="Commencer avec nous"
+    secondaryHref="/fr/courses"
+    secondaryLabel="Explorer les cours SSI"
+  />
 
-    <div class="mx-auto grid w-full max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:px-8">
-      <div class="lg:col-span-7" style="animation: var(--animate-fade-up);">
-        <p class="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium uppercase tracking-widest text-ocean-200">
-          <span class="inline-block h-1.5 w-1.5 rounded-full bg-ocean-400"></span>
-          Certifié SSI · Gili Meno · Indonésie
-        </p>
-        <h1 class="font-display text-5xl font-extrabold leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl">
-          {t('hero.title')}
-        </h1>
-        <p class="mt-6 max-w-xl text-lg text-white/80">{t('hero.subtitle')}</p>
-        <div class="mt-10 flex flex-wrap gap-4">
-          <a
-            href="/fr/booking"
-            class="rounded-full bg-ocean-500 px-6 py-3 text-sm font-semibold text-white shadow-xl shadow-ocean-500/30 transition hover:scale-[1.03] hover:bg-ocean-400"
-          >
-            {t('hero.cta')}
-          </a>
-          <a
-            href="/fr/courses"
-            class="rounded-full border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-white/90 backdrop-blur transition hover:bg-white/10"
-          >
-            {t('hero.secondary')}
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
+  <a id="main-after-hero" class="sr-only">Contenu principal</a>
 
-  <section class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+  {/* Notre histoire */}
+  <section class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8" data-reveal>
     <div class="grid gap-10 md:grid-cols-2 md:items-center">
       <div>
-        <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">{t('nav.about')}</p>
+        <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Commencer avec nous</p>
         <h2 class="mt-3 font-display text-3xl font-bold leading-tight tracking-tight md:text-5xl">
-          {t('home.aboutHeading')}
+          Plongez, apprenez & explorez !
         </h2>
+        <p class="mt-6 text-lg leading-relaxed text-white/80">
+          Bienvenue à Meno Dive Club, votre porte d'entrée vers les merveilles sous-marines de Gili
+          Meno. Des plongeurs débutants aux explorateurs chevronnés, nous proposons un encadrement
+          expert et des petits groupes pour une expérience inoubliable.
+        </p>
+        <a
+          href="/fr/about"
+          class="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-ocean-300 hover:text-ocean-200"
+        >
+          Plus à notre sujet
+          <span aria-hidden="true">→</span>
+        </a>
       </div>
-      <p class="text-lg leading-relaxed text-white/80">{t('home.aboutBody')}</p>
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Notre histoire</p>
+        <h3 class="mt-3 font-display text-2xl font-semibold leading-tight tracking-tight md:text-3xl">
+          Une école de plongée familiale à Gili Meno.
+        </h3>
+        <p class="mt-6 leading-relaxed text-white/75">
+          Établi en décembre 2018, nous sommes une école de plongée « familiale » dédiée à créer une
+          atmosphère accueillante pour les plongeurs de tous niveaux. Nous partageons notre passion
+          pour l'océan, aidant les autres à découvrir ses merveilles.
+        </p>
+      </div>
     </div>
   </section>
+
+  {/* Cours mis en avant */}
+  <section class="border-t border-white/5 bg-ocean-900/40" data-reveal>
+    <div class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+      <div class="max-w-3xl">
+        <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Apprendre à plonger</p>
+        <h2 class="mt-3 font-display text-3xl font-bold tracking-tight md:text-5xl">
+          Cours en vedette
+        </h2>
+        <p class="mt-6 text-lg text-white/80">
+          Découvrez nos divers cours de plongée. Que vous soyez débutant ou plongeur expérimenté,
+          nous avons le programme parfait pour vous.
+        </p>
+      </div>
+
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          featuredCourses.map((c) => {
+            const slug = cleanSlug(c.id)
+            return (
+              <article class="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur transition hover:-translate-y-1 hover:border-ocean-400/40 hover:bg-white/[0.06]">
+                {c.data.image && (
+                  <a href={`/fr/courses/${slug}`} class="block aspect-[16/10] overflow-hidden">
+                    <img
+                      src={c.data.image}
+                      alt={c.data.imageAlt ?? c.data.title}
+                      loading="lazy"
+                      decoding="async"
+                      class="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                    />
+                  </a>
+                )}
+                <div class="p-6">
+                  <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">
+                    {c.data.type}{c.data.duration && ` · ${c.data.duration} ${c.data.duration === 1 ? 'jour' : 'jours'}`}
+                  </p>
+                  <h3 class="mt-2 font-display text-xl font-semibold text-white">
+                    <a href={`/fr/courses/${slug}`} class="link-underline">{c.data.title}</a>
+                  </h3>
+                  <p class="mt-3 text-sm leading-relaxed text-white/70">{c.data.summary}</p>
+                </div>
+              </article>
+            )
+          })
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* Sites de plongée */}
+  <section class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8" data-reveal>
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Sites de plongée</p>
+        <h2 class="mt-3 font-display text-3xl font-bold tracking-tight md:text-5xl">
+          Plongées à couper le souffle
+        </h2>
+      </div>
+      <a
+        href="/fr/dive-sites"
+        class="inline-flex items-center gap-1 text-sm font-semibold text-ocean-300 hover:text-ocean-200"
+      >
+        Les 13 sites
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
+
+    <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        featuredSites.map((s) => {
+          const slug = cleanSlug(s.id)
+          return (
+            <a
+              href={`/fr/dive-sites/${slug}`}
+              class="group relative block overflow-hidden rounded-2xl border border-white/10"
+            >
+              {s.data.image && (
+                <img
+                  src={s.data.image}
+                  alt={s.data.imageAlt ?? s.data.name}
+                  loading="lazy"
+                  decoding="async"
+                  class="aspect-[4/5] w-full object-cover transition duration-700 group-hover:scale-105"
+                />
+              )}
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-ocean-900/95 via-ocean-900/30 to-transparent"
+                aria-hidden="true"
+              ></div>
+              <div class="absolute inset-x-0 bottom-0 p-5">
+                <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">
+                  {s.data.difficulty} · {s.data.maxDepth} m
+                </p>
+                <h3 class="mt-1 font-display text-xl font-semibold text-white">
+                  {s.data.name}
+                </h3>
+              </div>
+            </a>
+          )
+        })
+      }
+    </div>
+  </section>
+
+  {/* Carte interactive */}
+  <section class="border-t border-white/5 bg-ocean-950/40" data-reveal>
+    <div class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+      <div class="max-w-3xl">
+        <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Votre guide ultime de l'île</p>
+        <h2 class="mt-3 font-display text-3xl font-bold tracking-tight md:text-5xl">
+          Gili Meno sur la carte
+        </h2>
+        <p class="mt-4 text-lg text-white/75">
+          Cette carte interactive vous aide à trouver tout ce que vous cherchez sur Gili Meno —
+          des sites de plongée aux hôtels et restaurants. Touchez un marqueur pour les détails.
+        </p>
+      </div>
+      <div class="mt-12">
+        <GiliMenoMap />
+      </div>
+    </div>
+  </section>
+
+  {/* Témoignages */}
+  <section class="border-t border-white/5 bg-ocean-900/40" data-reveal>
+    <div class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <div class="max-w-3xl">
+          <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Ce que disent vos pairs plongeurs</p>
+          <h2 class="mt-3 font-display text-3xl font-bold tracking-tight md:text-5xl">
+            Avis de vrais plongeurs.
+          </h2>
+        </div>
+        <div class="flex flex-col gap-2">
+          <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm text-amber-200">
+            <span aria-hidden="true">★★★★★</span>
+            <span class="font-semibold text-white">4.9</span>
+            <span class="text-white/70">Google</span>
+          </span>
+          <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm text-amber-200">
+            <span aria-hidden="true">★★★★★</span>
+            <span class="font-semibold text-white">5.0</span>
+            <span class="text-white/70">TripAdvisor</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {
+          testimonials.map((tst) => (
+            <blockquote class="rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur">
+              <div class="flex items-center gap-1 text-amber-300">
+                {Array.from({ length: tst.data.rating }).map(() => (
+                  <span aria-hidden="true">★</span>
+                ))}
+                <span class="sr-only">{tst.data.rating} sur 5</span>
+              </div>
+              <p class="mt-4 text-base leading-relaxed text-white/85">"{tst.data.review}"</p>
+              <footer class="mt-5 text-xs uppercase tracking-widest text-white/50">
+                {tst.data.name} · {tst.data.source}
+              </footer>
+            </blockquote>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* Bubble Diaries */}
+  {
+    recentBlog.length > 0 && (
+      <section class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8" data-reveal>
+        <div class="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Bubble Diaries</p>
+            <h2 class="mt-3 font-display text-3xl font-bold tracking-tight md:text-5xl">
+              Histoires du récif.
+            </h2>
+          </div>
+          <a
+            href="/fr/blog"
+            class="inline-flex items-center gap-1 text-sm font-semibold text-ocean-300 hover:text-ocean-200"
+          >
+            Tout voir
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+
+        <div class="mt-12 grid gap-10 md:grid-cols-3">
+          {recentBlog.map((p) => {
+            const slug = cleanSlug(p.id)
+            return (
+              <article class="group">
+                {p.data.image && (
+                  <a
+                    href={`/fr/blog/${slug}`}
+                    class="block aspect-[16/10] overflow-hidden rounded-2xl border border-white/10"
+                  >
+                    <img
+                      src={p.data.image}
+                      alt={p.data.imageAlt ?? p.data.title}
+                      loading="lazy"
+                      decoding="async"
+                      class="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                    />
+                  </a>
+                )}
+                <p class="mt-4 text-xs font-medium uppercase tracking-widest text-white/50">
+                  <time datetime={p.data.date.toISOString()}>
+                    {p.data.date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}
+                  </time>
+                </p>
+                <h3 class="mt-2 font-display text-xl font-semibold text-white">
+                  <a href={`/fr/blog/${slug}`} class="link-underline">{p.data.title}</a>
+                </h3>
+                <p class="mt-2 text-sm leading-relaxed text-white/70">{p.data.summary}</p>
+              </article>
+            )
+          })}
+        </div>
+      </section>
+    )
+  }
+
+  {/* CTA final */}
+  <section class="border-t border-white/5" data-reveal>
+    <div class="mx-auto max-w-7xl px-4 py-24 text-center sm:px-6 lg:px-8">
+      <h2 class="font-display text-3xl font-bold tracking-tight md:text-5xl">
+        Apprenez à plonger avec Meno Dive Club
+      </h2>
+      <p class="mx-auto mt-4 max-w-xl text-lg text-white/80">
+        Envoyez-nous un message, ou un WhatsApp au {SITE_CONFIG.contact.phone}.
+      </p>
+      <div class="mt-10 flex flex-wrap justify-center gap-4">
+        <a
+          href="/fr/contact"
+          class="rounded-full bg-ocean-500 px-6 py-3 text-sm font-semibold text-white shadow-xl shadow-ocean-500/30 transition hover:scale-[1.03] hover:bg-ocean-400"
+        >
+          Nous contacter
+        </a>
+        <a
+          href="/fr/booking"
+          class="rounded-full border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-white/90 backdrop-blur transition hover:bg-white/10"
+        >
+          Réserver
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    /* IntersectionObserver section reveal */
+    const els = document.querySelectorAll<HTMLElement>('[data-reveal]')
+    if (els.length && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      els.forEach((el) => {
+        el.style.opacity = '0'
+        el.style.transform = 'translateY(20px)'
+        el.style.transition = 'opacity 700ms cubic-bezier(0.22, 1, 0.36, 1), transform 700ms cubic-bezier(0.22, 1, 0.36, 1)'
+      })
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              const t = e.target as HTMLElement
+              t.style.opacity = '1'
+              t.style.transform = 'translateY(0)'
+              io.unobserve(e.target)
+            }
+          })
+        },
+        { rootMargin: '0px 0px -10% 0px' },
+      )
+      els.forEach((el) => io.observe(el))
+    }
+  </script>
 </BaseLayout>
