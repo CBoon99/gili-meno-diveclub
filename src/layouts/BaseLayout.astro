@@ -60,7 +60,8 @@ const baseKeywords = [
 const allKeywords = keywords ? [...baseKeywords, keywords].join(', ') : baseKeywords.join(', ')
 
 const canonical = new URL(Astro.url.pathname, SITE_CONFIG.url).toString()
-const ogImageUrl = new URL(image, SITE_CONFIG.url).toString()
+const socialUrl = new URL(Astro.url.pathname, Astro.url.origin).toString()
+const ogImageUrl = new URL(image, Astro.url.origin).toString()
 const fullTitle = title === SITE_CONFIG.name ? title : `${title} · ${SITE_CONFIG.name}`
 
 // hreflang alternates: same path under each locale
@@ -127,7 +128,7 @@ const allJsonLd = [localBusinessJsonLd(), organizationJsonLd(), websiteJsonLd(),
     <meta property="og:type" content={type} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonical} />
+    <meta property="og:url" content={socialUrl} />
     <meta property="og:image" content={ogImageUrl} />
     <meta property="og:image:secure_url" content={ogImageUrl} />
     <meta property="og:image:type" content="image/jpeg" />
