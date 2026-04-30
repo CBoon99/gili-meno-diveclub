@@ -6,6 +6,29 @@ This document exists for full audit transparency: nothing is changed silently.
 
 ---
 
+## Phase 4.4 — natural-motion sea turtle on the hero (2026-04-30)
+
+Pure-CSS swimming turtle that drifts across the hero every ~42 s. **Zero JavaScript.** Bundle cost: one 269 KB PNG (lazy-loaded), ~80 lines of CSS. **Cannot break the site** — single inline `<style>` block.
+
+### How natural motion is built up
+
+Three nested CSS animations stack to give organic movement:
+
+| Layer | Duration | Effect |
+|---|---|---|
+| `turtle-track` | 42 s linear | Horizontal swim across the screen |
+| `turtle-bob` | 7 s ease-in-out | Vertical drift + gentle banking rotation |
+| `turtle-glide` | 2.4 s ease-in-out | Subtle scale "breathing" — reads as flipper power-strokes followed by a glide |
+
+Combined, the turtle never hits the same x/y/scale state twice, so it feels alive rather than looped.
+
+### Robust against everything
+
+- Respects `prefers-reduced-motion` (turtle freezes mid-frame, no animation)
+- Hides on screens ≤ 480 px wide so it can't crowd the H1
+- `aria-hidden="true"` so screen readers ignore it
+- `pointer-events: none` so it never blocks the CTAs
+
 ## Phase 4.3 — locally-hosted brand imagery + dead-link sweep (2026-04-30)
 
 User flagged broken image renders on the home page (Meno Wall, Bounty Wreck, SSI Advanced, Family Package) plus thematically wrong photos (Turtle City showing waves, Shark Point showing forest, Eco-Scuba showing the Milky Way). Despite Unsplash IDs returning 200 to a HEAD check, browsers received unrelated content because Unsplash had reassigned those slugs.
