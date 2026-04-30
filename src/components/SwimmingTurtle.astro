@@ -1,0 +1,105 @@
+---
+/**
+ * Sea turtle drifting across the hero. Pure CSS — no JS, no WebGL.
+ * Three nested layers compose natural motion:
+ *   1. .turtle-track  → horizontal swim across the screen (38s)
+ *   2. .turtle-bob    → vertical sin wave (drift up + down) (7s)
+ *   3. .turtle-glide  → very subtle scale "breathing" suggesting flipper strokes
+ *
+ * Disabled under prefers-reduced-motion.
+ */
+---
+
+<div class="turtle-track" aria-hidden="true">
+  <div class="turtle-bob">
+    <div class="turtle-glide">
+      <img
+        src="/images/turtle-swim.png"
+        alt=""
+        class="turtle-img"
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+  </div>
+</div>
+
+<style>
+  .turtle-track {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5; /* above bg image, below text */
+    overflow: hidden;
+  }
+
+  .turtle-bob {
+    position: absolute;
+    /* Start position: just off-screen left, mid height */
+    left: -22%;
+    top: 38%;
+    width: clamp(110px, 18vw, 220px);
+    will-change: transform, left;
+    animation:
+      turtle-swim 42s linear infinite,
+      turtle-bob 7s ease-in-out infinite;
+  }
+
+  .turtle-glide {
+    /* Subtle scale "breathing" to suggest flipper power strokes — easier on the eye than a hard flap */
+    animation: turtle-glide 2.4s ease-in-out infinite;
+    transform-origin: center;
+    will-change: transform;
+  }
+
+  .turtle-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    /* The PNG is head-right; tilt it down ~6° so it looks like it's gliding */
+    transform: rotate(2deg);
+    filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.35));
+    opacity: 0.95;
+  }
+
+  /* Horizontal travel — uses `left` rather than translateX so the bob's
+     transform can stack independently for natural compound motion. */
+  @keyframes turtle-swim {
+    0%   { left: -22%; }
+    100% { left: 122%; }
+  }
+
+  /* Gentle vertical drift + slight rotation banking */
+  @keyframes turtle-bob {
+    0%   { transform: translateY(0)    rotate(0deg); }
+    25%  { transform: translateY(-22px) rotate(-2deg); }
+    50%  { transform: translateY(8px)   rotate(1deg); }
+    75%  { transform: translateY(-12px) rotate(-1deg); }
+    100% { transform: translateY(0)    rotate(0deg); }
+  }
+
+  /* Pulsing scale that reads as "stroke … glide … stroke" */
+  @keyframes turtle-glide {
+    0%, 100% { transform: scale(1); }
+    35%      { transform: scale(1.03); }
+    70%      { transform: scale(0.98); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .turtle-bob,
+    .turtle-glide {
+      animation: none !important;
+    }
+    .turtle-bob {
+      left: 70%;
+      top: 32%;
+    }
+  }
+
+  /* Hide on tiny screens so it doesn't crowd the H1 on phones */
+  @media (max-width: 480px) {
+    .turtle-track {
+      display: none;
+    }
+  }
+</style>

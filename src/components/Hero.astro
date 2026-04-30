@@ -1,10 +1,12 @@
 ---
 /**
  * Cinematic photographic hero, exact text from the live menodiveclub.com.
- * Slow Ken-Burns on the image, light scroll parallax, soft CSS bubble overlay.
- * No WebGL. Hero text is server-rendered for LCP + crawlers.
+ * Slow Ken-Burns on the image, light scroll parallax, soft CSS bubble overlay,
+ * and a sea turtle gliding gracefully across the scene. No WebGL.
+ * Hero text is server-rendered for LCP + crawlers.
  */
 import { SITE_CONFIG } from '@/consts'
+import SwimmingTurtle from '@/components/SwimmingTurtle.astro'
 
 interface Props {
   /** Background image URL (Unsplash, CMS, or hosted file) */
@@ -53,6 +55,9 @@ const {
     aria-hidden="true"
   >
   </div>
+
+  {/* Sea turtle drifting across the hero */}
+  <SwimmingTurtle />
 
   {/* Subtle CSS bubble accents (no WebGL) */}
   <div aria-hidden="true" class="pointer-events-none absolute inset-0 -z-10 overflow-hidden">

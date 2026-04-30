@@ -6,6 +6,37 @@ This document exists for full audit transparency: nothing is changed silently.
 
 ---
 
+## Phase 4.3 — locally-hosted brand imagery + dead-link sweep (2026-04-30)
+
+User flagged broken image renders on the home page (Meno Wall, Bounty Wreck, SSI Advanced, Family Package) plus thematically wrong photos (Turtle City showing waves, Shark Point showing forest, Eco-Scuba showing the Milky Way). Despite Unsplash IDs returning 200 to a HEAD check, browsers received unrelated content because Unsplash had reassigned those slugs.
+
+### 8 generated, locally-hosted brand images
+
+Replaces all top-of-funnel imagery with images we control. Optimised to 1440×900 JPEG @ ~85 quality (~3 MB total for 8 images).
+
+| File | Used by |
+|---|---|
+| `/images/site-turtle-city.jpg` | home hero, Turtle City dive site, Sea Turtles marine life, Marine Life listing, Booking page |
+| `/images/site-meno-wall.jpg` | Meno Wall dive site, Dive Sites listing |
+| `/images/site-bounty-wreck.jpg` | Bounty Wreck, Turtle Encounters blog |
+| `/images/site-shark-point.jpg` | Shark Point dive site, Reef Sharks marine life |
+| `/images/course-open-water.jpg` | Open Water course, Courses listing |
+| `/images/course-advanced.jpg` | Advanced Adventurer course, About page |
+| `/images/course-eco-scuba.jpg` | Eco-Scuba course |
+| `/images/course-family.jpg` | Family Package course, Family Diving audience, Audiences listing |
+
+Result: every visible card on the home page, all 4 featured courses, all 4 featured dive sites, and all 7 listing-page banners now load reliable, on-theme images.
+
+### Dead links swept
+
+- `/dive-stay` (about page) → `/info/dive-and-stay` (real page)
+- All `/fr/*` sub-page links from FR home → fall back to existing `/` (EN) routes
+- `localizedPath()` and `switchLocale()` now use a `FR_AVAILABLE` allow-list so internal nav + the language switcher never land on a 404 when on the FR home
+
+### Smoke
+
+20 routes + 3 image assets all 200. Build green.
+
 ## Phase 4.2 — image audit + responsive polish (2026-04-30)
 
 ### Broken images fixed
