@@ -12,6 +12,8 @@
 - Location: Jl. Gili Meno, Pemenang, North Lombok Regency, West Nusa Tenggara, 83352, Indonesia
 - Coordinates: -8.3559, 116.0623
 - Website: https://menodiveclub.com
+- Canonical host: https://www.menodiveclub.com
+- Brand logo: https://www.menodiveclub.com/logo-menodiveclub.png
 
 ## Key facts
 
@@ -59,3 +61,12 @@
 - Booking: https://menodiveclub.com/booking
 - Contact: https://menodiveclub.com/contact
 - Sitemap: https://menodiveclub.com/sitemap-index.xml
+
+## SEO keyword focus
+
+- SSI Dive Centre Gili Meno
+- Scuba diving Gili Meno
+- Open Water course Indonesia
+- Fun dives Gili Islands
+- Dive & Stay Gili Meno
+- Turtle diving Lombok

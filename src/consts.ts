@@ -47,7 +47,7 @@ export const SITE_CONFIG = {
     google: general.google ?? 'https://g.page/menodiveclub',
   },
 
-  partners: ['SSI', 'PADI'],
+  partners: ['SSI'],
 
   // Color tokens — also defined in src/styles/global.css @theme.
   colors: {

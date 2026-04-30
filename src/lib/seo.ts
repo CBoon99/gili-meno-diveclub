@@ -24,7 +24,7 @@ export function localBusinessJsonLd() {
     telephone: SITE_CONFIG.contact.phone,
     email: SITE_CONFIG.contact.email,
     image: `${SITE_CONFIG.url}/og-default.jpg`,
-    logo: `${SITE_CONFIG.url}/icon-512.png`,
+    logo: `${SITE_CONFIG.url}/logo-menodiveclub.png`,
     priceRange: '$$',
     address: {
       '@type': 'PostalAddress',
@@ -83,9 +83,9 @@ export function organizationJsonLd() {
     url: SITE_CONFIG.url,
     logo: {
       '@type': 'ImageObject',
-      url: `${SITE_CONFIG.url}/icon-512.png`,
-      width: 512,
-      height: 512,
+      url: `${SITE_CONFIG.url}/logo-menodiveclub.png`,
+      width: 2560,
+      height: 1648,
     },
     contactPoint: {
       '@type': 'ContactPoint',

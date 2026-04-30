@@ -39,12 +39,21 @@ const {
 
 const baseKeywords = [
   'Meno Dive Club',
+  'Meno Dive Club Gili Meno',
   'Gili Meno diving',
+  'scuba diving Gili Meno',
+  'dive center Gili Meno',
   'SSI Dive Centre',
+  'SSI scuba courses',
   'Lombok diving',
   'Gili Islands scuba',
+  'fun dives Gili Islands',
   'turtle diving Gili Meno',
+  'dive and stay Gili Meno',
+  'Divemaster internship Indonesia',
   'Open Water course Indonesia',
+  'Advanced Adventurer SSI',
+  'Rescue Diver SSI',
   'Eco-Scuba',
   'Bubble Diaries',
 ]
@@ -75,6 +84,7 @@ const allJsonLd = [localBusinessJsonLd(), organizationJsonLd(), websiteJsonLd(),
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <meta name="keywords" content={allKeywords} />
+    <meta name="news_keywords" content={allKeywords} />
     <meta name="author" content={SITE_CONFIG.name} />
     <meta name="publisher" content={SITE_CONFIG.name} />
     <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
