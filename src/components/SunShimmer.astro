@@ -1,0 +1,111 @@
+---
+/**
+ * Underwater god-rays. Eight slim light beams falling from the surface,
+ * each independently flickering at its own rhythm. Pure CSS — no JS, no PNG,
+ * no SVG asset. Uses `mix-blend-mode: screen` so the beams add light rather
+ * than paint over the photo.
+ *
+ * Disabled under prefers-reduced-motion.
+ */
+---
+
+<div class="rays" aria-hidden="true">
+  <span class="ray r1"></span>
+  <span class="ray r2"></span>
+  <span class="ray r3"></span>
+  <span class="ray r4"></span>
+  <span class="ray r5"></span>
+  <span class="ray r6"></span>
+  <span class="ray r7"></span>
+  <span class="ray r8"></span>
+
+  {/* Surface caustic — a subtle band of brightness at the very top */}
+  <span class="surface"></span>
+</div>
+
+<style>
+  .rays {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 4; /* above bg image, below text */
+    mix-blend-mode: screen;
+  }
+
+  .surface {
+    position: absolute;
+    inset: -2% 0 auto 0;
+    height: 30%;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.16) 0%,
+      rgba(186, 230, 253, 0.08) 40%,
+      transparent 100%
+    );
+    filter: blur(8px);
+    opacity: 0.85;
+    animation: surface-shimmer 6s ease-in-out infinite alternate;
+  }
+
+  .ray {
+    position: absolute;
+    top: -10%;
+    height: 130%;
+    border-radius: 50%;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.55) 0%,
+      rgba(186, 230, 253, 0.18) 30%,
+      rgba(125, 211, 252, 0.06) 60%,
+      transparent 100%
+    );
+    filter: blur(12px);
+    opacity: 0;
+    transform-origin: top center;
+    will-change: opacity, transform;
+  }
+
+  /* Eight beams — varied widths, positions, tilts, timings */
+  .r1 { left: 6%;  width: 6%;  transform: rotate(-3deg); animation: ray-flicker 5.2s ease-in-out  0.0s infinite; }
+  .r2 { left: 14%; width: 4%;  transform: rotate(-1deg); animation: ray-flicker 4.4s ease-in-out  -1.5s infinite; }
+  .r3 { left: 24%; width: 9%;  transform: rotate(-4deg); animation: ray-flicker 6.8s ease-in-out  -2.8s infinite; }
+  .r4 { left: 38%; width: 5%;  transform: rotate(2deg);  animation: ray-flicker 3.8s ease-in-out  -1.2s infinite; }
+  .r5 { left: 52%; width: 8%;  transform: rotate(-2deg); animation: ray-flicker 5.6s ease-in-out  -3.5s infinite; }
+  .r6 { left: 66%; width: 6%;  transform: rotate(3deg);  animation: ray-flicker 4.0s ease-in-out  -0.6s infinite; }
+  .r7 { left: 78%; width: 7%;  transform: rotate(-1deg); animation: ray-flicker 6.2s ease-in-out  -2.2s infinite; }
+  .r8 { left: 90%; width: 5%;  transform: rotate(4deg);  animation: ray-flicker 4.8s ease-in-out  -4.1s infinite; }
+
+  /* Each beam fades in, holds, fades out, with a slight horizontal sway */
+  @keyframes ray-flicker {
+    0%, 100% {
+      opacity: 0;
+      transform: rotate(var(--tilt, 0deg)) translateX(0);
+    }
+    20% {
+      opacity: 0.9;
+      transform: rotate(calc(var(--tilt, 0deg) + 1deg)) translateX(-4px);
+    }
+    50% {
+      opacity: 0.55;
+      transform: rotate(var(--tilt, 0deg)) translateX(0);
+    }
+    75% {
+      opacity: 0.85;
+      transform: rotate(calc(var(--tilt, 0deg) - 1deg)) translateX(4px);
+    }
+  }
+
+  @keyframes surface-shimmer {
+    0%, 100% { opacity: 0.65; transform: translateX(0); }
+    50%      { opacity: 0.95; transform: translateX(8px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ray,
+    .surface {
+      animation: none !important;
+      opacity: 0.4 !important;
+    }
+  }
+</style>
