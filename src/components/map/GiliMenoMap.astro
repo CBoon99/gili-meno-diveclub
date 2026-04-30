@@ -1,0 +1,181 @@
+---
+import {
+  GILI_MENO_CENTER,
+  MAP_CATEGORY_COLOR,
+  MAP_CATEGORY_LABEL,
+  giliMenoPlaces,
+} from '@/lib/gili-meno-places'
+
+const categories = ['dive-site', 'restaurant', 'accommodation', 'sightseeing'] as const
+const placesJson = JSON.stringify(giliMenoPlaces)
+const categoryColorsJson = JSON.stringify(MAP_CATEGORY_COLOR)
+const categoryLabelsJson = JSON.stringify(MAP_CATEGORY_LABEL)
+const centreJson = JSON.stringify(GILI_MENO_CENTER)
+---
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+
+<div class="overflow-hidden rounded-2xl border border-white/15 bg-ocean-900/60 shadow-xl shadow-black/20 backdrop-blur">
+  <div class="flex flex-wrap gap-2 border-b border-white/10 p-4" data-map-toolbar>
+    {
+      categories.map((c) => (
+        <button
+          type="button"
+          data-category={c}
+          aria-pressed="true"
+          class="rounded-full px-3 py-1.5 text-xs font-semibold uppercase tracking-wide transition"
+          style={`background-color: ${MAP_CATEGORY_COLOR[c]}; color: #051a2c; box-shadow: 0 0 0 1px rgba(255,255,255,0.2);`}
+        >
+          {MAP_CATEGORY_LABEL[c]}
+        </button>
+      ))
+    }
+  </div>
+  <div
+    id="gili-meno-map"
+    class="relative h-[min(68vh,520px)] w-full [&_.leaflet-control-attribution]:rounded-bl-xl [&_.leaflet-control-attribution]:bg-ocean-950/90 [&_.leaflet-control-attribution]:text-[10px] [&_.leaflet-control-attribution]:text-white/60"
+    role="region"
+    aria-label="Interactive map of Gili Meno with dive sites and local places"
+  >
+  </div>
+</div>
+
+<script
+  type="application/json"
+  id="gili-meno-map-data"
+  set:html={JSON.stringify({
+    centre: JSON.parse(centreJson),
+    places: JSON.parse(placesJson),
+    colors: JSON.parse(categoryColorsJson),
+    labels: JSON.parse(categoryLabelsJson),
+  })}
+/>
+
+<script>
+  import L from 'leaflet'
+
+  type Cat = 'dive-site' | 'restaurant' | 'accommodation' | 'sightseeing'
+
+  type Place = {
+    id: string
+    name: string
+    category: Cat
+    lat: number
+    lng: number
+    href?: string
+    blurb?: string
+  }
+
+  type Payload = {
+    centre: { lat: number; lng: number }
+    places: Place[]
+    colors: Record<Cat, string>
+    labels: Record<Cat, string>
+  }
+
+  function init() {
+    const root = document.getElementById('gili-meno-map')
+    const dataEl = document.getElementById('gili-meno-map-data')
+    if (!root || !dataEl) return
+    const payload: Payload = JSON.parse(dataEl.textContent || '{}')
+
+    const map = L.map(root, { scrollWheelZoom: true }).setView(
+      [payload.centre.lat, payload.centre.lng],
+      15,
+    )
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 19,
+    }).addTo(map)
+
+    const iconFor = (cat: Cat) =>
+      L.divIcon({
+        className: 'gili-meno-map-marker',
+        html: `<span style="display:block;width:14px;height:14px;border-radius:999px;background:${payload.colors[cat]};border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.35)"></span>`,
+        iconSize: [14, 14],
+        iconAnchor: [7, 7],
+      })
+
+    const markersByCat: Record<Cat, L.Marker[]> = {
+      'dive-site': [],
+      restaurant: [],
+      accommodation: [],
+      sightseeing: [],
+    }
+
+    for (const p of payload.places) {
+      const m = L.marker([p.lat, p.lng], { icon: iconFor(p.category) })
+      const popup = `
+        <div style="min-width:200px">
+          <p style="margin:0 0 6px;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#7dd3fc">${payload.labels[p.category]}</p>
+          <p style="margin:0 0 4px;font-family:'Fraunces',Georgia,serif;font-size:16px;font-weight:600;color:#fff">${p.name}</p>
+          ${p.blurb ? `<p style="margin:0 0 8px;font-size:13px;line-height:1.4;color:rgba(255,255,255,.78)">${p.blurb}</p>` : ''}
+          ${p.href ? `<a href="${p.href}" style="font-size:13px;font-weight:600;color:#38bdf8;text-decoration:none">Read more →</a>` : ''}
+        </div>`
+      m.bindPopup(popup, {
+        className: 'gili-meno-popup',
+        closeButton: true,
+      })
+      m.addTo(map)
+      markersByCat[p.category].push(m)
+    }
+
+    const active = new Set<Cat>(['dive-site', 'restaurant', 'accommodation', 'sightseeing'])
+
+    const refit = () => {
+      const visible = (Object.keys(markersByCat) as Cat[])
+        .filter((c) => active.has(c))
+        .flatMap((c) => markersByCat[c])
+      if (visible.length === 0) return
+      const bounds = L.latLngBounds(visible.map((m) => m.getLatLng()))
+      map.fitBounds(bounds, { padding: [28, 28], maxZoom: 16, animate: true })
+    }
+    refit()
+
+    const toolbar = document.querySelector('[data-map-toolbar]')
+    toolbar?.querySelectorAll<HTMLButtonElement>('[data-category]').forEach((btn) => {
+      const cat = btn.dataset.category as Cat
+      btn.addEventListener('click', () => {
+        if (active.has(cat)) {
+          // Don't allow turning everything off
+          if (active.size === 1) return
+          active.delete(cat)
+          markersByCat[cat].forEach((m) => map.removeLayer(m))
+          btn.setAttribute('aria-pressed', 'false')
+          btn.style.backgroundColor = 'rgba(255,255,255,0.05)'
+          btn.style.color = 'rgba(255,255,255,0.5)'
+        } else {
+          active.add(cat)
+          markersByCat[cat].forEach((m) => m.addTo(map))
+          btn.setAttribute('aria-pressed', 'true')
+          btn.style.backgroundColor = payload.colors[cat]
+          btn.style.color = '#051a2c'
+        }
+        refit()
+      })
+    })
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init)
+  } else {
+    init()
+  }
+</script>
+
+<style is:global>
+  .gili-meno-popup .leaflet-popup-content-wrapper {
+    border-radius: 12px;
+    border: 1px solid #0c4a63;
+    background: #051a2c;
+  }
+  .gili-meno-popup .leaflet-popup-content {
+    margin: 12px;
+    color: #fff;
+  }
+  .gili-meno-popup .leaflet-popup-tip {
+    background: #051a2c;
+  }
+</style>

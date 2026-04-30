@@ -6,6 +6,45 @@ This document exists for full audit transparency: nothing is changed silently.
 
 ---
 
+## Phase 4 — pivot to photographic hero (2026-04-30)
+
+Per user request: drop the entire WebGL 3D layer (cinematic but slow, complex, and visually noisy after iteration), keep the polished underlying site, and replace the hero with a **large photographic image** that mirrors the live menodiveclub.com.
+
+### Removed (all WebGL)
+
+- `HeroUnderwater`, `HeroForeground` (R3F hero canvases)
+- All Phase 3B creature scenes — `Octopus`, `Eel`, `Jellyfish`, `SeabedDecor`, `SedimentParticles`, `CoralScene`, `Creatures`
+- `AmbientCanvas`, `FishSchool`, `Bubbles`, `CausticProjector`, `caustic-shader`, `HomeScrollFx`
+- React-Leaflet → replaced with **vanilla Leaflet** in a single `.astro` component, removing the entire React dependency tree
+
+### Uninstalled
+
+- `three`, `@react-three/fiber`, `@react-three/drei`, `@react-three/postprocessing`, `postprocessing`, `gsap`
+- `@astrojs/react`, `react`, `react-dom`, `@types/react`, `@types/react-dom`
+- `react-leaflet`
+
+### Added / replaced
+
+- **`Hero.astro`** — large photographic hero with **Ken-Burns slow zoom** (CSS keyframes), **scroll parallax** (rAF, no library), soft **CSS bubble overlay**, dark gradient for legibility, headline + subhead **verbatim from live site**: *"Your Underwater Adventure Awaits at Gili Meno"* + *"Meno Dive Club is the newest SSI Dive Center on Gili Meno..."*. Respects `prefers-reduced-motion`.
+- **`GiliMenoMap.astro`** — pure Leaflet rewrite. Same UX (toggle 4 categories, fit-bounds, popups link to dive-site detail pages). Loads Leaflet CSS from CDN, no React.
+- **Home page restructured** to mirror the live site sections in the same order: Hero → Our Story → Featured Courses → Featured Dive Sites → Interactive Map → Why Choose Us → Testimonials (with Google ★4.9 + TripAdvisor ★5.0 badges) → Bubble Diaries → Final CTA.
+- **`AggregateRating` JSON-LD** added so search engines surface the star rating in results.
+- **`/llms.txt`** added at root for emerging AI-agent discoverability standard. Lists business overview, contact, all 8 courses (with URLs), all 13 dive sites (with URLs), and key resource links.
+- **Decap CMS expanded** so the customer can edit:
+  - **Hero** (image, eyebrow, headline, subhead, button labels/links — all i18n)
+  - **Contact details** (phone, WhatsApp, email, social URLs)
+  - **Blog** (full markdown editor, hero image, tags)
+  - **Testimonials** (name, source, rating, review)
+  - **Courses + Dive sites** (locked schema, content editable)
+- IntersectionObserver-driven **section reveal** replaces GSAP ScrollTrigger — same effect, zero dependency.
+
+### Bundle / build
+
+- Production build still green; **dropped >3 MB of JS dependencies** (R3F + drei + three + postprocessing + React + react-leaflet + gsap).
+- Hero image is `fetchpriority="high"` so it lands quickly for LCP.
+
+---
+
 ## Phase 1 — Scaffolding
 
 ### Original 18 bugs in the pasted brief — all fixed

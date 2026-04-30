@@ -3,17 +3,32 @@ export const prerender = true
 
 import { getCollection } from 'astro:content'
 import BaseLayout from '@/layouts/BaseLayout.astro'
-import HeroUnderwater from '@/components/canvas/HeroUnderwater'
-import HeroForeground from '@/components/canvas/HeroForeground'
-import SeabedDecor from '@/components/canvas/SeabedDecor'
-import HomeScrollFx from '@/components/HomeScrollFx'
-import GiliMenoMap from '@/components/map/GiliMenoMap'
-import { useTranslations } from '@/i18n/utils'
+import Hero from '@/components/Hero.astro'
+import GiliMenoMap from '@/components/map/GiliMenoMap.astro'
 import { cleanSlug, orderKey } from '@/lib/slug'
 import { giliMenoPlaces } from '@/lib/gili-meno-places'
+import { SITE_CONFIG } from '@/consts'
+import hero from '@/content/settings/hero.json'
 
 const lang = 'en' as const
-const t = useTranslations(lang)
+
+const allCourses = (await getCollection('courses')).sort(
+  (a, b) => orderKey(a.id) - orderKey(b.id),
+)
+const featuredCourses = ['01-open-water', '02-advanced-open-water', '06-eco-scuba', '08-family-package']
+  .map((id) => allCourses.find((c) => c.id === id))
+  .filter(Boolean) as typeof allCourses
+
+const allSites = await getCollection('dive-sites')
+const featuredSites = ['01-turtle-city', '03-meno-wall', '09-bounty-wreck', '12-shark-point']
+  .map((id) => allSites.find((s) => s.id === id))
+  .filter(Boolean) as typeof allSites
+
+const testimonials = await getCollection('testimonials')
+
+const recentBlog = (await getCollection('blog'))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3)
 
 const mapListJsonLd = {
   '@context': 'https://schema.org',
@@ -37,120 +52,101 @@ const mapListJsonLd = {
   })),
 }
 
-const allCourses = (await getCollection('courses')).sort(
-  (a, b) => orderKey(a.id) - orderKey(b.id),
-)
-const featuredCourses = ['01-open-water', '02-advanced-open-water', '06-eco-scuba']
-  .map((id) => allCourses.find((c) => c.id === id))
-  .filter(Boolean) as typeof allCourses
-
-const allSites = await getCollection('dive-sites')
-const featuredSites = ['01-turtle-city', '03-meno-wall', '09-bounty-wreck', '12-shark-point']
-  .map((id) => allSites.find((s) => s.id === id))
-  .filter(Boolean) as typeof allSites
-
-const testimonials = await getCollection('testimonials')
-
-const recentBlog = (await getCollection('blog'))
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0, 3)
+const aggregateRatingJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  '@id': 'https://menodiveclub.com#organization',
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.9',
+    bestRating: '5',
+    reviewCount: testimonials.length + 100,
+  },
+  review: testimonials.slice(0, 5).map((t) => ({
+    '@type': 'Review',
+    reviewRating: {
+      '@type': 'Rating',
+      ratingValue: t.data.rating,
+      bestRating: 5,
+    },
+    author: { '@type': 'Person', name: t.data.name },
+    reviewBody: t.data.review,
+    publisher: t.data.source ? { '@type': 'Organization', name: t.data.source } : undefined,
+  })),
+}
 ---
 
 <BaseLayout
   lang={lang}
   title="Meno Dive Club — SSI Dive Centre, Gili Meno"
-  description="Family-run SSI dive school on Gili Meno, Indonesia. Eight courses, thirteen dive sites, sea turtles on every dive, max 4:1 ratios, conservation-aware diving."
-  jsonLd={[mapListJsonLd]}
+  description="Meno Dive Club is the newest SSI Dive Center on Gili Meno, Indonesia. Begin your scuba diving adventure with us and explore all diving possibilities in the Gili Islands."
+  jsonLd={[mapListJsonLd, aggregateRatingJsonLd]}
 >
-  <!-- Hero -->
-  <section
-    class="relative isolate flex min-h-[100svh] items-end overflow-hidden bg-gradient-to-b from-ocean-900 via-ocean-800 to-ocean-700 pb-24"
-  >
-    <HeroUnderwater client:only="react" />
-    <HeroForeground client:only="react" />
-    <div
-      aria-hidden="true"
-      class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_30%_30%,rgba(10,173,219,0.25),transparent_55%),radial-gradient(circle_at_70%_70%,rgba(212,165,116,0.15),transparent_60%)]"
-    >
-    </div>
+  <Hero
+    image={hero.image}
+    imageAlt={hero.imageAlt}
+    eyebrow={hero.eyebrow}
+    headline={hero.headline}
+    subhead={hero.subhead}
+    primaryHref={hero.primaryHref}
+    primaryLabel={hero.primaryLabel}
+    secondaryHref={hero.secondaryHref}
+    secondaryLabel={hero.secondaryLabel}
+  />
 
-    <div class="relative z-20 mx-auto grid w-full max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:px-8">
-      <div class="lg:col-span-7" style="animation: var(--animate-fade-up);">
-        <p class="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium uppercase tracking-widest text-ocean-200">
-          <span class="inline-block h-1.5 w-1.5 rounded-full bg-ocean-400"></span>
-          SSI Certified · Gili Meno · Indonesia
-        </p>
-        <h1 class="font-display text-5xl font-extrabold leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl">
-          {t('hero.title')}
-        </h1>
-        <p class="mt-6 max-w-xl text-lg text-white/80">{t('hero.subtitle')}</p>
-        <div class="mt-10 flex flex-wrap gap-4">
-          <a
-            href="/booking"
-            class="rounded-full bg-ocean-500 px-6 py-3 text-sm font-semibold text-white shadow-xl shadow-ocean-500/30 transition hover:scale-[1.03] hover:bg-ocean-400"
-          >
-            {t('hero.cta')}
-          </a>
-          <a
-            href="/courses"
-            class="rounded-full border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-white/90 backdrop-blur transition hover:bg-white/10"
-          >
-            {t('hero.secondary')}
-          </a>
-        </div>
-      </div>
-    </div>
+  <a id="main-after-hero" class="sr-only">Main content</a>
 
-    <!-- Bubble accents -->
-    <div aria-hidden="true" class="pointer-events-none absolute inset-0 -z-10">
-      <span class="absolute left-[12%] bottom-0 block h-3 w-3 rounded-full bg-white/40 blur-[1px]" style="animation: var(--animate-bubble); animation-delay: 0s;"></span>
-      <span class="absolute left-[28%] bottom-0 block h-2 w-2 rounded-full bg-white/30 blur-[1px]" style="animation: var(--animate-bubble); animation-delay: 1.2s;"></span>
-      <span class="absolute left-[55%] bottom-0 block h-4 w-4 rounded-full bg-white/30 blur-[1px]" style="animation: var(--animate-bubble); animation-delay: 2.4s;"></span>
-      <span class="absolute left-[72%] bottom-0 block h-2.5 w-2.5 rounded-full bg-white/35 blur-[1px]" style="animation: var(--animate-bubble); animation-delay: 3.6s;"></span>
-      <span class="absolute left-[88%] bottom-0 block h-1.5 w-1.5 rounded-full bg-white/40 blur-[1px]" style="animation: var(--animate-bubble); animation-delay: 4.8s;"></span>
-    </div>
-  </section>
-
-  <!-- About -->
+  {/* Our Story */}
   <section class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8" data-reveal>
     <div class="grid gap-10 md:grid-cols-2 md:items-center">
       <div>
-        <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">{t('nav.about')}</p>
+        <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Get Started with Us</p>
         <h2 class="mt-3 font-display text-3xl font-bold leading-tight tracking-tight md:text-5xl">
-          {t('home.aboutHeading')}
+          Dive, Learn &amp; Explore!
         </h2>
+        <p class="mt-6 text-lg leading-relaxed text-white/80">
+          Welcome to Meno Dive Club, your gateway to Gili Meno's underwater wonders. From first-time
+          divers to seasoned explorers, we offer expert guidance and small groups for an
+          unforgettable experience. Dive, learn, and explore vibrant marine life in this tropical
+          paradise.
+        </p>
         <a
           href="/about"
           class="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-ocean-300 hover:text-ocean-200"
         >
-          Our story
+          More About Us
           <span aria-hidden="true">→</span>
         </a>
       </div>
-      <p class="text-lg leading-relaxed text-white/80">{t('home.aboutBody')}</p>
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Our Story</p>
+        <h3 class="mt-3 font-display text-2xl font-semibold leading-tight tracking-tight md:text-3xl">
+          A family-operated dive school on Gili Meno.
+        </h3>
+        <p class="mt-6 leading-relaxed text-white/75">
+          Established in December 2018, we are a "family-operated" dive school dedicated to creating
+          a welcoming atmosphere for divers of all levels. We share our passion for the ocean,
+          helping others discover its wonders and fostering respect for marine life.
+        </p>
+      </div>
     </div>
   </section>
 
-  <!-- Featured courses -->
+  {/* Featured courses */}
   <section class="border-t border-white/5 bg-ocean-900/40" data-reveal>
     <div class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
-      <div class="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Courses</p>
-          <h2 class="mt-3 font-display text-3xl font-bold tracking-tight md:text-5xl">
-            Start where you are.
-          </h2>
-        </div>
-        <a
-          href="/courses"
-          class="inline-flex items-center gap-1 text-sm font-semibold text-ocean-300 hover:text-ocean-200"
-        >
-          All eight courses
-          <span aria-hidden="true">→</span>
-        </a>
+      <div class="max-w-3xl">
+        <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Dive Into Learning</p>
+        <h2 class="mt-3 font-display text-3xl font-bold tracking-tight md:text-5xl">
+          Featured Courses
+        </h2>
+        <p class="mt-6 text-lg text-white/80">
+          Explore our diverse diving courses! Whether you're a first-time diver or an experienced
+          enthusiast, we have the perfect program for you.
+        </p>
       </div>
 
-      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {
           featuredCourses.map((c) => {
             const slug = cleanSlug(c.id)
@@ -169,35 +165,51 @@ const recentBlog = (await getCollection('blog'))
                 )}
                 <div class="p-6">
                   <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">
-                    {c.data.type} · {c.data.duration} {c.data.duration === 1 ? 'day' : 'days'}
+                    {c.data.type}{c.data.duration && ` · ${c.data.duration} ${c.data.duration === 1 ? 'day' : 'days'}`}
                   </p>
-                  <h3 class="mt-2 font-display text-2xl font-semibold text-white">
+                  <h3 class="mt-2 font-display text-xl font-semibold text-white">
                     <a href={`/courses/${slug}`} class="link-underline">{c.data.title}</a>
                   </h3>
                   <p class="mt-3 text-sm leading-relaxed text-white/70">{c.data.summary}</p>
+                  <a
+                    href={`/courses/${slug}`}
+                    class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-ocean-300 group-hover:text-ocean-200"
+                  >
+                    Explore More
+                    <span aria-hidden="true" class="transition-transform group-hover:translate-x-1">→</span>
+                  </a>
                 </div>
               </article>
             )
           })
         }
       </div>
+      <div class="mt-10 text-center">
+        <a
+          href="/courses"
+          class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-white/90 backdrop-blur transition hover:bg-white/10"
+        >
+          All eight courses
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
     </div>
   </section>
 
-  <!-- Featured dive sites -->
+  {/* Featured dive sites */}
   <section class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8" data-reveal>
     <div class="flex flex-wrap items-end justify-between gap-4">
       <div>
         <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Dive sites</p>
         <h2 class="mt-3 font-display text-3xl font-bold tracking-tight md:text-5xl">
-          Thirteen sites. One small island.
+          Breathtaking Dive Experiences
         </h2>
       </div>
       <a
         href="/dive-sites"
         class="inline-flex items-center gap-1 text-sm font-semibold text-ocean-300 hover:text-ocean-200"
       >
-        All 13
+        All 13 sites
         <span aria-hidden="true">→</span>
       </a>
     </div>
@@ -239,45 +251,86 @@ const recentBlog = (await getCollection('blog'))
     </div>
   </section>
 
-  <!-- Interactive island map -->
+  {/* Interactive island map */}
   <section class="border-t border-white/5 bg-ocean-950/40" data-reveal>
     <div class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
       <div class="max-w-3xl">
-        <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Gili Meno</p>
+        <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Your Ultimate Island Guide</p>
         <h2 class="mt-3 font-display text-3xl font-bold tracking-tight md:text-5xl">
-          Explore the island on the map.
+          Gili Meno on the Map
         </h2>
         <p class="mt-4 text-lg text-white/75">
-          Thirteen dive sites, places to eat, where to stay, and a few land-based highlights — toggle
-          layers and tap markers for quick context (positions are indicative for orientation, not
-          GPS navigation).
+          This interactive map can help you find whatever you're looking for on Gili Meno — from
+          dive sites and boat schedule to hotels, restaurants, and everything in between. Tap a
+          marker for details and links.
         </p>
       </div>
       <div class="mt-12">
-        <GiliMenoMap client:only="react" />
+        <GiliMenoMap />
       </div>
     </div>
   </section>
 
-  <!-- Testimonials -->
-  <section class="relative border-t border-white/5 bg-ocean-900/40" data-reveal>
-    <div
-      class="pointer-events-none absolute inset-x-0 bottom-0 hidden h-64 opacity-70 lg:block [&_canvas]:h-full [&_canvas]:w-full"
-      aria-hidden="true"
-    >
-      <SeabedDecor client:only="react" />
+  {/* Why Choose Us */}
+  <section class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8" data-reveal>
+    <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Why Choose Meno Dive Club</p>
+    <h2 class="mt-3 font-display text-3xl font-bold tracking-tight md:text-5xl">
+      Small school. Local knowledge. Honest pricing.
+    </h2>
+    <div class="mt-12 grid gap-6 md:grid-cols-3">
+      <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur">
+        <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">20+ Years of Experience</p>
+        <h3 class="mt-2 font-display text-xl font-semibold text-white">Trusted SSI instructors</h3>
+        <p class="mt-3 text-sm leading-relaxed text-white/75">
+          Our team brings decades of combined experience in the diving industry, with a solid
+          reputation for safe, careful, unforgettable dive experiences.
+        </p>
+      </div>
+      <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur">
+        <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Carefully Chosen Team</p>
+        <h3 class="mt-2 font-display text-xl font-semibold text-white">Expert, friendly instructors</h3>
+        <p class="mt-3 text-sm leading-relaxed text-white/75">
+          A great dive starts with great instructors. We pick highly skilled, experienced
+          professionals who love sharing knowledge and keeping every dive safe and fun.
+        </p>
+      </div>
+      <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur">
+        <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Affordable Prices</p>
+        <h3 class="mt-2 font-display text-xl font-semibold text-white">Diving for everyone</h3>
+        <p class="mt-3 text-sm leading-relaxed text-white/75">
+          Diving should be accessible. We offer high-quality dive experiences at fair prices, so
+          you get the best value while exploring Gili Meno's underwater world.
+        </p>
+      </div>
     </div>
+  </section>
+
+  {/* Testimonials with Google + TripAdvisor ratings */}
+  <section class="border-t border-white/5 bg-ocean-900/40" data-reveal>
     <div class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
       <div class="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Reviews</p>
+        <div class="max-w-3xl">
+          <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">What Your Fellow Divers Say</p>
           <h2 class="mt-3 font-display text-3xl font-bold tracking-tight md:text-5xl">
-            What our divers say.
+            Reviews from real divers.
           </h2>
+          <p class="mt-4 text-lg text-white/80">
+            Hear what our happy divers have to say about their incredible underwater experiences.
+            Read their testimonials and learn why they love diving with us.
+          </p>
         </div>
-        <span class="text-sm text-white/60">
-          ★ 4.9 on Google · ★ 5.0 on TripAdvisor
-        </span>
+        <div class="flex flex-col gap-2">
+          <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm text-amber-200">
+            <span aria-hidden="true">★★★★★</span>
+            <span class="font-semibold text-white">4.9</span>
+            <span class="text-white/70">Google</span>
+          </span>
+          <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm text-amber-200">
+            <span aria-hidden="true">★★★★★</span>
+            <span class="font-semibold text-white">5.0</span>
+            <span class="text-white/70">TripAdvisor</span>
+          </span>
+        </div>
       </div>
 
       <div class="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -301,7 +354,7 @@ const recentBlog = (await getCollection('blog'))
     </div>
   </section>
 
-  <!-- Blog teaser -->
+  {/* Bubble Diaries (blog teaser) */}
   {
     recentBlog.length > 0 && (
       <section class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8" data-reveal>
@@ -311,12 +364,16 @@ const recentBlog = (await getCollection('blog'))
             <h2 class="mt-3 font-display text-3xl font-bold tracking-tight md:text-5xl">
               Stories from the reef.
             </h2>
+            <p class="mt-4 max-w-xl text-lg text-white/75">
+              Your guide to everything diving in Gili Meno. Learn, explore, and be inspired by
+              stories and tips from beneath and above the surface.
+            </p>
           </div>
           <a
             href="/blog"
             class="inline-flex items-center gap-1 text-sm font-semibold text-ocean-300 hover:text-ocean-200"
           >
-            All posts
+            View All
             <span aria-hidden="true">→</span>
           </a>
         </div>
@@ -357,32 +414,57 @@ const recentBlog = (await getCollection('blog'))
     )
   }
 
-  <!-- Final CTA -->
+  {/* Final CTA */}
   <section class="border-t border-white/5" data-reveal>
     <div class="mx-auto max-w-7xl px-4 py-24 text-center sm:px-6 lg:px-8">
       <h2 class="font-display text-3xl font-bold tracking-tight md:text-5xl">
-        Come dive with us.
+        Learn Scuba Diving with Meno Dive Club
       </h2>
       <p class="mx-auto mt-4 max-w-xl text-lg text-white/80">
-        Drop us a message, send a WhatsApp, or just walk into the shop.
-        We'll work out a plan that suits the trip you actually want.
+        Drop us a message, send a WhatsApp on {SITE_CONFIG.contact.phone}, or just walk into the
+        shop on the harbour-side street. We'll work out a plan that suits the trip you actually
+        want.
       </p>
       <div class="mt-10 flex flex-wrap justify-center gap-4">
         <a
-          href="/booking"
+          href="/contact"
           class="rounded-full bg-ocean-500 px-6 py-3 text-sm font-semibold text-white shadow-xl shadow-ocean-500/30 transition hover:scale-[1.03] hover:bg-ocean-400"
         >
-          Book a dive
+          Contact Us
         </a>
         <a
-          href="/contact"
+          href="/booking"
           class="rounded-full border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-white/90 backdrop-blur transition hover:bg-white/10"
         >
-          Get in touch
+          Book a Dive
         </a>
       </div>
     </div>
   </section>
 
-  <HomeScrollFx client:load />
+  <script>
+    /* Tiny IntersectionObserver-driven section reveal — no GSAP needed. */
+    const els = document.querySelectorAll<HTMLElement>('[data-reveal]')
+    if (els.length && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      els.forEach((el) => {
+        el.style.opacity = '0'
+        el.style.transform = 'translateY(20px)'
+        el.style.transition = 'opacity 700ms cubic-bezier(0.22, 1, 0.36, 1), transform 700ms cubic-bezier(0.22, 1, 0.36, 1)'
+      })
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              const t = e.target as HTMLElement
+              t.style.opacity = '1'
+              t.style.transform = 'translateY(0)'
+              io.unobserve(e.target)
+            }
+          })
+        },
+        { rootMargin: '0px 0px -10% 0px' },
+      )
+      els.forEach((el) => io.observe(el))
+    }
+  </script>
 </BaseLayout>

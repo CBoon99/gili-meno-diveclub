@@ -4,8 +4,6 @@ export const prerender = true
 import { getCollection } from 'astro:content'
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import Breadcrumbs from '@/components/Breadcrumbs.astro'
-import AmbientCanvas from '@/components/canvas/AmbientCanvas'
-import Octopus from '@/components/canvas/Octopus'
 import { cleanSlug, orderKey } from '@/lib/slug'
 
 const lang = 'en' as const
@@ -37,41 +35,24 @@ const itemListJsonLd = {
   <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
     <Breadcrumbs items={breadcrumbs} />
 
-    <header class="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
-      <div class="max-w-3xl">
-        <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">SSI courses</p>
-        <h1 class="mt-3 font-display text-4xl font-bold leading-tight tracking-tight md:text-6xl">
-          Eight ways to dive deeper.
-        </h1>
-        <p class="mt-6 text-lg text-white/80">
-          Every course runs small (max 4:1), with SSI-certified instructors who know
-          these reefs better than anyone. Pick one and book — or message us if you're
-          not sure which is right for you.
-        </p>
-      </div>
-      <div
-        class="hidden aspect-square overflow-hidden rounded-2xl border border-white/10 lg:block"
-        aria-hidden="true"
-      >
-        <AmbientCanvas client:only="react" fishCount={28} bubbleCount={45} fishColor="#facc15" />
-      </div>
+    <header class="mt-6 max-w-3xl">
+      <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">SSI courses</p>
+      <h1 class="mt-3 font-display text-4xl font-bold leading-tight tracking-tight md:text-6xl">
+        Eight ways to dive deeper.
+      </h1>
+      <p class="mt-6 text-lg text-white/80">
+        Every course runs small (max 4:1), with SSI-certified instructors who know
+        these reefs better than anyone. Pick one and book — or message us if you're
+        not sure which is right for you.
+      </p>
     </header>
 
     <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {
         courses.map((c) => {
           const slug = cleanSlug(c.id)
-          const isEcoScuba = c.id === '06-eco-scuba'
           return (
-            <article class={`group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur transition hover:-translate-y-1 hover:border-ocean-400/40 hover:bg-white/[0.06] ${isEcoScuba ? 'octopus-target' : ''}`}>
-              {isEcoScuba && (
-                <div
-                  class="pointer-events-none absolute -right-24 -top-24 hidden h-72 w-72 lg:block"
-                  aria-hidden="true"
-                >
-                  <Octopus client:only="react" />
-                </div>
-              )}
+            <article class="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur transition hover:-translate-y-1 hover:border-ocean-400/40 hover:bg-white/[0.06]">
               {c.data.image && (
                 <a
                   href={`/courses/${slug}`}

@@ -1,0 +1,185 @@
+---
+/**
+ * Cinematic photographic hero, exact text from the live menodiveclub.com.
+ * Slow Ken-Burns on the image, light scroll parallax, soft CSS bubble overlay.
+ * No WebGL. Hero text is server-rendered for LCP + crawlers.
+ */
+import { SITE_CONFIG } from '@/consts'
+
+interface Props {
+  /** Background image URL (Unsplash, CMS, or hosted file) */
+  image?: string
+  imageAlt?: string
+  eyebrow?: string
+  headline?: string
+  subhead?: string
+  primaryHref?: string
+  primaryLabel?: string
+  secondaryHref?: string
+  secondaryLabel?: string
+}
+
+const {
+  image = 'https://images.unsplash.com/photo-1582967788606-a171c1080cb0?auto=format&fit=crop&w=2400&q=82',
+  imageAlt = 'A green sea turtle gliding over a coral reef in Gili Meno, Indonesia',
+  eyebrow = 'SSI Certified · Gili Meno · Indonesia',
+  headline = 'Your Underwater Adventure Awaits at Gili Meno',
+  subhead = `${SITE_CONFIG.name} is the newest SSI Dive Center on Gili Meno. Begin your scuba diving adventure with us and explore all diving possibilities in the Gili Islands.`,
+  primaryHref = '/booking',
+  primaryLabel = 'Get Started with Us',
+  secondaryHref = '/courses',
+  secondaryLabel = 'Explore SSI Courses',
+} = Astro.props
+---
+
+<section
+  class="hero relative isolate flex min-h-[100svh] items-end overflow-hidden bg-ocean-950 pb-24"
+  data-hero
+>
+  {/* Background image with Ken-Burns slow zoom + scroll parallax */}
+  <div class="hero__media absolute inset-0 -z-10" aria-hidden="true">
+    <img
+      src={image}
+      alt={imageAlt}
+      class="hero__img h-full w-full object-cover"
+      fetchpriority="high"
+      decoding="async"
+    />
+  </div>
+
+  {/* Dark gradient for text legibility */}
+  <div
+    class="absolute inset-0 -z-10 bg-gradient-to-t from-ocean-950/95 via-ocean-950/55 to-ocean-950/35"
+    aria-hidden="true"
+  >
+  </div>
+
+  {/* Subtle CSS bubble accents (no WebGL) */}
+  <div aria-hidden="true" class="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+    <span class="bubble" style="left:8%; width:14px; height:14px; animation-delay:0s; animation-duration:11s;"></span>
+    <span class="bubble" style="left:18%; width:8px; height:8px; animation-delay:1.5s; animation-duration:9s;"></span>
+    <span class="bubble" style="left:30%; width:18px; height:18px; animation-delay:3s; animation-duration:13s;"></span>
+    <span class="bubble" style="left:42%; width:10px; height:10px; animation-delay:0.8s; animation-duration:10s;"></span>
+    <span class="bubble" style="left:55%; width:22px; height:22px; animation-delay:4.2s; animation-duration:14s;"></span>
+    <span class="bubble" style="left:66%; width:12px; height:12px; animation-delay:2.4s; animation-duration:11s;"></span>
+    <span class="bubble" style="left:78%; width:9px; height:9px; animation-delay:5.6s; animation-duration:9s;"></span>
+    <span class="bubble" style="left:88%; width:16px; height:16px; animation-delay:1.2s; animation-duration:12s;"></span>
+    <span class="bubble" style="left:14%; width:6px; height:6px; animation-delay:6s; animation-duration:8s;"></span>
+    <span class="bubble" style="left:48%; width:7px; height:7px; animation-delay:7.5s; animation-duration:9s;"></span>
+  </div>
+
+  <div class="relative z-10 mx-auto grid w-full max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:px-8">
+    <div class="lg:col-span-8 hero__content">
+      <p class="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium uppercase tracking-widest text-ocean-200 backdrop-blur">
+        <span class="inline-block h-1.5 w-1.5 rounded-full bg-ocean-400"></span>
+        {eyebrow}
+      </p>
+      <h1 class="font-display text-5xl font-extrabold leading-[0.95] tracking-tight drop-shadow-[0_4px_30px_rgba(0,0,0,0.6)] sm:text-6xl lg:text-7xl">
+        {headline}
+      </h1>
+      <p class="mt-6 max-w-2xl text-lg text-white/85 drop-shadow-[0_2px_15px_rgba(0,0,0,0.5)]">{subhead}</p>
+      <div class="mt-10 flex flex-wrap gap-4">
+        <a
+          href={primaryHref}
+          class="rounded-full bg-ocean-500 px-6 py-3 text-sm font-semibold text-white shadow-xl shadow-ocean-500/30 transition hover:scale-[1.03] hover:bg-ocean-400"
+        >
+          {primaryLabel}
+        </a>
+        <a
+          href={secondaryHref}
+          class="rounded-full border border-white/30 bg-white/10 px-6 py-3 text-sm font-semibold text-white/95 backdrop-blur transition hover:bg-white/20"
+        >
+          {secondaryLabel}
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <a
+    href="#main-after-hero"
+    aria-label="Scroll to content"
+    class="absolute inset-x-0 bottom-6 z-10 mx-auto flex h-10 w-6 items-center justify-center text-white/60"
+  >
+    <span class="block h-6 w-px animate-pulse bg-white/60"></span>
+  </a>
+</section>
+
+<style>
+  /* Ken Burns: slow zoom + tiny pan, infinite */
+  .hero__img {
+    animation: ken-burns 28s ease-in-out infinite alternate;
+    transform-origin: 55% 45%;
+    will-change: transform;
+  }
+
+  @keyframes ken-burns {
+    0% {
+      transform: scale(1.0) translate(0, 0);
+    }
+    100% {
+      transform: scale(1.12) translate(-1.5%, -1%);
+    }
+  }
+
+  /* Bubbles rising */
+  .bubble {
+    position: absolute;
+    bottom: -40px;
+    border-radius: 9999px;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.85), rgba(186, 230, 253, 0.15) 60%, transparent 70%);
+    box-shadow: 0 0 12px rgba(186, 230, 253, 0.3);
+    animation: bubble-rise linear infinite;
+    opacity: 0;
+    will-change: transform, opacity;
+  }
+
+  @keyframes bubble-rise {
+    0% {
+      transform: translateY(0) translateX(0);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.8;
+    }
+    100% {
+      transform: translateY(-110vh) translateX(20px);
+      opacity: 0;
+    }
+  }
+
+  /* Reduced-motion users get a static photo, no Ken Burns or bubbles */
+  @media (prefers-reduced-motion: reduce) {
+    .hero__img,
+    .bubble {
+      animation: none !important;
+    }
+    .bubble {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  /* Subtle scroll parallax — translate the hero image upward as the user scrolls past */
+  const heroEl = document.querySelector<HTMLElement>('[data-hero]')
+  const imgEl = heroEl?.querySelector<HTMLElement>('.hero__img')
+  if (heroEl && imgEl && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    let ticking = false
+    const onScroll = () => {
+      if (ticking) return
+      ticking = true
+      requestAnimationFrame(() => {
+        const rect = heroEl.getBoundingClientRect()
+        if (rect.bottom < 0 || rect.top > window.innerHeight) {
+          ticking = false
+          return
+        }
+        const offset = Math.max(-rect.top, 0) * 0.25
+        imgEl.style.transform = `translate3d(0, ${offset}px, 0)`
+        ticking = false
+      })
+    }
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+  }
+</script>

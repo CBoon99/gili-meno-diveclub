@@ -19,29 +19,41 @@ i18n:
   default_locale: en
 
 collections:
-  - name: 'courses'
-    label: 'Courses'
-    folder: 'src/content/courses'
-    create: true
-    slug: '{{slug}}'
-    i18n: true
-    fields:
-      - { label: 'Title', name: 'title', widget: 'string', i18n: true }
-      - { label: 'Slug', name: 'slug', widget: 'string', hint: 'URL slug (kebab-case)' }
-      - { label: 'Type', name: 'type', widget: 'select', options: ['BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'ECO', 'PACKAGE'] }
-      - { label: 'Price (IDR)', name: 'price', widget: 'number', required: false }
-      - { label: 'Duration (days)', name: 'duration', widget: 'number', required: false }
-      - { label: 'Hero image', name: 'image', widget: 'image', required: false }
-      - { label: 'Summary', name: 'summary', widget: 'text', i18n: true }
-      - { label: 'Body', name: 'body', widget: 'markdown', i18n: true }
-      - label: 'SEO'
-        name: 'seo'
-        widget: 'object'
+  # ============================================================
+  # Settings — hero, contact, social. Customer-editable.
+  # ============================================================
+  - name: 'settings'
+    label: 'Site settings'
+    files:
+      - name: 'hero'
+        label: 'Home page hero'
+        file: 'src/content/settings/hero.json'
         i18n: true
         fields:
-          - { label: 'Title', name: 'title', widget: 'string', required: false }
-          - { label: 'Description', name: 'description', widget: 'string', required: false }
+          - { label: 'Background image', name: 'image', widget: 'image', required: true, hint: 'A wide underwater photo (recommended at least 2400×1400)' }
+          - { label: 'Image alt text (for accessibility & SEO)', name: 'imageAlt', widget: 'string', i18n: true }
+          - { label: 'Eyebrow text', name: 'eyebrow', widget: 'string', i18n: true, default: 'SSI Certified · Gili Meno · Indonesia' }
+          - { label: 'Headline (H1)', name: 'headline', widget: 'string', i18n: true, default: 'Your Underwater Adventure Awaits at Gili Meno' }
+          - { label: 'Subheading', name: 'subhead', widget: 'text', i18n: true }
+          - { label: 'Primary button label', name: 'primaryLabel', widget: 'string', i18n: true, default: 'Get Started with Us' }
+          - { label: 'Primary button link', name: 'primaryHref', widget: 'string', default: '/booking' }
+          - { label: 'Secondary button label', name: 'secondaryLabel', widget: 'string', i18n: true, default: 'Explore SSI Courses' }
+          - { label: 'Secondary button link', name: 'secondaryHref', widget: 'string', default: '/courses' }
+      - name: 'general'
+        label: 'Contact details'
+        file: 'src/content/settings/general.json'
+        fields:
+          - { label: 'Phone (display)', name: 'phone', widget: 'string' }
+          - { label: 'Phone (international, no spaces — e.g. +6287864074156)', name: 'phoneIntl', widget: 'string' }
+          - { label: 'WhatsApp number (digits only — e.g. 6287864074156)', name: 'whatsapp', widget: 'string' }
+          - { label: 'Email', name: 'email', widget: 'string' }
+          - { label: 'Instagram URL', name: 'instagram', widget: 'string', required: false }
+          - { label: 'Facebook URL', name: 'facebook', widget: 'string', required: false }
+          - { label: 'Google Business URL', name: 'google', widget: 'string', required: false }
 
+  # ============================================================
+  # Bubble Diaries (Blog) — fully customer-editable
+  # ============================================================
   - name: 'blog'
     label: 'Bubble Diaries (Blog)'
     folder: 'src/content/blog'
@@ -53,10 +65,50 @@ collections:
       - { label: 'Author', name: 'author', widget: 'string' }
       - { label: 'Date', name: 'date', widget: 'datetime' }
       - { label: 'Hero image', name: 'image', widget: 'image', required: false }
-      - { label: 'Summary', name: 'summary', widget: 'text', i18n: true }
+      - { label: 'Image alt', name: 'imageAlt', widget: 'string', required: false, i18n: true }
+      - { label: 'Summary (1–2 sentences)', name: 'summary', widget: 'text', i18n: true }
       - { label: 'Body', name: 'body', widget: 'markdown', i18n: true }
       - { label: 'Tags', name: 'tags', widget: 'list', required: false }
 
+  # ============================================================
+  # Testimonials — customer-editable, displayed on home page
+  # ============================================================
+  - name: 'testimonials'
+    label: 'Testimonials'
+    folder: 'src/content/testimonials'
+    create: true
+    slug: '{{slug}}'
+    extension: 'json'
+    format: 'json'
+    fields:
+      - { label: 'Diver name', name: 'name', widget: 'string' }
+      - { label: 'Source', name: 'source', widget: 'select', options: ['Google', 'TripAdvisor', 'Email', 'Other'] }
+      - { label: 'Rating (1–5)', name: 'rating', widget: 'number', min: 1, max: 5, default: 5 }
+      - { label: 'Review text', name: 'review', widget: 'text' }
+      - { label: 'Date', name: 'date', widget: 'datetime', required: false }
+
+  # ============================================================
+  # Courses — full content (locked structure, content editable)
+  # ============================================================
+  - name: 'courses'
+    label: 'Courses'
+    folder: 'src/content/courses'
+    create: true
+    slug: '{{slug}}'
+    i18n: true
+    fields:
+      - { label: 'Title', name: 'title', widget: 'string', i18n: true }
+      - { label: 'Type', name: 'type', widget: 'select', options: ['BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'ECO', 'PACKAGE'] }
+      - { label: 'Price (IDR)', name: 'price', widget: 'number', required: false }
+      - { label: 'Duration (days)', name: 'duration', widget: 'number', required: false }
+      - { label: 'Hero image', name: 'image', widget: 'image', required: false }
+      - { label: 'Image alt', name: 'imageAlt', widget: 'string', required: false, i18n: true }
+      - { label: 'Summary', name: 'summary', widget: 'text', i18n: true }
+      - { label: 'Body', name: 'body', widget: 'markdown', i18n: true }
+
+  # ============================================================
+  # Dive sites — content editable, schema locked
+  # ============================================================
   - name: 'dive-sites'
     label: 'Dive Sites'
     folder: 'src/content/dive-sites'
@@ -65,34 +117,11 @@ collections:
     i18n: true
     fields:
       - { label: 'Name', name: 'name', widget: 'string', i18n: true }
-      - { label: 'Slug', name: 'slug', widget: 'string' }
       - { label: 'Max depth (m)', name: 'maxDepth', widget: 'number' }
       - { label: 'Difficulty', name: 'difficulty', widget: 'select', options: ['BEGINNER', 'INTERMEDIATE', 'ADVANCED'] }
       - { label: 'Latitude', name: 'lat', widget: 'number', value_type: 'float' }
       - { label: 'Longitude', name: 'lng', widget: 'number', value_type: 'float' }
       - { label: 'Hero image', name: 'image', widget: 'image', required: false }
-      - { label: 'Description', name: 'description', widget: 'markdown', i18n: true }
-
-  - name: 'testimonials'
-    label: 'Testimonials'
-    folder: 'src/content/testimonials'
-    create: true
-    slug: '{{slug}}'
-    fields:
-      - { label: 'Name', name: 'name', widget: 'string' }
-      - { label: 'Source', name: 'source', widget: 'select', options: ['Google', 'TripAdvisor', 'Email', 'Other'] }
-      - { label: 'Rating', name: 'rating', widget: 'number', min: 1, max: 5, default: 5 }
-      - { label: 'Review', name: 'review', widget: 'text' }
-      - { label: 'Date', name: 'date', widget: 'datetime', required: false }
-
-  - name: 'settings'
-    label: 'Settings'
-    files:
-      - name: 'general'
-        label: 'General'
-        file: 'src/content/settings/general.json'
-        fields:
-          - { label: 'Hero headline (EN)', name: 'heroEn', widget: 'string' }
-          - { label: 'Hero headline (FR)', name: 'heroFr', widget: 'string' }
-          - { label: 'Phone', name: 'phone', widget: 'string' }
-          - { label: 'Email', name: 'email', widget: 'string' }
+      - { label: 'Image alt', name: 'imageAlt', widget: 'string', required: false, i18n: true }
+      - { label: 'Summary', name: 'summary', widget: 'text', required: false, i18n: true }
+      - { label: 'Body', name: 'body', widget: 'markdown', i18n: true }

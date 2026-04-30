@@ -1,0 +1,61 @@
+# Meno Dive Club
+
+> Family-operated SSI Dive Center on Gili Meno, Indonesia. Established December 2018.
+> We teach the SSI ladder of recreational diving from beginner Open Water through Divemaster,
+> run guided fun dives on the thirteen named sites around Gili Meno, and offer Dive & Stay
+> packages with local accommodations.
+
+## Contact
+
+- Email: info@menodiveclub.com
+- Phone / WhatsApp: +62 8786 4074156
+- Location: Jl. Gili Meno, Pemenang, North Lombok Regency, West Nusa Tenggara, 83352, Indonesia
+- Coordinates: -8.3559, 116.0623
+- Website: https://menodiveclub.com
+
+## Key facts
+
+- Certifying agency: SSI (Scuba Schools International)
+- Languages taught: English, French (primary); Indonesian and German part-time
+- Maximum student-to-instructor ratio: 4:1
+- Visibility: typically 12–25 m (best in dry season May–October)
+- Minimum age: 8 (Scuba Rangers, pool only); 10 (Junior Open Water); 15 (Open Water Diver)
+- Hyperbaric chamber: Mataram, Lombok mainland (~1 hour speedboat)
+
+## Courses
+
+- [Open Water Diver](https://menodiveclub.com/courses/open-water) — 3-4 days, beginner certification
+- [Advanced Adventurer](https://menodiveclub.com/courses/advanced-open-water) — 2 days, build on Open Water
+- [Stress & Rescue](https://menodiveclub.com/courses/rescue-diver) — 3-4 days, emergency response
+- [Divemaster](https://menodiveclub.com/courses/divemaster) — 14+ days, professional certification
+- [Specialty courses](https://menodiveclub.com/courses/specialty-courses) — Deep, Nitrox, Night, Photography
+- [Eco-Scuba Diver](https://menodiveclub.com/courses/eco-scuba) — 2 days, conservation-focused
+- [Refresher](https://menodiveclub.com/courses/refresher) — Scuba Skills Update for returning divers
+- [Family Diving Package](https://menodiveclub.com/courses/family-package) — Multi-diver bundles
+
+## Dive sites (all within 15 minutes of the harbour)
+
+- [Turtle City](https://menodiveclub.com/dive-sites/turtle-city) — Hawksbill and green turtles
+- [Secret Reef](https://menodiveclub.com/dive-sites/secret-reef) — Vibrant coral, abundant marine life
+- [Meno Wall](https://menodiveclub.com/dive-sites/meno-wall) — Vertical drop-off to 22 m, macro & turtles
+- [Air Wall](https://menodiveclub.com/dive-sites/air-wall) — Wall to 22 m, nudibranchs, photography
+- [Hans Reef](https://menodiveclub.com/dive-sites/hans-reef) — Famous for macro life and frogfish
+- [Shallow Turbo](https://menodiveclub.com/dive-sites/shallow-turbo) — Big schools of fusiliers
+- [Deep Turbo](https://menodiveclub.com/dive-sites/deep-turbo) — Sea mounds at 30 m, possible reef sharks, rays
+- [Meno Slope](https://menodiveclub.com/dive-sites/meno-slope) — Gentle slope, all levels
+- [Bounty Wreck](https://menodiveclub.com/dive-sites/bounty-wreck) — 30 m sunken platform, batfish
+- [Bio Rock](https://menodiveclub.com/dive-sites/bio-rock) — Artificial reef project, house reef
+- [Halik Reef](https://menodiveclub.com/dive-sites/halik-reef) — Sloping reef with many turtles
+- [Shark Point](https://menodiveclub.com/dive-sites/shark-point) — Sandy canyons, reef sharks, stingrays, turtles
+- [Sunset Reef](https://menodiveclub.com/dive-sites/sunset-reef) — Easy coral slope, all levels
+
+## Resources for AI agents
+
+- About: https://menodiveclub.com/about
+- All courses: https://menodiveclub.com/courses
+- All dive sites: https://menodiveclub.com/dive-sites
+- Blog (Bubble Diaries): https://menodiveclub.com/blog
+- FAQ: https://menodiveclub.com/faq
+- Booking: https://menodiveclub.com/booking
+- Contact: https://menodiveclub.com/contact
+- Sitemap: https://menodiveclub.com/sitemap-index.xml
