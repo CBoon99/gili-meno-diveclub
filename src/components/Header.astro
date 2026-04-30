@@ -26,20 +26,23 @@ const navItems = [
   data-header
 >
   <div
-    class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-6 px-4 sm:px-6 lg:px-8 transition-colors"
+    class="header-inner mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 transition-colors"
+    data-header-inner
   >
     <a
       href={localizedPath(lang, '/')}
-      class="flex items-center gap-2 text-lg font-bold tracking-tight"
+      class="brand-link flex items-center gap-3 text-lg font-bold tracking-tight"
       aria-label="Meno Dive Club home"
     >
-      <img
-        src="/logo-menodiveclub.png"
-        alt="Meno Dive Club logo"
-        loading="eager"
-        decoding="async"
-        class="h-10 w-auto"
-      />
+      <span class="brand-logo-shell" aria-hidden="true">
+        <img
+          src="/logo-menodiveclub-transparent.png"
+          alt="Meno Dive Club logo"
+          loading="eager"
+          decoding="async"
+          class="brand-logo"
+        />
+      </span>
       <span class="font-display">Meno&nbsp;Dive&nbsp;Club</span>
     </a>
 
@@ -101,7 +104,51 @@ const navItems = [
     </ul>
   </nav>
 </header>
-<div class="h-16" aria-hidden="true"></div>
+<div class="h-20" aria-hidden="true"></div>
+
+<style>
+  .header-inner {
+    height: 5rem;
+    transition: height 240ms ease;
+  }
+  .brand-link {
+    transition: transform 240ms ease;
+  }
+  .brand-logo-shell {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.6rem;
+    height: 3.6rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.18));
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
+    transition: width 240ms ease, height 240ms ease, background-color 240ms ease, border-color 240ms ease;
+  }
+  .brand-logo {
+    width: 2.6rem;
+    height: 2.6rem;
+    object-fit: contain;
+    transition: width 240ms ease, height 240ms ease;
+  }
+  [data-header].is-scrolled .header-inner {
+    height: 4.2rem;
+  }
+  [data-header].is-scrolled .brand-link {
+    transform: translateY(-1px);
+  }
+  [data-header].is-scrolled .brand-logo-shell {
+    width: 3rem;
+    height: 3rem;
+    border-color: rgba(255, 255, 255, 0.2);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.14));
+  }
+  [data-header].is-scrolled .brand-logo {
+    width: 2.1rem;
+    height: 2.1rem;
+  }
+</style>
 
 <script>
   const header = document.querySelector('[data-header]') as HTMLElement | null
@@ -111,8 +158,13 @@ const navItems = [
   // Translucent → solid header on scroll.
   const onScroll = () => {
     if (!header) return
-    if (window.scrollY > 16) header.classList.add('bg-ocean-900/85')
-    else header.classList.remove('bg-ocean-900/85')
+    if (window.scrollY > 16) {
+      header.classList.add('bg-ocean-900/85')
+      header.classList.add('is-scrolled')
+    } else {
+      header.classList.remove('bg-ocean-900/85')
+      header.classList.remove('is-scrolled')
+    }
   }
   onScroll()
   window.addEventListener('scroll', onScroll, { passive: true })
