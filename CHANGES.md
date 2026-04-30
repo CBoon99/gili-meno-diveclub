@@ -6,6 +6,53 @@ This document exists for full audit transparency: nothing is changed silently.
 
 ---
 
+## Phase 4.1 — SEO + favicon polish (2026-04-30)
+
+User asked for "all the finer detail" — done.
+
+### Folder rename
+
+- `/Users/carlboon/Documents/Meno Drive Club/` → `/Users/carlboon/Documents/Meno Dive Club/` (the original `r` was a typo). Git repo + CLI links unaffected.
+
+### Brand assets generated
+
+- **`/public/apple-touch-icon.png`** (180×180) — branded mark on ocean-blue: stylised wave + diving mask with bubbles
+- **`/public/icon-512.png`**, **`/icon-192.png`**, **`/icon-32.png`**, **`/icon-16.png`** — same mark, multiple sizes for PWA + browser tabs
+- **`/public/og-default.jpg`** (1200×630) — turtle photo with "Meno Dive Club · SSI Dive Centre · Gili Meno · Indonesia" overlay; used for every page's social-share preview unless overridden per page
+- **`/public/favicon.svg`** — refreshed brand mark inline SVG (works at any size, 749 bytes)
+
+### `<head>` SEO completeness
+
+Now present on every page:
+
+- `<title>`, `<meta name="description">`, `<meta name="keywords">`, `<meta name="author">`, `<meta name="publisher">`
+- `<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">`
+- `<meta name="googlebot">` mirror
+- `<link rel="canonical">`
+- `<link rel="alternate" hreflang="en|fr|x-default">`
+- **PWA / Apple full set:** `apple-touch-icon` 180×180, `icon` 16/32/SVG, `mask-icon`, `manifest`, `apple-mobile-web-app-*`, `application-name`, `msapplication-TileColor`, `theme-color`, `color-scheme`
+- `<meta name="format-detection" content="telephone=yes">`
+- `<meta http-equiv="content-language">`
+- **Local SEO:** `geo.region`, `geo.placename`, `geo.position`, `ICBM`
+- **Open Graph 2.0 full set:** `og:type`, `og:title`, `og:description`, `og:url`, `og:image` (+ `secure_url`, `type`, `width`, `height`, `alt`), `og:site_name`, `og:locale`, `og:locale:alternate`, `article:published_time`/`modified_time` when applicable
+- **Twitter Card:** `summary_large_image` with title/desc/image/alt
+- **Preconnect** to fonts + Unsplash
+
+### Schema.org JSON-LD (every page)
+
+- **`LocalBusiness` + `SportsActivityLocation` + `TouristAttraction`** — rich result eligible
+- **`Organization`** with logo + `ContactPoint` (telephone, email, areaServed, language)
+- **`WebSite`** with `SearchAction` (gives site-name in Google results + sitelinks search box eligibility)
+- Per-page additions stay (Course / TouristAttraction / Article / FAQPage / BreadcrumbList / ItemList / AggregateRating / Review)
+
+### CMS-driven contact details
+
+- `consts.ts` now imports `src/content/settings/general.json` and uses Decap-edited values (phone, WhatsApp, email, social URLs) site-wide. Customer can change them at `/admin` → Site settings → Contact details.
+
+### Build / output verified
+
+- Build green; `dist/index.html` `<head>` audit confirms every meta + JSON-LD block ships correctly to crawlers.
+
 ## Phase 4 — pivot to photographic hero (2026-04-30)
 
 Per user request: drop the entire WebGL 3D layer (cinematic but slow, complex, and visually noisy after iteration), keep the polished underlying site, and replace the hero with a **large photographic image** that mirrors the live menodiveclub.com.
