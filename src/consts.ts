@@ -1,6 +1,21 @@
 /**
  * Site-wide constants. Single source of truth for SEO + branding.
+ *
+ * Contact + social fields are CMS-editable via `/admin` — the customer can
+ * change phone, email, WhatsApp, and social URLs and they propagate site-wide
+ * (Header, Footer, schema.org, contact page, WhatsApp button).
  */
+import generalSettings from './content/settings/general.json'
+
+const general = generalSettings as Partial<{
+  phone: string
+  phoneIntl: string
+  whatsapp: string
+  email: string
+  instagram: string
+  facebook: string
+  google: string
+}>
 
 export const SITE_CONFIG = {
   name: 'Meno Dive Club',
@@ -9,12 +24,11 @@ export const SITE_CONFIG = {
   defaultLocale: 'en' as const,
   locales: ['en', 'fr'] as const,
 
-  // Confirmed by user (live site values, 2026-04-28).
   contact: {
-    email: 'info@menodiveclub.com',
-    phone: '+62 8786 4074156',
-    phoneIntl: '+6287864074156',
-    whatsapp: '6287864074156',
+    email: general.email ?? 'info@menodiveclub.com',
+    phone: general.phone ?? '+62 8786 4074156',
+    phoneIntl: general.phoneIntl ?? '+6287864074156',
+    whatsapp: general.whatsapp ?? '6287864074156',
   },
 
   location: {
@@ -28,9 +42,9 @@ export const SITE_CONFIG = {
   },
 
   social: {
-    instagram: 'https://instagram.com/menodiveclub',
-    facebook: 'https://facebook.com/menodiveclub',
-    google: 'https://g.page/menodiveclub',
+    instagram: general.instagram ?? 'https://instagram.com/menodiveclub',
+    facebook: general.facebook ?? 'https://facebook.com/menodiveclub',
+    google: general.google ?? 'https://g.page/menodiveclub',
   },
 
   partners: ['SSI', 'PADI'],

@@ -24,7 +24,7 @@ export function localBusinessJsonLd() {
     telephone: SITE_CONFIG.contact.phone,
     email: SITE_CONFIG.contact.email,
     image: `${SITE_CONFIG.url}/og-default.jpg`,
-    logo: `${SITE_CONFIG.url}/logo.svg`,
+    logo: `${SITE_CONFIG.url}/icon-512.png`,
     priceRange: '$$',
     address: {
       '@type': 'PostalAddress',
@@ -47,6 +47,55 @@ export function localBusinessJsonLd() {
       bestRating: '5',
       worstRating: '1',
     },
+  }
+}
+
+/**
+ * JSON-LD: WebSite (helps Google show a site-name + sitelinks search box).
+ */
+export function websiteJsonLd() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': `${SITE_CONFIG.url}#website`,
+    name: SITE_CONFIG.name,
+    alternateName: SITE_CONFIG.shortName,
+    url: SITE_CONFIG.url,
+    inLanguage: ['en', 'fr'],
+    publisher: { '@id': `${SITE_CONFIG.url}#organization` },
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: `${SITE_CONFIG.url}/?q={search_term_string}`,
+      'query-input': 'required name=search_term_string',
+    },
+  }
+}
+
+/**
+ * JSON-LD: Organization (linked to LocalBusiness via @id).
+ */
+export function organizationJsonLd() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    '@id': `${SITE_CONFIG.url}#organization`,
+    name: SITE_CONFIG.name,
+    url: SITE_CONFIG.url,
+    logo: {
+      '@type': 'ImageObject',
+      url: `${SITE_CONFIG.url}/icon-512.png`,
+      width: 512,
+      height: 512,
+    },
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'customer service',
+      telephone: SITE_CONFIG.contact.phone,
+      email: SITE_CONFIG.contact.email,
+      areaServed: 'ID',
+      availableLanguage: ['English', 'French', 'Indonesian'],
+    },
+    sameAs: [SITE_CONFIG.social.instagram, SITE_CONFIG.social.facebook, SITE_CONFIG.social.google],
   }
 }
 

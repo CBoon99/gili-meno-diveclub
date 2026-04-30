@@ -1,12 +1,19 @@
 {
   "name": "Meno Dive Club",
   "short_name": "Meno Dive",
-  "description": "SSI dive school on Gili Meno, Indonesia.",
+  "description": "SSI Dive Centre on Gili Meno, Indonesia. Diving courses, guided dives, sea turtles, conservation.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#051a2c",
   "theme_color": "#051a2c",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["travel", "lifestyle", "education"],
   "icons": [
-    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
