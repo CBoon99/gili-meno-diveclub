@@ -4,8 +4,8 @@ difficulty: 'INTERMEDIATE'
 maxDepth: 30
 lat: -8.3545
 lng: 116.0250
-image: 'https://images.unsplash.com/photo-1542156822-6924d1a71ace?w=1600&q=80'
-imageAlt: 'Coral-covered slope descending into blue water'
+image: '/images/site-meno-slope.jpg'
+imageAlt: 'Meno Slope — gradual coral-covered reef slope near Gili Meno'
 ---
 
 ## Meno Slope

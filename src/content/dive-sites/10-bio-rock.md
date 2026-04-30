@@ -4,8 +4,8 @@ difficulty: 'INTERMEDIATE'
 maxDepth: 25
 lat: -8.3510
 lng: 116.0240
-image: 'https://images.unsplash.com/photo-1503342394128-c104d54dba01?w=1600&q=80'
-imageAlt: 'Artificial reef structure colonised by coral and small fish'
+image: '/images/site-bio-rock.jpg'
+imageAlt: 'Bio Rock coral restoration structures off Gili Meno'
 ---
 
 ## Bio Rock

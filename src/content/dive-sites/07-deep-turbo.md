@@ -4,8 +4,8 @@ difficulty: 'ADVANCED'
 maxDepth: 45
 lat: -8.3520
 lng: 116.0290
-image: 'https://images.unsplash.com/photo-1542931287-023b922fa89b?w=1600&q=80'
-imageAlt: 'Diver silhouetted against deep blue water with rays of sunlight'
+image: '/images/site-deep-turbo.jpg'
+imageAlt: 'Deep Turbo dive site — coral mound seascape in the Gili Islands'
 ---
 
 ## Deep Turbo
