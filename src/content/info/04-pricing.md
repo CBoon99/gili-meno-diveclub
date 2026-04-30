@@ -42,7 +42,7 @@ We bundle accommodation with diving for divers wanting one bill, one booking. Pr
 - **5 nights + Open Water + 2 fun dives** — from IDR 7,800,000 (~USD 480)
 - **7 nights + Advanced Adventurer + 4 fun dives** — from IDR 9,500,000 (~USD 580)
 
-See the [Dive & Stay page](/dive-stay) for current options.
+See the [Dive & Stay page](/info/dive-and-stay) for current options.
 
 ## What's NOT included
 

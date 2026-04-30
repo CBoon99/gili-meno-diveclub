@@ -58,7 +58,7 @@ We can help you arrange transfers if you're booking a course or stay package.
 
 ## Where to stay
 
-The island has accommodation from beachfront budget bungalows to boutique resorts. We're happy to recommend properties our students have enjoyed — the [Dive & Stay packages](/dive-stay) bundle accommodation with diving at a discount.
+The island has accommodation from beachfront budget bungalows to boutique resorts. We're happy to recommend properties our students have enjoyed — the [Dive & Stay packages](/info/dive-and-stay) bundle accommodation with diving at a discount.
 
 ## Beyond diving
 

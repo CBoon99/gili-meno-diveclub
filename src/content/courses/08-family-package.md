@@ -49,4 +49,4 @@ Diving is one of the few activities where a parent and a 12-year-old can have an
 
 ### Stay together too
 
-Add our [Dive & Stay package](/dive-stay) and we'll arrange family-friendly accommodation a short walk from the dive shop. Several of our partner properties have pools, family rooms, and cooking facilities for fussy small humans.
+Add our [Dive & Stay package](/info/dive-and-stay) and we'll arrange family-friendly accommodation a short walk from the dive shop. Several of our partner properties have pools, family rooms, and cooking facilities for fussy small humans.
