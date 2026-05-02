@@ -35,8 +35,10 @@ function difficultyBadge(d: string) {
 
 <BaseLayout
   lang={lang}
-  title="Gili Meno Dive Sites — All 13"
-  description="Every named dive site around Gili Meno: Turtle City, Meno Wall, Hans Reef, Bounty Wreck, Bio Rock, Shark Point, and more. Depths, difficulty, marine life."
+  title="Gili Meno Dive Sites — All 13 Sites Around the Island"
+  description="Every named dive site around Gili Meno: Turtle City, Meno Wall, Hans Reef, Bounty Wreck, Bio Rock, Shark Point, and more. Depths, difficulty, and what you'll see on each."
+  preloadImage="/images/site-meno-wall.jpg"
+  keywords="Gili Meno dive sites, Turtle City, Meno Wall, Bounty Wreck Gili Meno, Shark Point Gili Meno, Bio Rock"
   jsonLd={[itemListJsonLd]}
 >
   <PageHero
@@ -49,6 +51,14 @@ function difficultyBadge(d: string) {
 
   <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
     <Breadcrumbs items={breadcrumbs} />
+
+    <p class="mt-8 max-w-3xl text-base text-white/75">
+      New to the island? Start with our{' '}
+      <a href="/blog/top-5-dive-spots-gili-meno/" class="link-underline text-ocean-300">
+        Top 5 Dive Spots in Gili Meno
+      </a>{' '}— a quick guide to the sites we recommend most often. Or pick any site below
+      for depths, difficulty, and the marine life you're most likely to see.
+    </p>
 
     <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {

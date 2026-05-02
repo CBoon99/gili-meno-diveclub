@@ -93,7 +93,7 @@ export function organizationJsonLd() {
       telephone: SITE_CONFIG.contact.phone,
       email: SITE_CONFIG.contact.email,
       areaServed: 'ID',
-      availableLanguage: ['English', 'French', 'Indonesian'],
+      availableLanguage: ['English', 'French', 'Turkish', 'Indonesian', 'German'],
     },
     sameAs: [SITE_CONFIG.social.instagram, SITE_CONFIG.social.facebook, SITE_CONFIG.social.google],
   }

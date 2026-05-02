@@ -1,0 +1,114 @@
+---
+export const prerender = true
+
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import Breadcrumbs from '@/components/Breadcrumbs.astro'
+import PageHero from '@/components/PageHero.astro'
+import gallery from '@/content/settings/gallery.json'
+import { SITE_CONFIG } from '@/consts'
+
+const lang = 'en' as const
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Gallery', url: '/gallery' },
+]
+
+const galleryJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ImageGallery',
+  name: `${SITE_CONFIG.name} — Photo Gallery`,
+  url: `${SITE_CONFIG.url}/gallery`,
+  description:
+    'Photographs from dives, courses, and conservation work at Meno Dive Club, Gili Meno, Indonesia.',
+  associatedMedia: gallery.images.map((image) => ({
+    '@type': 'ImageObject',
+    contentUrl: new URL(image.src, SITE_CONFIG.url).toString(),
+    description: image.alt,
+    caption: image.caption,
+    creator: { '@type': 'Organization', name: SITE_CONFIG.name },
+    license: `${SITE_CONFIG.url}/privacy`,
+  })),
+}
+---
+
+<BaseLayout
+  lang={lang}
+  title="Photo Gallery — Diving on Gili Meno"
+  description="Photo gallery from Meno Dive Club: dive sites around Gili Meno, SSI courses in action, conservation work, and the reefs we dive every day."
+  image={gallery.images[0]?.src ?? '/og-default.jpg'}
+  imageAlt={gallery.images[0]?.alt ?? 'Diving on Gili Meno'}
+  preloadImage={gallery.images[0]?.src}
+  jsonLd={[galleryJsonLd]}
+  keywords="Gili Meno photos, scuba diving photos Indonesia, Meno Dive Club gallery, Bounty Wreck photo, turtle photo Gili Meno"
+>
+  <PageHero
+    image={gallery.images[0]?.src ?? '/og-default.jpg'}
+    imageAlt={gallery.images[0]?.alt ?? ''}
+    eyebrow="Gallery"
+    title={gallery.title ?? 'Photo Gallery'}
+    subtitle={gallery.subtitle}
+  />
+
+  <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+    <Breadcrumbs items={breadcrumbs} />
+
+    <div class="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        gallery.images.map((image, index) => (
+          <figure
+            class={`group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] ${
+              index % 5 === 0 ? 'sm:col-span-2 sm:row-span-2' : ''
+            }`}
+          >
+            <img
+              src={image.src}
+              alt={image.alt}
+              loading={index < 3 ? 'eager' : 'lazy'}
+              decoding="async"
+              width="1200"
+              height="800"
+              class="h-full w-full object-cover transition duration-700 group-hover:scale-[1.04]"
+            />
+            <figcaption
+              class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ocean-950/90 to-transparent p-4 text-sm text-white/90"
+            >
+              <p class="font-semibold">{image.caption}</p>
+              {image.site && (
+                <p class="mt-0.5 text-xs uppercase tracking-widest text-ocean-300">
+                  {image.site}
+                </p>
+              )}
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+
+    <div class="mt-14 rounded-2xl border border-white/10 bg-white/[0.03] p-8 text-center">
+      <h2 class="font-display text-2xl font-bold tracking-tight md:text-3xl">
+        Want to make some photos of your own?
+      </h2>
+      <p class="mx-auto mt-4 max-w-2xl text-white/75">
+        Bring your camera (or rent one of ours) and join an
+        <a href="/courses/specialty-courses" class="link-underline text-ocean-300"
+          >SSI Underwater Photography</a
+        >
+        specialty — two days, two ocean dives, and you'll leave with a logbook full of frames you'd actually print.
+      </p>
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
+        <a
+          href="/booking"
+          class="rounded-full bg-ocean-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-ocean-500/30 transition hover:scale-[1.03] hover:bg-ocean-400"
+        >
+          Book a dive
+        </a>
+        <a
+          href="/dive-sites"
+          class="rounded-full border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-white/90 transition hover:bg-white/10"
+        >
+          Explore dive sites
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

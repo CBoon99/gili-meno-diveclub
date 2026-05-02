@@ -1,0 +1,180 @@
+# =====================================================================
+# Netlify _redirects — WordPress → static-site migration map
+# =====================================================================
+#
+# Lines are evaluated top-to-bottom; first match wins. Trailing-slash
+# matching is exact, so we list both /foo and /foo/ where it matters.
+#
+# Redirect codes:
+#   301  permanent (preserves SEO authority)  ← used for WP migrations
+#   200  rewrite (proxy/SPA shell)            ← used for /admin
+#
+# After the domain switch, audit with httpstatus.io to confirm every
+# old URL hops to a 200 final destination with a single 301.
+
+# ---------------------------------------------------------------------
+# 1. Strip www → apex (also handled in netlify.toml; left here as belt-
+#    and-braces in case the toml file is ever edited away).
+# ---------------------------------------------------------------------
+https://www.menodiveclub.com/*  https://menodiveclub.com/:splat  301!
+
+# ---------------------------------------------------------------------
+# 2. Decap CMS admin shell rewrite (NOT a 301 — keep as 200 rewrite)
+# ---------------------------------------------------------------------
+/admin           /admin/index.html        200
+
+# ---------------------------------------------------------------------
+# 3. WordPress blog posts (currently indexed in Google)
+#    Source: SEO audit §6.1 — preserve every backlink and ranking.
+# ---------------------------------------------------------------------
+/the-top-5-dive-spots-in-gili-meno                                          /blog/top-5-dive-spots-gili-meno/                  301
+/the-top-5-dive-spots-in-gili-meno/                                         /blog/top-5-dive-spots-gili-meno/                  301
+/turtles-find-green-hawksbill-turtles-while-diving-the-gili-islands         /blog/turtle-encounters/                           301
+/turtles-find-green-hawksbill-turtles-while-diving-the-gili-islands/        /blog/turtle-encounters/                           301
+/discover-gili-meno-indonesias-hidden-gem-for-diving-and-tranquility        /blog/discover-gili-meno/                          301
+/discover-gili-meno-indonesias-hidden-gem-for-diving-and-tranquility/       /blog/discover-gili-meno/                          301
+/beginners-scuba-diving-introduction-dive-with-meno-dive-club               /blog/beginners-guide/                             301
+/beginners-scuba-diving-introduction-dive-with-meno-dive-club/              /blog/beginners-guide/                             301
+/trash-hero-gili-meno                                                       /blog/trash-hero/                                  301
+/trash-hero-gili-meno/                                                      /blog/trash-hero/                                  301
+
+# Emoji URL — must be redirected URL-encoded (browsers send 🌊 as %F0%9F%8C%8A)
+/%F0%9F%8C%8Alearn-to-dive-with-ssi-at-meno-dive-club-in-gili-meno-%F0%9F%8C%8A/   /blog/learn-to-dive-ssi-gili-meno/   301
+/%F0%9F%8C%8Alearn-to-dive-with-ssi-at-meno-dive-club-in-gili-meno-%F0%9F%8C%8A    /blog/learn-to-dive-ssi-gili-meno/   301
+# Plain-text fallback in case Google has the un-encoded version
+/learn-to-dive-with-ssi-at-meno-dive-club-in-gili-meno/                     /blog/learn-to-dive-ssi-gili-meno/                 301
+/learn-to-dive-with-ssi-at-meno-dive-club-in-gili-meno                      /blog/learn-to-dive-ssi-gili-meno/                 301
+
+# ---------------------------------------------------------------------
+# 4. Common WordPress permalinks that may exist as "soft" links from
+#    directories, cards, brochures, or social bios.
+# ---------------------------------------------------------------------
+
+# Top-level marketing pages
+/home                       /                      301
+/home/                      /                      301
+/about-us                   /about/                301
+/about-us/                  /about/                301
+/about                      /about/                301
+/contact-us                 /contact/              301
+/contact-us/                /contact/              301
+/our-team                   /about/                301
+/our-team/                  /about/                301
+/team                       /about/                301
+/team/                      /about/                301
+/eco                        /courses/eco-scuba/    301
+/eco/                       /courses/eco-scuba/    301
+/eco-diving                 /courses/eco-scuba/    301
+/eco-diving/                /courses/eco-scuba/    301
+
+# Booking / fun-dives — fix the audit-flagged double-slash
+/fun-dives                  /booking/              301
+/fun-dives/                 /booking/              301
+/fun-dives//                /booking/              301
+/book                       /booking/              301
+/book/                      /booking/              301
+/book-now                   /booking/              301
+/book-now/                  /booking/              301
+/booking                    /booking/              301
+
+# WP "courses" parent + common course slugs (catch-all)
+/courses                                /courses/                                  301
+/scuba-courses                          /courses/                                  301
+/scuba-courses/                         /courses/                                  301
+/ssi-courses                            /courses/                                  301
+/ssi-courses/                           /courses/                                  301
+/open-water-diver                       /courses/open-water/                       301
+/open-water-diver/                      /courses/open-water/                       301
+/open-water                             /courses/open-water/                       301
+/open-water/                            /courses/open-water/                       301
+/advanced-adventurer                    /courses/advanced-open-water/              301
+/advanced-adventurer/                   /courses/advanced-open-water/              301
+/advanced-open-water                    /courses/advanced-open-water/              301
+/advanced-open-water/                   /courses/advanced-open-water/              301
+/rescue-diver                           /courses/rescue-diver/                     301
+/rescue-diver/                          /courses/rescue-diver/                     301
+/stress-and-rescue                      /courses/rescue-diver/                     301
+/stress-and-rescue/                     /courses/rescue-diver/                     301
+/divemaster                             /courses/divemaster/                       301
+/divemaster/                            /courses/divemaster/                       301
+/divemaster-internship                  /courses/divemaster/                       301
+/divemaster-internship/                 /courses/divemaster/                       301
+/specialties                            /courses/specialty-courses/                301
+/specialties/                           /courses/specialty-courses/                301
+/specialty                              /courses/specialty-courses/                301
+/specialty/                             /courses/specialty-courses/                301
+/specialty-courses                      /courses/specialty-courses/                301
+/specialty-courses/                     /courses/specialty-courses/                301
+/refresher                              /courses/refresher/                        301
+/refresher/                             /courses/refresher/                        301
+/eco-scuba                              /courses/eco-scuba/                        301
+/eco-scuba/                             /courses/eco-scuba/                        301
+/family-package                         /courses/family-package/                   301
+/family-package/                        /courses/family-package/                   301
+/family-diving                          /courses/family-package/                   301
+/family-diving/                         /courses/family-package/                   301
+
+# Dive sites
+/dive-sites                             /dive-sites/                               301
+/dive-spots                             /dive-sites/                               301
+/dive-spots/                            /dive-sites/                               301
+/turtle-city                            /dive-sites/turtle-city/                   301
+/turtle-city/                           /dive-sites/turtle-city/                   301
+/meno-wall                              /dive-sites/meno-wall/                     301
+/meno-wall/                             /dive-sites/meno-wall/                     301
+/bounty-wreck                           /dive-sites/bounty-wreck/                  301
+/bounty-wreck/                          /dive-sites/bounty-wreck/                  301
+/shark-point                            /dive-sites/shark-point/                   301
+/shark-point/                           /dive-sites/shark-point/                   301
+/bio-rock                               /dive-sites/bio-rock/                      301
+/bio-rock/                              /dive-sites/bio-rock/                      301
+
+# Gallery / video / reviews — common WP links to redirect
+/photo-gallery                          /gallery/                                  301
+/photo-gallery/                         /gallery/                                  301
+/gallery                                /gallery/                                  301
+/video                                  /                                          301
+/video/                                 /                                          301
+/reviews                                /#reviews                                  301
+/reviews/                               /#reviews                                  301
+/testimonials                           /#reviews                                  301
+/testimonials/                          /#reviews                                  301
+
+# Dive & stay package
+/dive-and-stay                          /info/dive-and-stay/                       301
+/dive-and-stay/                         /info/dive-and-stay/                       301
+/dive-stay                              /info/dive-and-stay/                       301
+/dive-stay/                             /info/dive-and-stay/                       301
+/accommodation                          /info/dive-and-stay/                       301
+/accommodation/                         /info/dive-and-stay/                       301
+
+# Blog parent
+/blog                                   /blog/                                     301
+/bubble-diaries                         /blog/                                     301
+/bubble-diaries/                        /blog/                                     301
+/news                                   /blog/                                     301
+/news/                                  /blog/                                     301
+
+# WP category / tag / author / feed paths — collapse to blog index
+/category/*                             /blog/                                     301
+/tag/*                                  /blog/                                     301
+/author/*                               /blog/                                     301
+/feed                                   /blog/                                     301
+/feed/                                  /blog/                                     301
+/?feed=rss2                             /blog/                                     301
+
+# WordPress core endpoints — block hits to /wp-* gracefully
+/wp-admin/*                             /                                          301
+/wp-login.php                           /                                          301
+/xmlrpc.php                             /                                          410
+/wp-json/*                              /                                          410
+
+# Privacy / legal
+/privacy-policy                         /privacy/                                  301
+/privacy-policy/                        /privacy/                                  301
+
+# FAQ
+/faqs                                   /faq/                                      301
+/faqs/                                  /faq/                                      301
+/frequently-asked-questions             /faq/                                      301
+/frequently-asked-questions/            /faq/                                      301

@@ -29,8 +29,10 @@ const itemListJsonLd = {
 
 <BaseLayout
   lang={lang}
-  title="SSI Diving Courses on Gili Meno"
-  description="From your first breath underwater to professional Divemaster certification. Eight SSI courses run small and personal at Meno Dive Club, Gili Meno."
+  title="SSI Scuba Diving Courses on Gili Meno — Open Water to Divemaster"
+  description="From your first breath underwater to professional Divemaster certification. Eight SSI courses + 20 specialty certifications, taught small (4:1 max) at Meno Dive Club, Gili Meno. PADI cross-cert students welcome."
+  preloadImage="/images/course-open-water.jpg"
+  keywords="SSI Open Water Gili Meno, Advanced Adventurer course, scuba diving courses Indonesia, Divemaster internship Gili Meno, learn to dive Lombok"
   jsonLd={[itemListJsonLd]}
 >
   <PageHero
@@ -43,6 +45,16 @@ const itemListJsonLd = {
 
   <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
     <Breadcrumbs items={breadcrumbs} />
+
+    <p class="mt-8 max-w-3xl text-base text-white/75">
+      Never dived before? Read{' '}
+      <a href="/blog/learn-to-dive-ssi-gili-meno/" class="link-underline text-ocean-300">
+        Learn to Dive with SSI at Meno Dive Club
+      </a>{' '}for what your first three days will look like. Already certified through
+      PADI, NAUI or another agency? <a href="/about" class="link-underline text-ocean-300">
+        Cross-certs are welcome
+      </a> on every SSI course we run.
+    </p>
 
     <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {

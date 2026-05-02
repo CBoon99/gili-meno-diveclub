@@ -17,23 +17,91 @@ const submitted = Astro.url.searchParams.has('success')
 const reserveActionJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Service',
-  name: 'Meno Dive Club booking',
+  '@id': 'https://menodiveclub.com/booking#service',
+  serviceType: 'Scuba diving instruction and guided fun dives',
+  name: 'Meno Dive Club — diving on Gili Meno',
+  description:
+    'SSI scuba diving courses, fun dives, and Dive & Stay packages on Gili Meno, Indonesia. Open Water through Divemaster, PADI cross-certs welcome.',
   provider: {
     '@type': 'Organization',
+    '@id': 'https://menodiveclub.com#organization',
     name: 'Meno Dive Club',
+    url: 'https://menodiveclub.com',
   },
-  areaServed: 'Gili Meno, Indonesia',
+  areaServed: {
+    '@type': 'Place',
+    name: 'Gili Meno, Lombok, Indonesia',
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: SITE_CONFIG.location.coordinates.lat,
+      longitude: SITE_CONFIG.location.coordinates.lng,
+    },
+  },
+  availableLanguage: ['English', 'French', 'Turkish', 'Indonesian', 'German'],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Diving services',
+    itemListElement: [
+      {
+        '@type': 'Offer',
+        name: 'Single fun dive (certified divers)',
+        priceCurrency: 'IDR',
+        price: 600000,
+        availability: 'https://schema.org/InStock',
+      },
+      {
+        '@type': 'Offer',
+        name: '3-dive package (certified divers)',
+        priceCurrency: 'IDR',
+        price: 1700000,
+        availability: 'https://schema.org/InStock',
+      },
+      {
+        '@type': 'Offer',
+        name: 'Discover Scuba — pool + 1 ocean dive',
+        priceCurrency: 'IDR',
+        price: 1200000,
+        availability: 'https://schema.org/InStock',
+      },
+      {
+        '@type': 'Offer',
+        name: 'SSI Open Water Diver course (3-4 days)',
+        priceCurrency: 'IDR',
+        price: 5500000,
+        availability: 'https://schema.org/InStock',
+      },
+      {
+        '@type': 'Offer',
+        name: 'SSI Advanced Adventurer course (2 days)',
+        priceCurrency: 'IDR',
+        price: 4200000,
+        availability: 'https://schema.org/InStock',
+      },
+      {
+        '@type': 'Offer',
+        name: 'SSI Specialty course (1-2 days)',
+        priceCurrency: 'IDR',
+        price: 1800000,
+        availability: 'https://schema.org/InStock',
+      },
+    ],
+  },
   potentialAction: {
     '@type': 'ReserveAction',
     target: 'https://menodiveclub.com/booking',
+    result: {
+      '@type': 'Reservation',
+      name: 'Diving reservation at Meno Dive Club',
+    },
   },
 }
 ---
 
 <BaseLayout
   lang={lang}
-  title="Book a Dive or Course"
-  description="Book a dive course or fun-dive day at Meno Dive Club, Gili Meno. We'll confirm by email within a day and reply with payment instructions."
+  title="Book a Scuba Dive or SSI Course on Gili Meno"
+  description="Book a scuba diving course, fun-dive day, or Dive & Stay package at Meno Dive Club on Gili Meno. We confirm availability by email within 24 hours — no deposit until we reply."
+  preloadImage="/images/site-turtle-city.jpg"
   jsonLd={[reserveActionJsonLd]}
 >
   <PageHero

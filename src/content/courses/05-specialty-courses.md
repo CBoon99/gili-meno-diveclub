@@ -24,6 +24,8 @@ Stack three full SSI specialties + 24 logged dives and you earn the **Specialty 
 
 ### Available specialties at Meno Dive Club
 
+We run sixteen SSI specialties, plus another half-dozen on demand with our Instructor Trainer:
+
 - **Deep Diving** — safely down to 30-40 m on Gili Meno's deeper sites
 - **Night Diving** — sleeping turtles, hunting moray eels, and bioluminescence
 - **Wreck Diving** — Bounty Wreck the safe way, from outside in
@@ -34,9 +36,21 @@ Stack three full SSI specialties + 24 logged dives and you earn the **Specialty 
 - **Search & Recovery** — patterns, lift bags, the unromantic but useful skills
 - **Navigation** — natural and compass, day and night
 - **Fish ID & Marine Ecology** — from "lots of fish" to "I saw three species of trevally"
-- **Equipment techniques** — basic care and field troubleshooting
+- **Equipment Techniques** — basic care and field troubleshooting
+- **Enriched Air Nitrox (EANx)** — extend your bottom time on multi-dive days
+- **Sidemount Diving** — twin tanks side-mounted, redundant air, easier on your back
+- **Waves, Tides & Currents** — read sea state and time your entries safely
+- **Science of Diving** — physics, physiology, and decompression theory in depth
+- **React Right (CPR / first aid / O₂)** — required theory module for Stress & Rescue
+- **Marine Ecology** — focused on the reefs around Gili Meno specifically
+- **Diver Stress & Rescue (specialty version)** — for divers not ready for the full course
+- **Free Diving Try Out** — single-day intro to apnea with a SSI Free Diving Instructor
 
 If you want a specialty we don't run on this list, ask — we can usually arrange it with our SSI Instructor Trainer.
+
+### Cross-certifications welcome
+
+Already qualified through PADI, NAUI, BSAC, RAID, or another WRSTC-aligned agency? You don't need to re-do beginner courses to add SSI specialties — bring your card and a logbook and we'll cross-credit you straight in.
 
 ### Course structure
 

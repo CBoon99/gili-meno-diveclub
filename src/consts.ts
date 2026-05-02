@@ -47,7 +47,10 @@ export const SITE_CONFIG = {
     google: general.google ?? 'https://g.page/menodiveclub',
   },
 
-  partners: ['SSI'],
+  // SSI is our primary training agency. PADI cross-cert students are
+  // welcomed on every SSI course (Advanced, Rescue, Specialties, Divemaster)
+  // without needing to re-do the Open Water cert.
+  partners: ['SSI Dive Centre', 'PADI Crossover Welcome', 'Trash Hero Gili Meno'],
 
   // Color tokens — also defined in src/styles/global.css @theme.
   colors: {

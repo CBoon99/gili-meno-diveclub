@@ -1,0 +1,77 @@
+---
+/**
+ * Promotional video section, CMS-editable through src/content/settings/video.json.
+ * If `enabled` is false or the embedUrl is empty, the whole section is skipped
+ * so the homepage stays clean until a real video URL is added.
+ *
+ * Lazy-loads the iframe (loading="lazy") and uses `youtube-nocookie.com`
+ * automatically when a YouTube watch URL is pasted in by mistake.
+ */
+import video from '@/content/settings/video.json'
+
+interface Settings {
+  enabled?: boolean
+  embedUrl?: string
+  eyebrow?: string
+  heading?: string
+  description?: string
+  poster?: string
+}
+
+const settings = video as Settings
+const enabled = Boolean(settings.enabled && settings.embedUrl)
+
+// Coerce common YouTube watch URLs into the embed form, and prefer the
+// privacy-enhanced youtube-nocookie domain for embedded playback.
+function normaliseEmbedUrl(raw: string): string {
+  try {
+    const url = new URL(raw)
+    if (url.hostname.endsWith('youtube.com') || url.hostname === 'youtu.be') {
+      let id = ''
+      if (url.hostname === 'youtu.be') id = url.pathname.slice(1)
+      else if (url.pathname.startsWith('/embed/')) id = url.pathname.split('/')[2]
+      else id = url.searchParams.get('v') ?? ''
+      if (id) return `https://www.youtube-nocookie.com/embed/${id}`
+    }
+    return raw
+  } catch {
+    return raw
+  }
+}
+
+const embedSrc = enabled ? normaliseEmbedUrl(settings.embedUrl ?? '') : ''
+---
+
+{
+  enabled && (
+    <section class="border-t border-white/5 bg-ocean-950/40" data-reveal>
+      <div class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+        <div class="max-w-3xl">
+          <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">
+            {settings.eyebrow ?? 'Watch'}
+          </p>
+          <h2 class="mt-3 font-display text-3xl font-bold tracking-tight md:text-5xl">
+            {settings.heading ?? 'Diving Gili Meno — in motion.'}
+          </h2>
+          {settings.description && (
+            <p class="mt-4 text-lg text-white/75">{settings.description}</p>
+          )}
+        </div>
+
+        <div class="mt-12 overflow-hidden rounded-2xl border border-white/10 bg-black shadow-2xl shadow-ocean-950/40">
+          <div class="relative aspect-video w-full">
+            <iframe
+              src={embedSrc}
+              title={settings.heading ?? 'Promotional video'}
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+              referrerpolicy="strict-origin-when-cross-origin"
+              class="absolute inset-0 h-full w-full"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}

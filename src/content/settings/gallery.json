@@ -1,0 +1,72 @@
+{
+  "title": "Photo Gallery",
+  "subtitle": "Reefs, courses, and divers from our daily life on Gili Meno. All photos taken by our team and students — no stock images.",
+  "images": [
+    {
+      "src": "/images/site-turtle-city.jpg",
+      "alt": "Green sea turtle gliding over coral at Turtle City, Gili Meno",
+      "caption": "Turtle City — our most-dived site",
+      "site": "Turtle City"
+    },
+    {
+      "src": "/images/site-meno-wall.jpg",
+      "alt": "Vertical coral wall with sun rays piercing the water at Meno Wall",
+      "caption": "Meno Wall — vertical drop from 5 m to 30 m+",
+      "site": "Meno Wall"
+    },
+    {
+      "src": "/images/site-bounty-wreck.jpg",
+      "alt": "Bounty Wreck pontoon resting on white sand in 18 m of water",
+      "caption": "Bounty Wreck — sunk pontoon, batfish, lionfish",
+      "site": "Bounty Wreck"
+    },
+    {
+      "src": "/images/site-shark-point.jpg",
+      "alt": "White-tip reef shark cruising over a sandy bottom at Shark Point",
+      "caption": "Shark Point — white-tips, jacks, bamboo sharks",
+      "site": "Shark Point"
+    },
+    {
+      "src": "/images/site-bio-rock.jpg",
+      "alt": "Bio Rock conservation structure with new coral growth",
+      "caption": "Bio Rock — coral regrowth on steel frames",
+      "site": "Bio Rock"
+    },
+    {
+      "src": "/images/site-meno-slope.jpg",
+      "alt": "Coral slope at Meno Slope dive site with reef fish",
+      "caption": "Meno Slope — gentle slope, perfect for fun-dives",
+      "site": "Meno Slope"
+    },
+    {
+      "src": "/images/site-deep-turbo.jpg",
+      "alt": "Deep coral garden at Deep Turbo with schooling fish",
+      "caption": "Deep Turbo — deeper site for Advanced divers",
+      "site": "Deep Turbo"
+    },
+    {
+      "src": "/images/course-open-water.jpg",
+      "alt": "Open Water Diver student practising buoyancy with instructor in shallow tropical water",
+      "caption": "Open Water Diver — your first ocean dives",
+      "site": "Training pool / Turtle City"
+    },
+    {
+      "src": "/images/course-advanced.jpg",
+      "alt": "Advanced Adventurer diver swimming alongside a coral wall",
+      "caption": "Advanced Adventurer — five disciplines in two days",
+      "site": "Meno Wall"
+    },
+    {
+      "src": "/images/course-eco-scuba.jpg",
+      "alt": "Eco-Scuba diver collecting marine debris on a reef cleanup dive",
+      "caption": "Eco-Scuba — conservation diving with Trash Hero",
+      "site": "Sunset Reef"
+    },
+    {
+      "src": "/images/course-family.jpg",
+      "alt": "Family in dive gear smiling on a dive boat off Gili Meno",
+      "caption": "Family Diving Package — kids welcome from age 10",
+      "site": "Gili Meno harbour"
+    }
+  ]
+}

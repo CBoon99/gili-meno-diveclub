@@ -39,6 +39,30 @@ collections:
           - { label: 'Primary button link', name: 'primaryHref', widget: 'string', default: '/booking' }
           - { label: 'Secondary button label', name: 'secondaryLabel', widget: 'string', i18n: true, default: 'Explore SSI Courses' }
           - { label: 'Secondary button link', name: 'secondaryHref', widget: 'string', default: '/courses' }
+      - name: 'gallery'
+        label: 'Photo gallery'
+        file: 'src/content/settings/gallery.json'
+        fields:
+          - { label: 'Page title', name: 'title', widget: 'string' }
+          - { label: 'Page subtitle', name: 'subtitle', widget: 'text' }
+          - label: 'Images'
+            name: 'images'
+            widget: 'list'
+            fields:
+              - { label: 'Image', name: 'src', widget: 'image' }
+              - { label: 'Alt text (for accessibility & SEO)', name: 'alt', widget: 'string' }
+              - { label: 'Caption', name: 'caption', widget: 'string', required: false }
+              - { label: 'Dive site / location', name: 'site', widget: 'string', required: false }
+      - name: 'video'
+        label: 'Promotional video'
+        file: 'src/content/settings/video.json'
+        fields:
+          - { label: 'Show on home page?', name: 'enabled', widget: 'boolean', default: false }
+          - { label: 'YouTube or Vimeo embed URL (must be the /embed/ form, not /watch?v=)', name: 'embedUrl', widget: 'string', required: false }
+          - { label: 'Section eyebrow', name: 'eyebrow', widget: 'string', default: 'Watch' }
+          - { label: 'Section heading', name: 'heading', widget: 'string', default: 'Diving Gili Meno — in motion.' }
+          - { label: 'Description', name: 'description', widget: 'text', required: false }
+          - { label: 'Poster image (shown until video plays)', name: 'poster', widget: 'image', required: false }
       - name: 'general'
         label: 'Contact details'
         file: 'src/content/settings/general.json'

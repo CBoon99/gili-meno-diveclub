@@ -4,6 +4,7 @@ export const prerender = true
 import { getCollection } from 'astro:content'
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import Hero from '@/components/Hero.astro'
+import VideoSection from '@/components/VideoSection.astro'
 import GiliMenoMap from '@/components/map/GiliMenoMap.astro'
 import { cleanSlug, orderKey } from '@/lib/slug'
 import { giliMenoPlaces } from '@/lib/gili-meno-places'
@@ -78,8 +79,9 @@ const aggregateRatingJsonLd = {
 
 <BaseLayout
   lang={lang}
-  title="Meno Dive Club — SSI Dive Centre, Gili Meno"
-  description="Meno Dive Club is the newest SSI Dive Center on Gili Meno, Indonesia. Begin your scuba diving adventure with us and explore all diving possibilities in the Gili Islands."
+  title="Scuba Diving Gili Meno — SSI Dive Centre & PADI Crossover"
+  description="Scuba diving on Gili Meno with Meno Dive Club — SSI Dive Centre, family-operated since 2018. Open Water, Advanced, Rescue, Divemaster + 20 specialty courses. PADI cross-certifications welcome. Multilingual team (EN · FR · TR · ID)."
+  preloadImage={hero.image}
   jsonLd={[mapListJsonLd, aggregateRatingJsonLd]}
 >
   <Hero
@@ -184,12 +186,19 @@ const aggregateRatingJsonLd = {
           })
         }
       </div>
-      <div class="mt-10 text-center">
+      <div class="mt-10 flex flex-wrap items-center justify-center gap-3 text-center">
         <a
           href="/courses"
           class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-white/90 backdrop-blur transition hover:bg-white/10"
         >
-          All eight courses
+          See all 8 courses
+          <span aria-hidden="true">→</span>
+        </a>
+        <a
+          href="/courses/specialty-courses"
+          class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-white/90 backdrop-blur transition hover:bg-white/10"
+        >
+          + 20 specialty certifications
           <span aria-hidden="true">→</span>
         </a>
       </div>
@@ -271,42 +280,57 @@ const aggregateRatingJsonLd = {
     </div>
   </section>
 
-  {/* Why Choose Us */}
+  {/* Why Choose Us — competitive differentiators (SEO audit §5) */}
   <section class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8" data-reveal>
-    <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Why Choose Meno Dive Club</p>
+    <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Why divers choose us</p>
     <h2 class="mt-3 font-display text-3xl font-bold tracking-tight md:text-5xl">
       Small school. Local knowledge. Honest pricing.
     </h2>
-    <div class="mt-12 grid gap-6 md:grid-cols-3">
+    <p class="mt-4 max-w-3xl text-lg text-white/75">
+      Four things make Meno Dive Club different from every other dive centre on the Gili
+      Islands — and they're the four things our reviewers mention most often.
+    </p>
+
+    <div class="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
       <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur">
-        <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">20+ Years of Experience</p>
-        <h3 class="mt-2 font-display text-xl font-semibold text-white">Trusted SSI instructors</h3>
+        <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">5.0 on TripAdvisor</p>
+        <h3 class="mt-2 font-display text-xl font-semibold text-white">Highest-rated on the island</h3>
         <p class="mt-3 text-sm leading-relaxed text-white/75">
-          Our team brings decades of combined experience in the diving industry, with a solid
-          reputation for safe, careful, unforgettable dive experiences.
+          The highest of any Gili Meno dive centre. Built on small groups, careful
+          briefings, and crews who actually know the reef.
         </p>
       </div>
       <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur">
-        <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Carefully Chosen Team</p>
-        <h3 class="mt-2 font-display text-xl font-semibold text-white">Expert, friendly instructors</h3>
+        <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Eco-Diving</p>
+        <h3 class="mt-2 font-display text-xl font-semibold text-white">Trash Hero partner since 2019</h3>
         <p class="mt-3 text-sm leading-relaxed text-white/75">
-          A great dive starts with great instructors. We pick highly skilled, experienced
-          professionals who love sharing knowledge and keeping every dive safe and fun.
+          Monthly cleanup dives with <a href="/blog/trash-hero/" class="link-underline text-ocean-300">Trash Hero Gili Meno</a>,
+          plus our SSI Eco-Scuba Diver programme. Conservation isn't a tab on the
+          website — it's how we run the shop.
         </p>
       </div>
       <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur">
-        <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Affordable Prices</p>
-        <h3 class="mt-2 font-display text-xl font-semibold text-white">Diving for everyone</h3>
+        <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">Family-operated</p>
+        <h3 class="mt-2 font-display text-xl font-semibold text-white">Open since December 2018</h3>
         <p class="mt-3 text-sm leading-relaxed text-white/75">
-          Diving should be accessible. We offer high-quality dive experiences at fair prices, so
-          you get the best value while exploring Gili Meno's underwater world.
+          A small, family-run SSI dive school — not a franchise. The same instructors
+          you book with are the ones who'll be on the boat with you.
+        </p>
+      </div>
+      <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur">
+        <p class="text-xs font-semibold uppercase tracking-widest text-ocean-300">4 languages</p>
+        <h3 class="mt-2 font-display text-xl font-semibold text-white">Multilingual SSI instructors</h3>
+        <p class="mt-3 text-sm leading-relaxed text-white/75">
+          We teach courses in <strong>English</strong>, <strong>French</strong>,
+          <strong>Turkish</strong>, and <strong>Bahasa Indonesia</strong>. PADI cross-cert
+          students are welcome on every course.
         </p>
       </div>
     </div>
   </section>
 
   {/* Testimonials with Google + TripAdvisor ratings */}
-  <section class="border-t border-white/5 bg-ocean-900/40" data-reveal>
+  <section id="reviews" class="scroll-mt-24 border-t border-white/5 bg-ocean-900/40" data-reveal>
     <div class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
       <div class="flex flex-wrap items-end justify-between gap-4">
         <div class="max-w-3xl">
@@ -335,24 +359,51 @@ const aggregateRatingJsonLd = {
 
       <div class="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {
-          testimonials.map((tst) => (
-            <blockquote class="rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur">
-              <div class="flex items-center gap-1 text-amber-300">
-                {Array.from({ length: tst.data.rating }).map(() => (
-                  <span aria-hidden="true">★</span>
-                ))}
-                <span class="sr-only">{tst.data.rating} out of 5</span>
-              </div>
-              <p class="mt-4 text-base leading-relaxed text-white/85">"{tst.data.review}"</p>
-              <footer class="mt-5 text-xs uppercase tracking-widest text-white/50">
-                {tst.data.name} · {tst.data.source}
-              </footer>
-            </blockquote>
-          ))
+          testimonials.map((tst) => {
+            const initials = tst.data.name
+              .split(/\s+/)
+              .map((part) => part[0])
+              .filter(Boolean)
+              .slice(0, 2)
+              .join('')
+              .toUpperCase()
+            // Deterministic ocean-toned avatar tint per name.
+            const hue = Math.abs(
+              [...tst.data.name].reduce((a, c) => a + c.charCodeAt(0), 0),
+            ) % 360
+            return (
+              <blockquote class="rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur">
+                <div class="flex items-center gap-1 text-amber-300">
+                  {Array.from({ length: tst.data.rating }).map(() => (
+                    <span aria-hidden="true">★</span>
+                  ))}
+                  <span class="sr-only">{tst.data.rating} out of 5</span>
+                </div>
+                <p class="mt-4 text-base leading-relaxed text-white/85">"{tst.data.review}"</p>
+                <footer class="mt-5 flex items-center gap-3">
+                  <span
+                    aria-hidden="true"
+                    class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-semibold text-white shadow-inner"
+                    style={`background: linear-gradient(135deg, hsl(${hue} 55% 38%), hsl(${(hue + 40) % 360} 55% 22%));`}
+                  >
+                    {initials}
+                  </span>
+                  <span class="flex flex-col">
+                    <span class="text-sm font-semibold text-white">{tst.data.name}</span>
+                    <span class="text-xs uppercase tracking-widest text-white/50">
+                      via {tst.data.source}
+                    </span>
+                  </span>
+                </footer>
+              </blockquote>
+            )
+          })
         }
       </div>
     </div>
   </section>
+
+  <VideoSection />
 
   {/* Bubble Diaries (blog teaser) */}
   {
