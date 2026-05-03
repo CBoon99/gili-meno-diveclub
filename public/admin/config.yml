@@ -33,7 +33,7 @@ collections:
           - { label: 'Background image', name: 'image', widget: 'image', required: true, hint: 'A wide underwater photo (recommended at least 2400×1400)' }
           - { label: 'Image alt text (for accessibility & SEO)', name: 'imageAlt', widget: 'string', i18n: true }
           - { label: 'Eyebrow text', name: 'eyebrow', widget: 'string', i18n: true, default: 'SSI Certified · Gili Meno · Indonesia' }
-          - { label: 'Headline (H1)', name: 'headline', widget: 'string', i18n: true, default: 'Your Underwater Adventure Awaits at Gili Meno' }
+          - { label: 'Headline (H1)', name: 'headline', widget: 'string', i18n: true, default: 'Scuba diving on Gili Meno — SSI courses, fun dives & eco-diving' }
           - { label: 'Subheading', name: 'subhead', widget: 'text', i18n: true }
           - { label: 'Primary button label', name: 'primaryLabel', widget: 'string', i18n: true, default: 'Get Started with Us' }
           - { label: 'Primary button link', name: 'primaryHref', widget: 'string', default: '/booking' }

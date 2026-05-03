@@ -46,6 +46,18 @@ https://www.menodiveclub.com/*  https://menodiveclub.com/:splat  301!
 /learn-to-dive-with-ssi-at-meno-dive-club-in-gili-meno                      /blog/learn-to-dive-ssi-gili-meno/                 301
 
 # ---------------------------------------------------------------------
+# 3b. Regional / market landing aliases (SEO hubs)
+# ---------------------------------------------------------------------
+/australia-diving                           /regions/australia-indonesia-diving/             301
+/australia-diving/                          /regions/australia-indonesia-diving/             301
+/diving-from-australia                      /regions/australia-indonesia-diving/             301
+/diving-from-australia/                     /regions/australia-indonesia-diving/             301
+/scuba-australia-indonesia                  /regions/australia-indonesia-diving/             301
+/scuba-australia-indonesia/                 /regions/australia-indonesia-diving/             301
+/australia-to-gili-meno                     /regions/australia-indonesia-diving/             301
+/australia-to-gili-meno/                    /regions/australia-indonesia-diving/             301
+
+# ---------------------------------------------------------------------
 # 4. Common WordPress permalinks that may exist as "soft" links from
 #    directories, cards, brochures, or social bios.
 # ---------------------------------------------------------------------
